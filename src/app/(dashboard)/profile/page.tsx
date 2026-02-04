@@ -1,6 +1,7 @@
+
 "use client";
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useApp } from '@/app/context/AppContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,15 +9,19 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { 
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription 
+} from '@/components/ui/dialog';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  Cell, PieChart, Pie
 } from 'recharts';
 import { 
   Settings, LogOut, Edit2, Flame, Trophy, Calendar, 
-  ChevronRight, MapPin, Mail, Bell, Shield, Info
+  ChevronRight, MapPin, Mail, Bell, Shield, Info, Camera
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const STATS_DATA = [
   { name: 'Lun', value: 3 },
@@ -28,59 +33,167 @@ const STATS_DATA = [
   { name: 'Dom', value: 1 },
 ];
 
-const CATEGORY_DATA = [
-  { name: 'Yoga', value: 40, color: '#17B5B5' },
-  { name: 'Nutrición', value: 30, color: '#6CD7D7' },
-  { name: 'Running', value: 30, color: '#FF7043' },
-];
-
 export default function ProfilePage() {
-  const { userData, streak, completedTipsToday } = useApp();
+  const { userData, setUserData, streak } = useApp();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  
+  // Estado local para el formulario de edición
+  const [editForm, setEditForm] = useState({
+    name: userData?.name || '',
+    email: userData?.email || '',
+    location: userData?.location || '',
+    birthDate: userData?.birthDate || ''
+  });
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && userData) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUserData({
+          ...userData,
+          profilePic: reader.result as string
+        });
+        toast({
+          title: "Foto actualizada",
+          description: "Tu nueva foto de perfil se ha guardado correctamente.",
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveProfile = () => {
+    if (userData) {
+      setUserData({
+        ...userData,
+        ...editForm
+      });
+      setIsEditOpen(false);
+      toast({
+        title: "Perfil actualizado",
+        description: "Tus cambios se han guardado con éxito.",
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 p-6 animate-fade-in bg-secondary/5 min-h-screen pb-24">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Mi Perfil</h1>
-        <Button variant="ghost" size="icon" className="rounded-full"><Settings size={22} /></Button>
+        
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-full bg-white shadow-sm hover:bg-primary/5">
+              <Settings size={22} className="text-primary" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="rounded-[2.5rem] max-w-[92vw] p-8 border-none">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold">Editar Perfil</DialogTitle>
+              <DialogDescription>Actualiza tu información personal de BloomWell.</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-1">
+                <Label className="text-xs font-bold uppercase text-muted-foreground ml-1">Nombre</Label>
+                <Input 
+                  value={editForm.name} 
+                  onChange={e => setEditForm(p => ({ ...p, name: e.target.value }))}
+                  className="rounded-2xl h-12 bg-secondary/20 border-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs font-bold uppercase text-muted-foreground ml-1">Email</Label>
+                <Input 
+                  value={editForm.email} 
+                  onChange={e => setEditForm(p => ({ ...p, email: e.target.value }))}
+                  className="rounded-2xl h-12 bg-secondary/20 border-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs font-bold uppercase text-muted-foreground ml-1">Ubicación</Label>
+                <Input 
+                  value={editForm.location} 
+                  onChange={e => setEditForm(p => ({ ...p, location: e.target.value }))}
+                  className="rounded-2xl h-12 bg-secondary/20 border-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs font-bold uppercase text-muted-foreground ml-1">Fecha de Nacimiento</Label>
+                <Input 
+                  type="date"
+                  value={editForm.birthDate} 
+                  onChange={e => setEditForm(p => ({ ...p, birthDate: e.target.value }))}
+                  className="rounded-2xl h-12 bg-secondary/20 border-none"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleSaveProfile} className="w-full h-14 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20">
+                Guardar Cambios
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </header>
 
       <section className="flex flex-col items-center gap-4 bg-white p-8 rounded-[3rem] shadow-sm border border-border/50">
         <div className="relative">
-          <Avatar className="h-24 w-24 border-4 border-primary/20">
-            <AvatarImage src={userData?.profilePic} />
-            <AvatarFallback>{userData?.name?.[0]}</AvatarFallback>
+          <Avatar className="h-28 w-28 border-4 border-primary/20 shadow-xl">
+            <AvatarImage src={userData?.profilePic} className="object-cover" />
+            <AvatarFallback className="text-2xl font-bold bg-primary/10 text-primary">
+              {userData?.name?.[0]}
+            </AvatarFallback>
           </Avatar>
-          <div className="absolute bottom-0 right-0 p-1.5 bg-primary rounded-full text-white border-2 border-white shadow-lg cursor-pointer">
-            <Edit2 size={14} />
-          </div>
+          <button 
+            onClick={handleImageClick}
+            className="absolute bottom-0 right-0 p-2.5 bg-primary rounded-full text-white border-2 border-white shadow-lg hover:scale-110 transition-transform"
+          >
+            <Camera size={16} />
+          </button>
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleImageChange} 
+            accept="image/*" 
+            className="hidden" 
+          />
         </div>
         <div className="text-center">
-          <h2 className="text-xl font-bold">{userData?.name || 'Usuario BloomWell'}</h2>
-          <p className="text-muted-foreground text-sm flex items-center justify-center gap-1 mt-1">
-            <MapPin size={14} /> {userData?.location || 'Mundo Saludable'}
+          <h2 className="text-2xl font-bold">{userData?.name || 'Usuario BloomWell'}</h2>
+          <p className="text-muted-foreground text-sm flex items-center justify-center gap-1.5 mt-1 font-medium">
+            <MapPin size={14} className="text-primary" /> {userData?.location || 'Mundo Saludable'}
           </p>
         </div>
-        <div className="flex gap-4 w-full mt-4">
-          <div className="flex-1 bg-primary/10 p-4 rounded-3xl text-center border border-primary/20">
-            <Flame size={20} className="mx-auto text-primary mb-1" fill="currentColor" />
-            <p className="text-xl font-black text-primary">{streak}</p>
-            <p className="text-[10px] font-bold text-primary/70 uppercase">Racha</p>
+        <div className="flex gap-4 w-full mt-6">
+          <div className="flex-1 bg-primary/10 p-5 rounded-[2rem] text-center border border-primary/20">
+            <Flame size={24} className="mx-auto text-primary mb-1" fill="currentColor" />
+            <p className="text-2xl font-black text-primary">{streak}</p>
+            <p className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">Racha</p>
           </div>
-          <div className="flex-1 bg-secondary p-4 rounded-3xl text-center border border-border/50">
-            <Trophy size={20} className="mx-auto text-primary mb-1" />
-            <p className="text-xl font-black text-primary">12</p>
-            <p className="text-[10px] font-bold text-primary/70 uppercase">Logros</p>
+          <div className="flex-1 bg-secondary/30 p-5 rounded-[2rem] text-center border border-border/50">
+            <Trophy size={24} className="mx-auto text-primary mb-1" />
+            <p className="text-2xl font-black text-primary">12</p>
+            <p className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">Logros</p>
           </div>
         </div>
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-bold text-lg px-2">Mis Estadísticas</h2>
+        <h2 className="font-bold text-lg px-2 text-primary flex items-center gap-2">
+          <BarChart size={20} /> Mis Estadísticas
+        </h2>
         <Card className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-bold text-muted-foreground uppercase flex items-center justify-between">
+            <CardTitle className="text-xs font-bold text-muted-foreground uppercase flex items-center justify-between tracking-wider">
               Tips completados esta semana
-              <Badge variant="outline" className="text-[9px]">Últimos 7 días</Badge>
+              <Badge variant="outline" className="text-[9px] border-primary/20 text-primary">Últimos 7 días</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="h-48 pt-0">
@@ -89,6 +202,10 @@ export default function ProfilePage() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#999' }} />
                 <Bar dataKey="value" fill="#17B5B5" radius={[4, 4, 0, 0]} barSize={20} />
+                <Tooltip 
+                  cursor={{fill: 'transparent'}}
+                  contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -96,25 +213,27 @@ export default function ProfilePage() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="font-bold text-lg px-2">Preferencias</h2>
+        <h2 className="font-bold text-lg px-2 text-primary flex items-center gap-2">
+          <Settings size={20} /> Preferencias
+        </h2>
         <div className="grid gap-3">
-          <div className="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm border border-border/30">
+          <div className="bg-white p-5 rounded-3xl flex items-center justify-between shadow-sm border border-border/30">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-xl text-blue-600"><Bell size={18} /></div>
+              <div className="p-2.5 bg-blue-100 rounded-2xl text-blue-600"><Bell size={20} /></div>
               <Label className="font-bold">Notificaciones</Label>
             </div>
             <Switch defaultChecked />
           </div>
-          <div className="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm border border-border/30">
+          <div className="bg-white p-5 rounded-3xl flex items-center justify-between shadow-sm border border-border/30">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-xl text-purple-600"><Shield size={18} /></div>
+              <div className="p-2.5 bg-purple-100 rounded-2xl text-purple-600"><Shield size={20} /></div>
               <Label className="font-bold">Privacidad</Label>
             </div>
-            <ChevronRight size={18} className="text-muted-foreground" />
+            <ChevronRight size={20} className="text-muted-foreground" />
           </div>
-          <div className="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm border border-border/30">
+          <div className="bg-white p-5 rounded-3xl flex items-center justify-between shadow-sm border border-border/30">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-xl text-green-600"><Calendar size={18} /></div>
+              <div className="p-2.5 bg-green-100 rounded-2xl text-green-600"><Calendar size={20} /></div>
               <Label className="font-bold">Sincronizar Calendario</Label>
             </div>
             <Switch />
@@ -127,7 +246,7 @@ export default function ProfilePage() {
       </Button>
       
       <div className="text-center pb-8">
-        <p className="text-[10px] text-muted-foreground">BloomWell v1.0.0 • Hecho para tu bienestar</p>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">BloomWell v1.0.0 • Tu Bienestar es nuestra meta</p>
       </div>
     </div>
   );
