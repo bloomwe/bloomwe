@@ -7,10 +7,12 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { 
   Dumbbell, Moon, ShoppingBag, TreePine, Utensils, Award, 
-  ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, Timer
+  ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, 
+  Timer, Play, BookOpen, Download, Music
 } from 'lucide-react';
-import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES } from '@/app/lib/mock-data';
+import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION } from '@/app/lib/mock-data';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 const CATEGORIES = [
   { id: 'deportes', name: 'Deportes', icon: Dumbbell, color: 'bg-orange-100 text-orange-600' },
@@ -23,6 +25,14 @@ const CATEGORIES = [
 
 export default function HacerPage() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const handleDownload = (title: string) => {
+    toast({
+      title: "Descarga iniciada",
+      description: `"${title}" se ha guardado en descargas en tu celular.`,
+    });
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -62,18 +72,6 @@ export default function HacerPage() {
                       </div>
                       <span>{activity.time}</span>
                     </div>
-                    <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
-                      <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
-                        <Timer size={14} />
-                      </div>
-                      <span>{activity.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
-                      <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
-                        <MapPin size={14} />
-                      </div>
-                      <span className="truncate">{activity.location}</span>
-                    </div>
                   </div>
                   
                   <Button className="w-full mt-6 h-12 rounded-2xl bg-primary text-white font-bold shadow-lg shadow-primary/20 group-hover:bg-primary/90 transition-colors">
@@ -82,6 +80,79 @@ export default function HacerPage() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        );
+      case 'relax':
+        return (
+          <div className="space-y-8 animate-fade-in pb-8">
+            <section className="space-y-4">
+              <div className="flex items-center justify-between px-1">
+                <h3 className="font-bold text-lg flex items-center gap-2"><Music size={20} className="text-primary" /> Podcasts para Meditar</h3>
+                <Badge variant="outline" className="text-[10px] border-primary/20 text-primary">Nuevos</Badge>
+              </div>
+              <div className="grid gap-4">
+                {MOCK_RELAXATION.podcasts.map(pod => (
+                  <Card key={pod.id} className="rounded-3xl border-none shadow-sm bg-white overflow-hidden group">
+                    <CardContent className="p-4 flex gap-4">
+                      <div className="relative w-24 h-24 rounded-2xl overflow-hidden shrink-0">
+                        <img src={pod.image} alt={pod.title} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Play size={24} className="text-white fill-white" />
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
+                        <div>
+                          <h4 className="font-bold text-sm truncate">{pod.title}</h4>
+                          <p className="text-[10px] text-muted-foreground font-medium">{pod.author} • {pod.duration}</p>
+                          <p className="text-[11px] text-muted-foreground mt-1 line-clamp-2">{pod.description}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-8 rounded-full text-[10px] font-bold text-primary hover:bg-primary/5"
+                            onClick={() => handleDownload(pod.title)}
+                          >
+                            <Download size={14} className="mr-1" /> Descargar
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-4">
+              <div className="flex items-center justify-between px-1">
+                <h3 className="font-bold text-lg flex items-center gap-2"><BookOpen size={20} className="text-primary" /> Libros y Guías</h3>
+                <Badge variant="outline" className="text-[10px] border-primary/20 text-primary">Populares</Badge>
+              </div>
+              <div className="grid gap-4">
+                {MOCK_RELAXATION.books.map(book => (
+                  <Card key={book.id} className="rounded-3xl border-none shadow-sm bg-white overflow-hidden">
+                    <CardContent className="p-0 flex h-40">
+                      <img src={book.image} alt={book.title} className="w-1/3 object-cover" />
+                      <div className="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                          <h4 className="font-bold text-sm">{book.title}</h4>
+                          <p className="text-[10px] text-primary font-bold">{book.author}</p>
+                          <p className="text-[11px] text-muted-foreground mt-2 line-clamp-3">{book.description}</p>
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full h-9 rounded-xl text-[10px] border-primary/20 text-primary font-bold hover:bg-primary/5"
+                          onClick={() => handleDownload(book.title)}
+                        >
+                          <Download size={14} className="mr-2" /> Descargar Guía
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
           </div>
         );
       case 'expertos':

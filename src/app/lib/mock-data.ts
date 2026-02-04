@@ -139,12 +139,53 @@ export const MOCK_SOCIAL_FEED = [
 
 export const MOCK_RELAXATION = {
   podcasts: [
-    { id: '1', title: 'Mente Serena', duration: '20 min', author: 'Dr. Calma' },
-    { id: '2', title: 'Wellness Diario', duration: '15 min', author: 'Ana Salud' }
+    { 
+      id: 'p1', 
+      title: 'Mente Serena', 
+      duration: '20 min', 
+      author: 'Dr. Calma', 
+      image: 'https://images.unsplash.com/photo-1478737270239-2fccd27ee10f?q=80&w=1000',
+      description: 'Una guía diaria para reducir el estrés y encontrar paz mental en minutos.'
+    },
+    { 
+      id: 'p2', 
+      title: 'Wellness Diario', 
+      duration: '15 min', 
+      author: 'Ana Salud', 
+      image: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1000',
+      description: 'Pequeños consejos de salud mental para aplicar en tu rutina universitaria.'
+    },
+    { 
+      id: 'p3', 
+      title: 'Sonidos del Bosque', 
+      duration: '45 min', 
+      author: 'Naturaleza Viva', 
+      image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1000',
+      description: 'Inmersión acústica total para concentrarte o dormir profundamente.'
+    }
   ],
   books: [
-    { id: '1', title: 'El Arte de Respirar', author: 'James Nestor', synopsis: 'Una guía sobre la importancia de la respiración.' },
-    { id: '2', title: 'Hábitos Atómicos', author: 'James Clear', synopsis: 'Cómo pequeños cambios traen grandes resultados.' }
+    { 
+      id: 'b1', 
+      title: 'El Arte de Respirar', 
+      author: 'James Nestor', 
+      image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1000',
+      description: 'Explora cómo la forma en que respiras afecta cada aspecto de tu bienestar físico.' 
+    },
+    { 
+      id: 'b2', 
+      title: 'Hábitos Atómicos', 
+      author: 'James Clear', 
+      image: 'https://images.unsplash.com/photo-1589998059171-988d887df646?q=80&w=1000',
+      description: 'Aprende a construir rutinas que duren toda la vida con cambios minúsculos.' 
+    },
+    { 
+      id: 'b3', 
+      title: 'Minimalismo Digital', 
+      author: 'Cal Newport', 
+      image: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=1000',
+      description: 'Encuentra el equilibrio en un mundo lleno de distracciones tecnológicas.'
+    }
   ]
 };
 
