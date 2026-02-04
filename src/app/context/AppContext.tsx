@@ -17,6 +17,15 @@ interface UserData {
   hobbies: Record<string, { level: string }>;
 }
 
+export interface RegisteredActivity {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  sport: string;
+}
+
 interface AppContextType {
   userData: UserData | null;
   setUserData: (data: UserData) => void;
@@ -28,6 +37,8 @@ interface AppContextType {
   lastCompletedDate: string | null;
   refreshTips: () => Promise<void>;
   isLoaded: boolean;
+  registeredActivities: RegisteredActivity[];
+  registerActivity: (activity: RegisteredActivity) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -38,6 +49,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [completedTipsToday, setCompletedTipsToday] = useState<string[]>([]);
   const [streak, setStreak] = useState(0);
   const [lastCompletedDate, setLastCompletedDate] = useState<string | null>(null);
+  const [registeredActivities, setRegisteredActivities] = useState<RegisteredActivity[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -46,6 +58,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const savedCompleted = getFromStorage<string[]>(STORAGE_KEYS.COMPLETED_TIPS) || [];
     const savedStreak = getFromStorage<number>(STORAGE_KEYS.STREAK) || 0;
     const lastTipsDate = getFromStorage<string>(STORAGE_KEYS.LAST_TIPS_DATE);
+    const savedRegistered = getFromStorage<RegisteredActivity[]>(STORAGE_KEYS.REGISTERED_ACTIVITIES) || [];
 
     if (savedUser) setUserDataState(savedUser);
     
@@ -54,13 +67,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setDailyTips(savedTips);
       setCompletedTipsToday(savedCompleted);
     } else if (savedUser) {
-      // New day, clear completed and fetch new tips
       saveToStorage(STORAGE_KEYS.COMPLETED_TIPS, []);
       saveToStorage(STORAGE_KEYS.LAST_TIPS_DATE, today);
-      // Fetching will happen in refreshTips called separately or in useEffect
     }
 
     setStreak(savedStreak);
+    setRegisteredActivities(savedRegistered);
     setIsLoaded(true);
   }, []);
 
@@ -95,7 +107,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCompletedTipsToday(updated);
     saveToStorage(STORAGE_KEYS.COMPLETED_TIPS, updated);
 
-    // Update streak logic
     const today = new Date().toDateString();
     if (updated.length > 0 && lastCompletedDate !== today) {
       const newStreak = streak + 1;
@@ -105,11 +116,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  const registerActivity = (activity: RegisteredActivity) => {
+    if (registeredActivities.some(a => a.id === activity.id)) return;
+    const updated = [...registeredActivities, activity];
+    setRegisteredActivities(updated);
+    saveToStorage(STORAGE_KEYS.REGISTERED_ACTIVITIES, updated);
+  };
+
   return (
     <AppContext.Provider value={{
       userData, setUserData, dailyTips, setDailyTips,
       completedTipsToday, toggleTipCompletion,
-      streak, lastCompletedDate, refreshTips, isLoaded
+      streak, lastCompletedDate, refreshTips, isLoaded,
+      registeredActivities, registerActivity
     }}>
       {children}
     </AppContext.Provider>

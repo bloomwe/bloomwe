@@ -5,15 +5,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { 
   Dumbbell, Moon, ShoppingBag, TreePine, Utensils, Award, 
   ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, 
   Timer, Play, BookOpen, Download, Music, Tag, Map, Star, ArrowLeft,
-  CheckCircle2, ListChecks, ChefHat
+  CheckCircle2, ListChecks, ChefHat, Sparkles
 } from 'lucide-react';
 import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION, MOCK_SHOPS } from '@/app/lib/mock-data';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useApp } from '@/app/context/AppContext';
 
 const CATEGORIES = [
   { id: 'deportes', name: 'Deportes', icon: Dumbbell, color: 'bg-orange-100 text-orange-600' },
@@ -33,7 +35,9 @@ export default function HacerPage() {
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
   const [recipeFilter, setRecipeFilter] = useState('Todos');
   const [expertFilter, setExpertFilter] = useState('Todos');
+  const [registrationSuccess, setRegistrationSuccess] = useState<string | null>(null);
   const { toast } = useToast();
+  const { registerActivity } = useApp();
 
   const handleDownload = (title: string) => {
     toast({
@@ -47,6 +51,18 @@ export default function HacerPage() {
       title: "Cupón copiado",
       description: `El código "${code}" ha sido copiado al portapapeles.`,
     });
+  };
+
+  const handleRegister = (activity: any) => {
+    registerActivity({
+      id: activity.id,
+      title: activity.title,
+      date: activity.date,
+      time: activity.time,
+      location: activity.location,
+      sport: activity.sport
+    });
+    setRegistrationSuccess(activity.title);
   };
 
   const filteredRecipes = recipeFilter === 'Todos' 
@@ -96,7 +112,10 @@ export default function HacerPage() {
                     </div>
                   </div>
                   
-                  <Button className="w-full mt-6 h-12 rounded-2xl bg-primary text-white font-bold shadow-lg shadow-primary/20 group-hover:bg-primary/90 transition-colors">
+                  <Button 
+                    onClick={() => handleRegister(activity)}
+                    className="w-full mt-6 h-12 rounded-2xl bg-primary text-white font-bold shadow-lg shadow-primary/20 group-hover:bg-primary/90 transition-colors"
+                  >
                     Inscribirse Ahora
                   </Button>
                 </CardContent>
@@ -536,6 +555,27 @@ export default function HacerPage() {
           {renderContent()}
         </div>
       )}
+
+      <Dialog open={!!registrationSuccess} onOpenChange={() => setRegistrationSuccess(null)}>
+        <DialogContent className="rounded-[2.5rem] max-w-[85vw] p-8 text-center">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-black text-primary flex flex-col items-center gap-4">
+              <div className="bg-primary/10 p-4 rounded-full">
+                <Sparkles size={40} className="text-primary" />
+              </div>
+              ¡Te has inscrito!
+            </DialogTitle>
+            <DialogDescription className="text-center pt-2 font-medium">
+              Pronto te llegará toda la información sobre <span className="text-primary font-bold">{registrationSuccess}</span> a tu correo electrónico.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="pt-6">
+            <Button onClick={() => setRegistrationSuccess(null)} className="w-full h-12 rounded-2xl bg-primary font-bold">
+              Entendido
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
