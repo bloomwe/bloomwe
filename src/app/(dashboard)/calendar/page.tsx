@@ -24,11 +24,18 @@ interface Event {
   notes?: string;
 }
 
+const INITIAL_EVENT_STATE = {
+  title: '',
+  time: '08:00',
+  type: 'Yoga',
+  notes: ''
+};
+
 export default function CalendarPage() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [events, setEvents] = useState<Event[]>([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [newEvent, setNewEvent] = useState<Partial<Event>>({ type: 'Yoga' });
+  const [newEvent, setNewEvent] = useState<Partial<Event>>(INITIAL_EVENT_STATE);
 
   useEffect(() => {
     const saved = getFromStorage<Event[]>(STORAGE_KEYS.EVENTS) || [];
@@ -52,7 +59,7 @@ export default function CalendarPage() {
     };
     saveEvents([...events, event]);
     setIsAddOpen(false);
-    setNewEvent({ type: 'Yoga' });
+    setNewEvent(INITIAL_EVENT_STATE);
   };
 
   const deleteEvent = (id: string) => {
@@ -80,7 +87,11 @@ export default function CalendarPage() {
             <div className="space-y-4 py-4">
               <div className="space-y-1">
                 <Label>Título</Label>
-                <Input value={newEvent.title} onChange={e => setNewEvent(p => ({ ...p, title: e.target.value }))} placeholder="Ej: Correr 5km" />
+                <Input 
+                  value={newEvent.title || ''} 
+                  onChange={e => setNewEvent(p => ({ ...p, title: e.target.value }))} 
+                  placeholder="Ej: Correr 5km" 
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
@@ -94,7 +105,11 @@ export default function CalendarPage() {
                 </div>
                 <div className="space-y-1">
                   <Label>Hora</Label>
-                  <Input type="time" value={newEvent.time} onChange={e => setNewEvent(p => ({ ...p, time: e.target.value }))} />
+                  <Input 
+                    type="time" 
+                    value={newEvent.time || ''} 
+                    onChange={e => setNewEvent(p => ({ ...p, time: e.target.value }))} 
+                  />
                 </div>
               </div>
               <Button onClick={handleAddEvent} className="w-full h-12 rounded-xl bg-primary mt-4">Programar Recordatorio</Button>
