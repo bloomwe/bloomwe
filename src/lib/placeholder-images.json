@@ -1,3 +1,22 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "app_logo",
+      "description": "Logo de BloomWell",
+      "imageUrl": "https://images.unsplash.com/photo-1631880268373-18c7749f34c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3ZWxsbmVzcyUyMGxvZ298ZW58MHx8fHwxNzcwMjI1MDQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wellness logo"
+    },
+    {
+      "id": "user_avatar",
+      "description": "Avatar de usuario por defecto",
+      "imageUrl": "https://images.unsplash.com/photo-1543269664-56d93c1b41a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxoYXBweSUyMHBlcnNvbnxlbnwwfHx8fDE3NzAxODA2NDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "happy person"
+    },
+    {
+      "id": "park_image",
+      "description": "Imagen de parque natural",
+      "imageUrl": "https://images.unsplash.com/photo-1598794721766-95d7cb574127?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bmF0dXJlJTIwcGFya3xlbnwwfHx8fDE3NzAyMjUwNDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nature park"
+    }
+  ]
 }
