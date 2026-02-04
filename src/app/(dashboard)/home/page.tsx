@@ -1,10 +1,10 @@
+
 "use client";
 
 import React, { useEffect, useState } from 'react';
 import { useApp } from '@/app/context/AppContext';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
@@ -34,13 +34,13 @@ export default function HomePage() {
   const progress = dailyTips.length > 0 ? (completedTipsToday.length / dailyTips.length) * 100 : 0;
 
   return (
-    <div className="flex flex-col gap-6 p-6 animate-fade-in">
-      <header className="flex items-center justify-between">
-        <div>
-          <p className="text-muted-foreground text-sm font-medium">¡Hola, {userData?.name?.split(' ')[0]}!</p>
-          <h1 className="text-2xl font-bold">Tu BloomWell hoy</h1>
+    <div className="flex flex-col gap-6 p-6 animate-fade-in max-w-full overflow-x-hidden">
+      <header className="flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-muted-foreground text-sm font-medium truncate">¡Hola, {userData?.name?.split(' ')[0]}!</p>
+          <h1 className="text-2xl font-bold truncate">Tu BloomWell hoy</h1>
         </div>
-        <div className="flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full text-primary border border-primary/20">
+        <div className="flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full text-primary border border-primary/20 shrink-0">
           <Flame size={18} fill="currentColor" />
           <span className="font-bold">{streak}</span>
         </div>
@@ -59,11 +59,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="font-bold text-xl">Tips Diarios</h2>
+      <section className="space-y-4 w-full">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="font-bold text-xl shrink-0">Tips Diarios</h2>
           {dailyTips.length > 0 && (
-            <Badge variant="secondary" className="bg-secondary/50 text-primary">Nuevos tips en 12h</Badge>
+            <Badge variant="secondary" className="bg-secondary/50 text-primary text-[10px] whitespace-nowrap">Nuevos tips en 12h</Badge>
           )}
         </div>
 
@@ -72,7 +72,7 @@ export default function HomePage() {
             {[1, 2, 3].map(i => <div key={i} className="h-24 bg-muted animate-pulse rounded-2xl" />)}
           </div>
         ) : (
-          <div className="grid gap-3">
+          <div className="grid grid-cols-1 gap-3 w-full">
             {dailyTips.map((tip) => {
               const Icon = CATEGORY_ICONS[tip.category.toLowerCase()] || CATEGORY_ICONS.default;
               const isCompleted = completedTipsToday.includes(tip.id);
@@ -80,22 +80,25 @@ export default function HomePage() {
               return (
                 <Card 
                   key={tip.id} 
-                  className={cn("transition-all duration-300 border shadow-none rounded-2xl cursor-pointer", isCompleted ? "bg-primary/5 border-primary/20" : "bg-white hover:shadow-md")}
+                  className={cn(
+                    "transition-all duration-300 border shadow-none rounded-2xl cursor-pointer w-full overflow-hidden", 
+                    isCompleted ? "bg-primary/5 border-primary/20" : "bg-white hover:shadow-md"
+                  )}
                   onClick={() => setSelectedTip(tip)}
                 >
-                  <CardContent className="p-4 flex items-center gap-4">
-                    <div className={cn("p-3 rounded-xl", isCompleted ? "bg-primary text-white" : "bg-secondary text-primary")}>
-                      <Icon size={24} />
+                  <CardContent className="p-4 flex items-center gap-3">
+                    <div className={cn("p-2.5 rounded-xl shrink-0", isCompleted ? "bg-primary text-white" : "bg-secondary text-primary")}>
+                      <Icon size={20} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className={cn("font-bold truncate", isCompleted && "text-muted-foreground line-through")}>{tip.title}</h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">{tip.category}</span>
-                        <span className="text-muted-foreground text-[10px]">•</span>
-                        <span className="text-muted-foreground text-[10px]">{tip.timeEstimate} min</span>
+                      <h3 className={cn("font-bold text-sm truncate", isCompleted && "text-muted-foreground line-through")}>{tip.title}</h3>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground truncate max-w-[80px]">{tip.category}</span>
+                        <span className="text-muted-foreground text-[9px] shrink-0">•</span>
+                        <span className="text-muted-foreground text-[9px] shrink-0">{tip.timeEstimate} min</span>
                       </div>
                     </div>
-                    <div onClick={(e) => { e.stopPropagation(); toggleTipCompletion(tip.id); }}>
+                    <div className="shrink-0" onClick={(e) => { e.stopPropagation(); toggleTipCompletion(tip.id); }}>
                        <div className={cn("w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors", isCompleted ? "bg-primary border-primary text-white" : "border-muted-foreground/30")}>
                          {isCompleted && <CheckCircle2 size={16} />}
                        </div>
@@ -112,12 +115,12 @@ export default function HomePage() {
         <DialogContent className="sm:max-w-md rounded-3xl p-0 overflow-hidden border-none max-w-[90vw]">
           {selectedTip && (
             <>
-              <DialogHeader className="sr-only">
-                <DialogTitle>{selectedTip.title}</DialogTitle>
-                <DialogDescription>{selectedTip.description}</DialogDescription>
+              <DialogHeader className="p-0 space-y-0 h-0 overflow-hidden">
+                <DialogTitle className="sr-only">{selectedTip.title}</DialogTitle>
+                <DialogDescription className="sr-only">{selectedTip.description}</DialogDescription>
               </DialogHeader>
               <div className="flex flex-col">
-                <div className="h-40 bg-primary flex items-center justify-center text-white p-8 text-center">
+                <div className="h-40 bg-primary flex items-center justify-center text-white p-8 text-center relative">
                   <h2 className="text-2xl font-bold">{selectedTip.title}</h2>
                 </div>
                 <div className="p-6 space-y-4">
@@ -142,7 +145,7 @@ export default function HomePage() {
                     <h4 className="font-bold text-sm text-primary uppercase mb-1">Actividades Relacionadas</h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedTip.activities.map((a: string) => (
-                        <Badge key={a} variant="outline" className="border-primary/30 text-primary">{a}</Badge>
+                        <Badge key={a} variant="outline" className="border-primary/30 text-primary text-[10px]">{a}</Badge>
                       ))}
                     </div>
                   </div>
