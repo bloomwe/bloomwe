@@ -1,11 +1,11 @@
 export const MOCK_EXPERTS = [
   {
     id: '1',
-    category: 'Médicos Generales',
+    category: 'Médicos',
     name: 'Dr. Julián Rivera',
     specialty: 'Medicina General y Preventiva',
     experience: 8,
-    bio: 'Especialista en salud joven y prevención de enfermedades crónicas.',
+    bio: 'Especialista en salud joven y prevención de enfermedades crónicas con enfoque en hábitos saludables.',
     phone: '+573001234567',
     email: 'julian.rivera@bloomwell.com',
     location: 'Centro Médico Norte, Piso 4',
@@ -13,15 +13,63 @@ export const MOCK_EXPERTS = [
   },
   {
     id: '2',
+    category: 'Médicos',
+    name: 'Dra. Elena Castiblanco',
+    specialty: 'Medicina Interna',
+    experience: 12,
+    bio: 'Dedicada al diagnóstico integral y manejo de condiciones de salud en adultos jóvenes.',
+    phone: '+573109876543',
+    email: 'elena.c@bloomwell.com',
+    location: 'Hospital San Lucas, Consultorio 302',
+    hours: 'Mar-Jue 2pm - 7pm'
+  },
+  {
+    id: '3',
+    category: 'Psicólogos',
+    name: 'Dr. Ricardo Gómez',
+    specialty: 'Psicología Clínica y Cognitiva',
+    experience: 10,
+    bio: 'Experto en manejo de ansiedad, estrés académico y desarrollo personal en jóvenes.',
+    phone: '+573152223344',
+    email: 'ricardo.g@bloomwell.com',
+    location: 'Torre Empresarial, Of. 901',
+    hours: 'Lun-Vie 9am - 6pm'
+  },
+  {
+    id: '4',
+    category: 'Psicólogos',
+    name: 'Dra. Camila Velez',
+    specialty: 'Psicoterapia Juvenil',
+    experience: 6,
+    bio: 'Enfoque empático para tratar temas de autoestima, relaciones y bienestar emocional.',
+    phone: '+573201112233',
+    email: 'camila.v@bloomwell.com',
+    location: 'Centro Zen, Calle 80',
+    hours: 'Mié-Sáb 8am - 2pm'
+  },
+  {
+    id: '5',
     category: 'Nutricionistas',
     name: 'Dra. Sofía Mendez',
     specialty: 'Nutrición Deportiva',
     experience: 5,
-    bio: 'Ayudo a jóvenes a optimizar su rendimiento a través de la alimentación.',
+    bio: 'Ayudo a jóvenes a optimizar su rendimiento físico y mental a través de una alimentación balanceada.',
     phone: '+573007654321',
     email: 'sofia.m@bloomwell.com',
     location: 'Consultorio Vitalia 202',
     hours: 'Lun-Sáb 9am - 1pm'
+  },
+  {
+    id: '6',
+    category: 'Nutricionistas',
+    name: 'Dr. Andrés Pardo',
+    specialty: 'Nutrición Clínica Integral',
+    experience: 7,
+    bio: 'Especialista en planes de alimentación personalizados para mejorar la salud metabólica.',
+    phone: '+573014445566',
+    email: 'andres.p@bloomwell.com',
+    location: 'Plaza Médica, Local 12',
+    hours: 'Lun-Vie 7am - 4pm'
   }
 ];
 

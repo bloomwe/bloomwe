@@ -25,12 +25,14 @@ const CATEGORIES = [
 ];
 
 const RECIPE_TABS = ['Todos', 'Ligeras', 'Fuertes', 'Snacks'];
+const EXPERT_TABS = ['Todos', 'Médicos', 'Psicólogos', 'Nutricionistas'];
 
 export default function HacerPage() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [selectedShopId, setSelectedShopId] = useState<string | null>(null);
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
   const [recipeFilter, setRecipeFilter] = useState('Todos');
+  const [expertFilter, setExpertFilter] = useState('Todos');
   const { toast } = useToast();
 
   const handleDownload = (title: string) => {
@@ -50,6 +52,10 @@ export default function HacerPage() {
   const filteredRecipes = recipeFilter === 'Todos' 
     ? MOCK_RECIPES 
     : MOCK_RECIPES.filter(r => r.category === recipeFilter);
+
+  const filteredExperts = expertFilter === 'Todos'
+    ? MOCK_EXPERTS
+    : MOCK_EXPERTS.filter(e => e.category === expertFilter);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -282,29 +288,48 @@ export default function HacerPage() {
         );
       case 'expertos':
         return (
-          <div className="space-y-4 animate-fade-in pb-8">
-            {MOCK_EXPERTS.map(exp => (
-              <Card key={exp.id} className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
-                <CardContent className="p-6 flex gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl shrink-0">
-                    {exp.name.split(' ')[1][0]}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-lg">{exp.name}</h3>
-                    <p className="text-xs text-primary font-bold uppercase tracking-wider">{exp.specialty}</p>
-                    <p className="text-[11px] text-muted-foreground mt-2 line-clamp-2">{exp.bio}</p>
-                    <div className="flex gap-2 mt-4">
-                      <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
-                        <a href={`tel:${exp.phone}`}><Phone size={14} className="mr-2" /> Llamar</a>
-                      </Button>
-                      <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
-                        <a href={`mailto:${exp.email}`}><Mail size={14} className="mr-2" /> Email</a>
-                      </Button>
+          <div className="space-y-6 animate-fade-in pb-8">
+            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+              {EXPERT_TABS.map(tab => (
+                <Button 
+                  key={tab}
+                  variant={expertFilter === tab ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setExpertFilter(tab)}
+                  className={cn("rounded-full px-4 h-9 font-bold transition-all", expertFilter === tab ? "bg-primary shadow-md" : "border-primary/20 text-primary")}
+                >
+                  {tab}
+                </Button>
+              ))}
+            </div>
+
+            <div className="grid gap-4">
+              {filteredExperts.map(exp => (
+                <Card key={exp.id} className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
+                  <CardContent className="p-6 flex gap-4">
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl shrink-0">
+                      {exp.name.split(' ').length > 1 ? exp.name.split(' ')[1][0] : exp.name[0]}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start">
+                        <h3 className="font-bold text-lg">{exp.name}</h3>
+                        <Badge variant="secondary" className="bg-primary/5 text-primary text-[8px] border-none uppercase">{exp.category}</Badge>
+                      </div>
+                      <p className="text-xs text-primary font-bold uppercase tracking-wider">{exp.specialty}</p>
+                      <p className="text-[11px] text-muted-foreground mt-2 line-clamp-2">{exp.bio}</p>
+                      <div className="flex gap-2 mt-4">
+                        <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
+                          <a href={`tel:${exp.phone}`}><Phone size={14} className="mr-2" /> Llamar</a>
+                        </Button>
+                        <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
+                          <a href={`mailto:${exp.email}`}><Mail size={14} className="mr-2" /> Email</a>
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         );
       case 'comidas':
