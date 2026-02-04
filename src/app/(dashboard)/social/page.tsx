@@ -1,18 +1,19 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Heart, MessageCircle, Send, Zap, Flame, Smile } from 'lucide-react';
+import { Heart, MessageCircle, Zap, Flame, Smile } from 'lucide-react';
 import { MOCK_SOCIAL_FEED } from '@/app/lib/mock-data';
 import { useApp } from '@/app/context/AppContext';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 export default function SocialPage() {
   const { userData, streak } = useApp();
+  const { toast } = useToast();
   const [post, setPost] = useState('');
   const [feed, setFeed] = useState(MOCK_SOCIAL_FEED);
 
@@ -29,6 +30,13 @@ export default function SocialPage() {
     };
     setFeed([newPost, ...feed]);
     setPost('');
+  };
+
+  const handleMatch = (name: string) => {
+    toast({
+      title: "¡Solicitud de Match enviada!",
+      description: `Ya has hecho match con ${name}. Debes esperar a que te devuelva el match para conectar.`,
+    });
   };
 
   return (
@@ -101,7 +109,10 @@ export default function SocialPage() {
                 <button className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
                   <MessageCircle size={20} /> <span className="text-xs">Comentar</span>
                 </button>
-                <button className="flex items-center gap-2 text-primary font-bold ml-auto hover:scale-105 transition-transform">
+                <button 
+                  onClick={() => handleMatch(user.name)}
+                  className="flex items-center gap-2 text-primary font-bold ml-auto hover:scale-105 transition-transform"
+                >
                   <Zap size={18} fill="currentColor" /> <span className="text-xs">Hacer Match</span>
                 </button>
               </div>
