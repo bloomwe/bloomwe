@@ -5,7 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Heart, MessageCircle, Zap, Flame, Smile } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Heart, MessageCircle, Zap, Flame, Smile, Sparkles } from 'lucide-react';
 import { MOCK_SOCIAL_FEED } from '@/app/lib/mock-data';
 import { useApp } from '@/app/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
@@ -16,6 +17,7 @@ export default function SocialPage() {
   const { toast } = useToast();
   const [post, setPost] = useState('');
   const [feed, setFeed] = useState(MOCK_SOCIAL_FEED);
+  const [matchSuccess, setMatchSuccess] = useState<string | null>(null);
 
   const handlePost = () => {
     if (!post) return;
@@ -33,10 +35,7 @@ export default function SocialPage() {
   };
 
   const handleMatch = (name: string) => {
-    toast({
-      title: "¡Solicitud de Match enviada!",
-      description: `Ya has hecho match con ${name}. Debes esperar a que te devuelva el match para conectar.`,
-    });
+    setMatchSuccess(name);
   };
 
   return (
@@ -120,6 +119,29 @@ export default function SocialPage() {
           </Card>
         ))}
       </div>
+
+      <Dialog open={!!matchSuccess} onOpenChange={() => setMatchSuccess(null)}>
+        <DialogContent className="rounded-[2.5rem] max-w-[85vw] p-8 text-center border-none shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-black text-primary flex flex-col items-center gap-4">
+              <div className="bg-primary/10 p-4 rounded-full">
+                <Zap size={40} className="text-primary fill-primary" />
+              </div>
+              ¡Solicitud Enviada!
+            </DialogTitle>
+            <DialogDescription className="text-center pt-2 text-sm font-medium leading-relaxed">
+              La notificación se ha enviado a <span className="text-primary font-bold">{matchSuccess}</span>. 
+              <br /><br />
+              Debes esperar a que <span className="text-primary font-bold">{matchSuccess}</span> te devuelva el match para conectar.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="pt-6">
+            <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20">
+              Entendido
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
