@@ -7,9 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { 
   Dumbbell, Moon, ShoppingBag, TreePine, Utensils, Award, 
-  ChevronRight, Phone, Mail, MapPin, Search, Clock
+  ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, Timer
 } from 'lucide-react';
-import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_RELAXATION } from '@/app/lib/mock-data';
+import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES } from '@/app/lib/mock-data';
 import { cn } from '@/lib/utils';
 
 const CATEGORIES = [
@@ -26,25 +26,83 @@ export default function HacerPage() {
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'deportes':
+        return (
+          <div className="space-y-6 animate-fade-in pb-8">
+            <p className="text-xs text-muted-foreground px-1">Próximos eventos y sesiones disponibles</p>
+            {MOCK_SPORTS_ACTIVITIES.map(activity => (
+              <Card key={activity.id} className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white hover:shadow-md transition-all group">
+                <div className="relative h-48 w-full overflow-hidden">
+                  <img 
+                    src={activity.image} 
+                    alt={activity.title} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                    data-ai-hint="sport activity"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <Badge className="bg-white/90 text-primary hover:bg-white border-none backdrop-blur-sm rounded-full px-4 py-1 font-bold shadow-sm">
+                      {activity.sport}
+                    </Badge>
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-xl mb-3 text-foreground">{activity.title}</h3>
+                  <p className="text-xs text-muted-foreground mb-5 line-clamp-2">{activity.description}</p>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
+                      <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
+                        <CalendarIcon size={14} />
+                      </div>
+                      <span className="truncate">{activity.date}</span>
+                    </div>
+                    <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
+                      <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
+                        <Clock size={14} />
+                      </div>
+                      <span>{activity.time}</span>
+                    </div>
+                    <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
+                      <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
+                        <Timer size={14} />
+                      </div>
+                      <span>{activity.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
+                      <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
+                        <MapPin size={14} />
+                      </div>
+                      <span className="truncate">{activity.location}</span>
+                    </div>
+                  </div>
+                  
+                  <Button className="w-full mt-6 h-12 rounded-2xl bg-primary text-white font-bold shadow-lg shadow-primary/20 group-hover:bg-primary/90 transition-colors">
+                    Inscribirse Ahora
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        );
       case 'expertos':
         return (
-          <div className="space-y-4 animate-fade-in">
+          <div className="space-y-4 animate-fade-in pb-8">
             {MOCK_EXPERTS.map(exp => (
-              <Card key={exp.id} className="rounded-2xl border-none shadow-sm">
-                <CardContent className="p-4 flex gap-4">
-                  <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-primary font-bold text-xl">
+              <Card key={exp.id} className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
+                <CardContent className="p-6 flex gap-4">
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl shrink-0">
                     {exp.name.split(' ')[1][0]}
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold">{exp.name}</h3>
-                    <p className="text-xs text-primary font-medium">{exp.specialty}</p>
-                    <p className="text-[10px] text-muted-foreground mt-1 line-clamp-1">{exp.bio}</p>
-                    <div className="flex gap-2 mt-3">
-                      <Button size="sm" variant="outline" className="h-8 rounded-lg" asChild>
-                        <a href={`tel:${exp.phone}`}><Phone size={14} className="mr-1" /> Llamar</a>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-lg">{exp.name}</h3>
+                    <p className="text-xs text-primary font-bold uppercase tracking-wider">{exp.specialty}</p>
+                    <p className="text-[11px] text-muted-foreground mt-2 line-clamp-2">{exp.bio}</p>
+                    <div className="flex gap-2 mt-4">
+                      <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
+                        <a href={`tel:${exp.phone}`}><Phone size={14} className="mr-2" /> Llamar</a>
                       </Button>
-                      <Button size="sm" variant="outline" className="h-8 rounded-lg" asChild>
-                        <a href={`mailto:${exp.email}`}><Mail size={14} className="mr-1" /> Email</a>
+                      <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
+                        <a href={`mailto:${exp.email}`}><Mail size={14} className="mr-2" /> Email</a>
                       </Button>
                     </div>
                   </div>
@@ -57,22 +115,22 @@ export default function HacerPage() {
         return (
           <div className="grid grid-cols-1 gap-4 animate-fade-in pb-8">
             {MOCK_RECIPES.map(recipe => (
-              <Card key={recipe.id} className="rounded-2xl border-none shadow-sm overflow-hidden">
-                <img src={recipe.image} alt={recipe.name} className="w-full h-40 object-cover" />
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-lg">{recipe.name}</h3>
-                    <Badge variant="secondary">{recipe.category}</Badge>
+              <Card key={recipe.id} className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white">
+                <img src={recipe.image} alt={recipe.name} className="w-full h-44 object-cover" />
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-bold text-xl">{recipe.name}</h3>
+                    <Badge variant="secondary" className="bg-primary/10 text-primary border-none rounded-full px-3">{recipe.category}</Badge>
                   </div>
-                  <div className="flex gap-4 text-xs text-muted-foreground mb-4">
-                    <span className="flex items-center gap-1"><Clock size={12} /> {recipe.time}</span>
-                    <span className="flex items-center gap-1"><Award size={12} /> {recipe.difficulty}</span>
+                  <div className="flex gap-4 text-xs text-muted-foreground mb-5 font-medium">
+                    <span className="flex items-center gap-1.5"><Clock size={14} className="text-primary" /> {recipe.time}</span>
+                    <span className="flex items-center gap-1.5"><Award size={14} className="text-primary" /> {recipe.difficulty}</span>
                   </div>
-                  <div className="grid grid-cols-4 gap-2 text-center bg-secondary/30 p-2 rounded-xl text-[10px]">
-                    <div><p className="font-bold">{recipe.nutrition.calories}</p><p>Cal</p></div>
-                    <div><p className="font-bold">{recipe.nutrition.protein}</p><p>Prot</p></div>
-                    <div><p className="font-bold">{recipe.nutrition.carbs}</p><p>Carbs</p></div>
-                    <div><p className="font-bold">{recipe.nutrition.fats}</p><p>Grasa</p></div>
+                  <div className="grid grid-cols-4 gap-3 text-center bg-secondary/20 p-4 rounded-2xl text-[11px] font-bold">
+                    <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.calories}</span><span className="text-muted-foreground font-medium">Cal</span></div>
+                    <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.protein}</span><span className="text-muted-foreground font-medium">Prot</span></div>
+                    <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.carbs}</span><span className="text-muted-foreground font-medium">Carbs</span></div>
+                    <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.fats}</span><span className="text-muted-foreground font-medium">Grasa</span></div>
                   </div>
                 </CardContent>
               </Card>
@@ -81,15 +139,15 @@ export default function HacerPage() {
         );
       case 'activa':
         return (
-          <div className="space-y-4 animate-fade-in">
+          <div className="space-y-4 animate-fade-in pb-8">
             {MOCK_PLACES.map(place => (
-              <Card key={place.id} className="rounded-2xl border-none shadow-sm overflow-hidden">
-                <img src={place.image} alt={place.name} className="w-full h-32 object-cover" />
-                <CardContent className="p-4">
-                  <h3 className="font-bold">{place.name}</h3>
-                  <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin size={12} /> {place.address}</p>
-                  <div className="flex flex-wrap gap-1 mt-3">
-                    {place.activities.map(a => <Badge key={a} variant="outline" className="text-[10px]">{a}</Badge>)}
+              <Card key={place.id} className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white">
+                <img src={place.image} alt={place.name} className="w-full h-36 object-cover" />
+                <CardContent className="p-5">
+                  <h3 className="font-bold text-lg">{place.name}</h3>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-2 font-medium"><MapPin size={14} className="text-primary" /> {place.address}</p>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {place.activities.map(a => <Badge key={a} variant="outline" className="text-[10px] rounded-full px-3 border-primary/20 text-primary font-bold">{a}</Badge>)}
                   </div>
                 </CardContent>
               </Card>
@@ -98,23 +156,23 @@ export default function HacerPage() {
         );
       default:
         return (
-          <div className="flex flex-col items-center justify-center p-12 text-center h-48 bg-white rounded-3xl border border-dashed">
-            <p className="text-muted-foreground">Próximamente datos reales de {activeTab}.</p>
+          <div className="flex flex-col items-center justify-center p-12 text-center h-48 bg-white rounded-[2.5rem] border border-dashed border-muted-foreground/30">
+            <p className="text-muted-foreground font-medium">Próximamente datos reales de {activeTab}.</p>
           </div>
         );
     }
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6 animate-fade-in">
+    <div className="flex flex-col gap-6 p-6 animate-fade-in min-h-screen bg-secondary/5 pb-24">
       <header>
-        <h1 className="text-2xl font-bold">Actividades y Hub</h1>
-        <p className="text-muted-foreground text-sm">Explora tu entorno saludable</p>
+        <h1 className="text-2xl font-bold text-foreground">Actividades y Hub</h1>
+        <p className="text-muted-foreground text-sm font-medium">Explora tu entorno saludable</p>
       </header>
 
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-        <Input placeholder="Buscar lugares, recetas..." className="pl-10 h-12 bg-white rounded-2xl border-none shadow-sm" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+        <Input placeholder="Buscar lugares, recetas..." className="pl-12 h-14 bg-white rounded-[1.5rem] border-none shadow-sm focus-visible:ring-primary/20 text-sm" />
       </div>
 
       {!activeTab ? (
@@ -123,20 +181,22 @@ export default function HacerPage() {
             <button
               key={cat.id}
               onClick={() => setActiveTab(cat.id)}
-              className="bg-white p-6 rounded-3xl shadow-sm hover:shadow-md transition-all flex flex-col items-center gap-3 text-center border border-border/50"
+              className="bg-white p-6 rounded-[2.5rem] shadow-sm hover:shadow-md transition-all flex flex-col items-center gap-4 text-center border border-transparent hover:border-primary/20 group"
             >
-              <div className={cn("p-4 rounded-2xl", cat.color)}>
-                <cat.icon size={28} />
+              <div className={cn("p-5 rounded-[1.8rem] transition-transform group-hover:scale-110", cat.color)}>
+                <cat.icon size={32} />
               </div>
-              <span className="font-bold text-sm">{cat.name}</span>
+              <span className="font-bold text-sm text-foreground">{cat.name}</span>
             </button>
           ))}
         </section>
       ) : (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setActiveTab(null)} className="h-8">← Volver</Button>
-            <h2 className="font-bold text-lg capitalize">{activeTab}</h2>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={() => setActiveTab(null)} className="h-10 w-10 p-0 rounded-full bg-white shadow-sm">
+              <ChevronRight className="rotate-180" size={20} />
+            </Button>
+            <h2 className="font-bold text-xl capitalize text-foreground">{activeTab}</h2>
           </div>
           {renderContent()}
         </div>

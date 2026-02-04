@@ -69,6 +69,53 @@ export const MOCK_PLACES = [
   }
 ];
 
+export const MOCK_SPORTS_ACTIVITIES = [
+  {
+    id: 's1',
+    sport: 'Yoga',
+    title: 'Yoga al Atardecer',
+    date: 'Miércoles, 18 Oct',
+    time: '05:30 PM',
+    duration: '60 min',
+    location: 'Mirador del Parque',
+    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1000',
+    description: 'Encuentra tu equilibrio interior con una sesión guiada frente al sol poniente.'
+  },
+  {
+    id: 's2',
+    sport: 'Running',
+    title: 'Carrera 5K Comunitaria',
+    date: 'Sábado, 21 Oct',
+    time: '07:00 AM',
+    duration: '45-60 min',
+    location: 'Entrada Principal Parque',
+    image: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1000',
+    description: 'Únete a nuestro grupo de corredores para una ruta escénica de 5 kilómetros.'
+  },
+  {
+    id: 's3',
+    sport: 'Fútbol',
+    title: 'Torneo Relámpago 5x5',
+    date: 'Domingo, 22 Oct',
+    time: '10:00 AM',
+    duration: '120 min',
+    location: 'Canchas Sintéticas Norte',
+    image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1000',
+    description: 'Arma tu equipo y participa en nuestro torneo amistoso de fin de semana.'
+  },
+  {
+    id: 's4',
+    sport: 'Natación',
+    title: 'Clase Abierta de Técnica',
+    date: 'Lunes, 23 Oct',
+    time: '06:00 PM',
+    duration: '50 min',
+    location: 'Complejo Acuático Municipal',
+    image: 'https://images.unsplash.com/photo-1519315901367-f34ff9154487?q=80&w=1000',
+    description: 'Mejora tu brazada con consejos de instructores profesionales en piscina climatizada.'
+  }
+];
+
 export const MOCK_SOCIAL_FEED = [
   {
     id: '1',
