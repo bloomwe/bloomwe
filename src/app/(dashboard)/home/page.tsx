@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Flame, Droplets, Dumbbell, Brain, Apple, Clock, CheckCircle2 } from 'lucide-react';
+import { Flame, Droplets, Dumbbell, Brain, Apple, Clock, CheckCircle2, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const CATEGORY_ICONS: Record<string, any> = {
