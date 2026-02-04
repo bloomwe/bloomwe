@@ -1,7 +1,6 @@
-
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '@/app/context/AppContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -39,13 +38,24 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   
-  // Estado local para el formulario de edición
   const [editForm, setEditForm] = useState({
-    name: userData?.name || '',
-    email: userData?.email || '',
-    location: userData?.location || '',
-    birthDate: userData?.birthDate || ''
+    name: '',
+    email: '',
+    location: '',
+    birthDate: ''
   });
+
+  // Sincronizar el formulario con los datos del usuario cuando se abre el diálogo
+  useEffect(() => {
+    if (isEditOpen && userData) {
+      setEditForm({
+        name: userData.name || '',
+        email: userData.email || '',
+        location: userData.location || '',
+        birthDate: userData.birthDate || ''
+      });
+    }
+  }, [isEditOpen, userData]);
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
@@ -97,7 +107,7 @@ export default function ProfilePage() {
           <DialogContent className="rounded-[2.5rem] max-w-[92vw] p-8 border-none">
             <DialogHeader>
               <DialogTitle className="text-xl font-bold">Editar Perfil</DialogTitle>
-              <DialogDescription>Actualiza tu información personal de BloomWell.</DialogDescription>
+              <DialogDescription className="text-xs">Actualiza tu información personal de BloomWell.</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-1">
@@ -134,7 +144,7 @@ export default function ProfilePage() {
                 />
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="sm:justify-start">
               <Button onClick={handleSaveProfile} className="w-full h-14 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20">
                 Guardar Cambios
               </Button>
