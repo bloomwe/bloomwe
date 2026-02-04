@@ -36,14 +36,12 @@ export default function HacerPage() {
   const [recipeFilter, setRecipeFilter] = useState('Todos');
   const [expertFilter, setExpertFilter] = useState('Todos');
   const [registrationSuccess, setRegistrationSuccess] = useState<string | null>(null);
+  const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
   const { toast } = useToast();
   const { registerActivity } = useApp();
 
   const handleDownload = (title: string) => {
-    toast({
-      title: "Descarga iniciada",
-      description: `"${title}" se ha guardado en descargas en tu celular.`,
-    });
+    setDownloadSuccess(title);
   };
 
   const handleCopyCoupon = (code: string) => {
@@ -571,6 +569,27 @@ export default function HacerPage() {
           </DialogHeader>
           <div className="pt-6">
             <Button onClick={() => setRegistrationSuccess(null)} className="w-full h-12 rounded-2xl bg-primary font-bold">
+              Entendido
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!downloadSuccess} onOpenChange={() => setDownloadSuccess(null)}>
+        <DialogContent className="rounded-[2.5rem] max-w-[85vw] p-8 text-center">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-black text-primary flex flex-col items-center gap-4">
+              <div className="bg-primary/10 p-4 rounded-full">
+                <Download size={40} className="text-primary" />
+              </div>
+              ¡Archivo Descargado!
+            </DialogTitle>
+            <DialogDescription className="text-center pt-2 font-medium">
+              El archivo <span className="text-primary font-bold">"{downloadSuccess}"</span> se ha guardado en descargas en tu dispositivo.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="pt-6">
+            <Button onClick={() => setDownloadSuccess(null)} className="w-full h-12 rounded-2xl bg-primary font-bold">
               Entendido
             </Button>
           </div>
