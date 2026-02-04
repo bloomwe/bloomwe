@@ -69,6 +69,78 @@ export const MOCK_PLACES = [
   }
 ];
 
+export const MOCK_SHOPS = [
+  {
+    id: 'shop1',
+    name: 'BioMarket Orgánico',
+    category: 'Alimentación',
+    distance: '800 m',
+    address: 'Calle Verde #10-20',
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1000',
+    description: 'Productos locales y orgánicos para una vida equilibrada.',
+    products: [
+      { name: 'Miel de Abeja Pura', price: '$12.000' },
+      { name: 'Quinoa Real 500g', price: '$8.500' },
+      { name: 'Kombucha Ancestral', price: '$6.000' }
+    ],
+    coupons: [
+      { code: 'BIO10', discount: '10% OFF', description: 'En toda la tienda' },
+      { code: 'FRUTAS20', discount: '20% OFF', description: 'En sección frutería' }
+    ]
+  },
+  {
+    id: 'shop2',
+    name: 'SportXtreme',
+    category: 'Ropa Deportiva',
+    distance: '1.2 km',
+    address: 'C.C. Portal Norte, Local 45',
+    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1000',
+    description: 'Equipamiento de alto rendimiento para todos los niveles.',
+    products: [
+      { name: 'Tenis de Running Pro', price: '$250.000' },
+      { name: 'Mat de Yoga Premium', price: '$45.000' },
+      { name: 'Bandas Elásticas (Set)', price: '$15.000' }
+    ],
+    coupons: [
+      { code: 'RUN25', discount: '25% OFF', description: 'En calzado de correr' }
+    ]
+  },
+  {
+    id: 'shop3',
+    name: 'Zen Apothecary',
+    category: 'Bienestar',
+    distance: '2.5 km',
+    address: 'Carrera 15 #82-11',
+    image: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=1000',
+    description: 'Aceites esenciales, cristales y herramientas para meditación.',
+    products: [
+      { name: 'Difusor de Aromas', price: '$110.000' },
+      { name: 'Incienso de Sándalo', price: '$5.000' },
+      { name: 'Aceite de Lavanda', price: '$25.000' }
+    ],
+    coupons: [
+      { code: 'PAZINTERIOR', discount: '15% OFF', description: 'En primer kit de aceites' }
+    ]
+  },
+  {
+    id: 'shop4',
+    name: 'NutriFit Store',
+    category: 'Suplementos',
+    distance: '5.0 km',
+    address: 'Av. El Dorado #68',
+    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000',
+    description: 'Todo lo que necesitas para tu nutrición y recuperación muscular.',
+    products: [
+      { name: 'Proteína Whey 2lb', price: '$140.000' },
+      { name: 'Creatina Monohidratada', price: '$60.000' },
+      { name: 'BCAAs 30 servicios', price: '$75.000' }
+    ],
+    coupons: [
+      { code: 'FIT2024', discount: '20% OFF', description: 'En toda la sección de proteínas' }
+    ]
+  }
+];
+
 export const MOCK_SPORTS_ACTIVITIES = [
   {
     id: 's1',

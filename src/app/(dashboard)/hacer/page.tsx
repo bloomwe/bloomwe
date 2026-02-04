@@ -8,9 +8,9 @@ import { Input } from '@/components/ui/input';
 import { 
   Dumbbell, Moon, ShoppingBag, TreePine, Utensils, Award, 
   ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, 
-  Timer, Play, BookOpen, Download, Music
+  Timer, Play, BookOpen, Download, Music, Tag, Map, Star, ArrowLeft
 } from 'lucide-react';
-import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION } from '@/app/lib/mock-data';
+import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION, MOCK_SHOPS } from '@/app/lib/mock-data';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -25,12 +25,20 @@ const CATEGORIES = [
 
 export default function HacerPage() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
+  const [selectedShopId, setSelectedShopId] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleDownload = (title: string) => {
     toast({
       title: "Descarga iniciada",
       description: `"${title}" se ha guardado en descargas en tu celular.`,
+    });
+  };
+
+  const handleCopyCoupon = (code: string) => {
+    toast({
+      title: "Cupón copiado",
+      description: `El código "${code}" ha sido copiado al portapapeles.`,
     });
   };
 
@@ -155,6 +163,115 @@ export default function HacerPage() {
             </section>
           </div>
         );
+      case 'tiendas':
+        if (selectedShopId) {
+          const shop = MOCK_SHOPS.find(s => s.id === selectedShopId);
+          if (!shop) return null;
+          return (
+            <div className="space-y-6 animate-fade-in pb-8">
+              <Button variant="ghost" onClick={() => setSelectedShopId(null)} className="mb-2 p-0 h-auto font-bold text-primary hover:bg-transparent">
+                <ArrowLeft size={18} className="mr-2" /> Volver al listado
+              </Button>
+              
+              <Card className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white">
+                <img src={shop.image} alt={shop.name} className="w-full h-48 object-cover" />
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-bold text-2xl">{shop.name}</h3>
+                      <p className="text-xs text-primary font-bold">{shop.category}</p>
+                    </div>
+                    <Badge variant="secondary" className="bg-primary/10 text-primary border-none">{shop.distance}</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-4 leading-relaxed">{shop.description}</p>
+                  <div className="flex items-center gap-2 mt-4 text-xs font-medium text-muted-foreground">
+                    <MapPin size={14} className="text-primary" /> {shop.address}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <section className="space-y-4">
+                <h4 className="font-bold text-lg px-1 flex items-center gap-2"><Map size={18} className="text-primary" /> Ubicación en el Mapa</h4>
+                <div className="rounded-[2rem] overflow-hidden h-40 bg-secondary/30 relative">
+                  <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=1000" alt="Mapa" className="w-full h-full object-cover opacity-50" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-primary p-3 rounded-full text-white shadow-xl animate-bounce">
+                      <MapPin size={24} fill="white" />
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section className="space-y-4">
+                <h4 className="font-bold text-lg px-1 flex items-center gap-2"><ShoppingBag size={18} className="text-primary" /> Productos Destacados</h4>
+                <div className="grid gap-3">
+                  {shop.products.map((prod, i) => (
+                    <div key={i} className="flex justify-between items-center p-4 bg-white rounded-2xl shadow-sm border border-border/50">
+                      <span className="text-sm font-medium">{prod.name}</span>
+                      <span className="text-sm font-bold text-primary">{prod.price}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="space-y-4">
+                <h4 className="font-bold text-lg px-1 flex items-center gap-2"><Tag size={18} className="text-primary" /> Cupones de Descuento</h4>
+                <div className="grid gap-3">
+                  {shop.coupons.map((coupon, i) => (
+                    <Card key={i} className="rounded-2xl border-dashed border-2 border-primary/30 bg-primary/5 overflow-hidden">
+                      <CardContent className="p-4 flex items-center justify-between">
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-primary uppercase">{coupon.discount}</p>
+                          <p className="text-[10px] text-muted-foreground truncate">{coupon.description}</p>
+                        </div>
+                        <Button 
+                          size="sm" 
+                          className="h-8 rounded-lg bg-primary text-[10px] font-bold"
+                          onClick={() => handleCopyCoupon(coupon.code)}
+                        >
+                          Copia: {coupon.code}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+            </div>
+          );
+        }
+        return (
+          <div className="space-y-6 animate-fade-in pb-8">
+            <p className="text-xs text-muted-foreground px-1">Tiendas saludables cerca de ti</p>
+            <div className="grid gap-4">
+              {MOCK_SHOPS.map(shop => (
+                <Card 
+                  key={shop.id} 
+                  className="rounded-[2rem] border-none shadow-sm overflow-hidden bg-white hover:shadow-md transition-all cursor-pointer group"
+                  onClick={() => setSelectedShopId(shop.id)}
+                >
+                  <div className="flex h-32">
+                    <div className="w-1/3 overflow-hidden">
+                      <img src={shop.image} alt={shop.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    </div>
+                    <div className="w-2/3 p-4 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-bold text-sm">{shop.name}</h3>
+                          <Badge className="bg-secondary/50 text-primary text-[8px] px-1.5 h-4 border-none">{shop.distance}</Badge>
+                        </div>
+                        <p className="text-[10px] text-primary font-bold mt-0.5">{shop.category}</p>
+                        <p className="text-[11px] text-muted-foreground mt-2 line-clamp-2">{shop.description}</p>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium">
+                        <MapPin size={10} className="text-primary" /> {shop.address}
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        );
       case 'expertos':
         return (
           <div className="space-y-4 animate-fade-in pb-8">
@@ -234,6 +351,16 @@ export default function HacerPage() {
     }
   };
 
+  const handleTabChange = (id: string) => {
+    setActiveTab(id);
+    setSelectedShopId(null);
+  };
+
+  const handleBackToCategories = () => {
+    setActiveTab(null);
+    setSelectedShopId(null);
+  };
+
   return (
     <div className="flex flex-col gap-6 p-6 animate-fade-in min-h-screen bg-secondary/5 pb-24">
       <header>
@@ -251,7 +378,7 @@ export default function HacerPage() {
           {CATEGORIES.map(cat => (
             <button
               key={cat.id}
-              onClick={() => setActiveTab(cat.id)}
+              onClick={() => handleTabChange(cat.id)}
               className="bg-white p-6 rounded-[2.5rem] shadow-sm hover:shadow-md transition-all flex flex-col items-center gap-4 text-center border border-transparent hover:border-primary/20 group"
             >
               <div className={cn("p-5 rounded-[1.8rem] transition-transform group-hover:scale-110", cat.color)}>
@@ -264,7 +391,7 @@ export default function HacerPage() {
       ) : (
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={() => setActiveTab(null)} className="h-10 w-10 p-0 rounded-full bg-white shadow-sm">
+            <Button variant="ghost" size="sm" onClick={handleBackToCategories} className="h-10 w-10 p-0 rounded-full bg-white shadow-sm">
               <ChevronRight className="rotate-180" size={20} />
             </Button>
             <h2 className="font-bold text-xl capitalize text-foreground">{activeTab}</h2>
