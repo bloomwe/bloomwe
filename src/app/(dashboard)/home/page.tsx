@@ -111,48 +111,54 @@ export default function HomePage() {
       <Dialog open={!!selectedTip} onOpenChange={() => setSelectedTip(null)}>
         <DialogContent className="sm:max-w-md rounded-3xl p-0 overflow-hidden border-none max-w-[90vw]">
           {selectedTip && (
-            <div className="flex flex-col">
-              <div className="h-40 bg-primary flex items-center justify-center text-white p-8 text-center">
-                <h2 className="text-2xl font-bold">{selectedTip.title}</h2>
+            <>
+              <DialogHeader className="sr-only">
+                <DialogTitle>{selectedTip.title}</DialogTitle>
+                <DialogDescription>{selectedTip.description}</DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col">
+                <div className="h-40 bg-primary flex items-center justify-center text-white p-8 text-center">
+                  <h2 className="text-2xl font-bold">{selectedTip.title}</h2>
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="flex justify-around bg-secondary/30 p-4 rounded-2xl">
+                    <div className="text-center">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase">Nivel</p>
+                      <p className="font-semibold">{selectedTip.level}</p>
+                    </div>
+                    <div className="w-px bg-border" />
+                    <div className="text-center">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase">Tiempo</p>
+                      <p className="font-semibold">{selectedTip.timeEstimate} min</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-bold text-sm text-primary uppercase mb-1">Descripción</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{selectedTip.description}</p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-bold text-sm text-primary uppercase mb-1">Actividades Relacionadas</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedTip.activities.map((a: string) => (
+                        <Badge key={a} variant="outline" className="border-primary/30 text-primary">{a}</Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Button 
+                    onClick={() => {
+                      toggleTipCompletion(selectedTip.id);
+                      setSelectedTip(null);
+                    }}
+                    className={cn("w-full h-12 rounded-2xl font-bold", completedTipsToday.includes(selectedTip.id) ? "bg-muted text-muted-foreground" : "bg-primary hover:bg-primary/90")}
+                  >
+                    {completedTipsToday.includes(selectedTip.id) ? 'Marcar como pendiente' : '¡Completado!'}
+                  </Button>
+                </div>
               </div>
-              <div className="p-6 space-y-4">
-                <div className="flex justify-around bg-secondary/30 p-4 rounded-2xl">
-                  <div className="text-center">
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase">Nivel</p>
-                    <p className="font-semibold">{selectedTip.level}</p>
-                  </div>
-                  <div className="w-px bg-border" />
-                  <div className="text-center">
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase">Tiempo</p>
-                    <p className="font-semibold">{selectedTip.timeEstimate} min</p>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-bold text-sm text-primary uppercase mb-1">Descripción</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{selectedTip.description}</p>
-                </div>
-
-                <div>
-                  <h4 className="font-bold text-sm text-primary uppercase mb-1">Actividades Relacionadas</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedTip.activities.map((a: string) => (
-                      <Badge key={a} variant="outline" className="border-primary/30 text-primary">{a}</Badge>
-                    ))}
-                  </div>
-                </div>
-
-                <Button 
-                  onClick={() => {
-                    toggleTipCompletion(selectedTip.id);
-                    setSelectedTip(null);
-                  }}
-                  className={cn("w-full h-12 rounded-2xl font-bold", completedTipsToday.includes(selectedTip.id) ? "bg-muted text-muted-foreground" : "bg-primary hover:bg-primary/90")}
-                >
-                  {completedTipsToday.includes(selectedTip.id) ? 'Marcar como pendiente' : '¡Completado!'}
-                </Button>
-              </div>
-            </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
