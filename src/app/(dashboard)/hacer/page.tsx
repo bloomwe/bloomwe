@@ -8,7 +8,8 @@ import { Input } from '@/components/ui/input';
 import { 
   Dumbbell, Moon, ShoppingBag, TreePine, Utensils, Award, 
   ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, 
-  Timer, Play, BookOpen, Download, Music, Tag, Map, Star, ArrowLeft
+  Timer, Play, BookOpen, Download, Music, Tag, Map, Star, ArrowLeft,
+  CheckCircle2, ListChecks, ChefHat
 } from 'lucide-react';
 import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION, MOCK_SHOPS } from '@/app/lib/mock-data';
 import { cn } from '@/lib/utils';
@@ -23,9 +24,13 @@ const CATEGORIES = [
   { id: 'expertos', name: 'Expertos', icon: Award, color: 'bg-primary/10 text-primary' },
 ];
 
+const RECIPE_TABS = ['Todos', 'Ligeras', 'Fuertes', 'Snacks'];
+
 export default function HacerPage() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [selectedShopId, setSelectedShopId] = useState<string | null>(null);
+  const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
+  const [recipeFilter, setRecipeFilter] = useState('Todos');
   const { toast } = useToast();
 
   const handleDownload = (title: string) => {
@@ -42,6 +47,10 @@ export default function HacerPage() {
     });
   };
 
+  const filteredRecipes = recipeFilter === 'Todos' 
+    ? MOCK_RECIPES 
+    : MOCK_RECIPES.filter(r => r.category === recipeFilter);
+
   const renderContent = () => {
     switch (activeTab) {
       case 'deportes':
@@ -55,7 +64,6 @@ export default function HacerPage() {
                     src={activity.image} 
                     alt={activity.title} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                    data-ai-hint="sport activity"
                   />
                   <div className="absolute top-4 left-4">
                     <Badge className="bg-white/90 text-primary hover:bg-white border-none backdrop-blur-sm rounded-full px-4 py-1 font-bold shadow-sm">
@@ -300,29 +308,131 @@ export default function HacerPage() {
           </div>
         );
       case 'comidas':
-        return (
-          <div className="grid grid-cols-1 gap-4 animate-fade-in pb-8">
-            {MOCK_RECIPES.map(recipe => (
-              <Card key={recipe.id} className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white">
-                <img src={recipe.image} alt={recipe.name} className="w-full h-44 object-cover" />
+        if (selectedRecipeId) {
+          const recipe = MOCK_RECIPES.find(r => r.id === selectedRecipeId);
+          if (!recipe) return null;
+          return (
+            <div className="space-y-6 animate-fade-in pb-8">
+              <Button variant="ghost" onClick={() => setSelectedRecipeId(null)} className="mb-2 p-0 h-auto font-bold text-primary hover:bg-transparent">
+                <ArrowLeft size={18} className="mr-2" /> Volver a recetas
+              </Button>
+              
+              <Card className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white">
+                <img src={recipe.image} alt={recipe.name} className="w-full h-56 object-cover" />
                 <CardContent className="p-6">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-bold text-xl">{recipe.name}</h3>
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-none rounded-full px-3">{recipe.category}</Badge>
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="font-bold text-2xl">{recipe.name}</h3>
+                      <Badge variant="secondary" className="bg-primary/10 text-primary border-none mt-1">{recipe.category}</Badge>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-black text-primary">{recipe.nutrition.calories}</p>
+                      <p className="text-[10px] text-muted-foreground font-bold uppercase">Calorías</p>
+                    </div>
                   </div>
-                  <div className="flex gap-4 text-xs text-muted-foreground mb-5 font-medium">
-                    <span className="flex items-center gap-1.5"><Clock size={14} className="text-primary" /> {recipe.time}</span>
-                    <span className="flex items-center gap-1.5"><Award size={14} className="text-primary" /> {recipe.difficulty}</span>
+                  
+                  <div className="flex gap-4 text-xs font-medium text-muted-foreground mb-6">
+                    <span className="flex items-center gap-1.5 bg-secondary/30 px-3 py-1.5 rounded-full"><Clock size={14} className="text-primary" /> {recipe.time}</span>
+                    <span className="flex items-center gap-1.5 bg-secondary/30 px-3 py-1.5 rounded-full"><ChefHat size={14} className="text-primary" /> {recipe.difficulty}</span>
                   </div>
-                  <div className="grid grid-cols-4 gap-3 text-center bg-secondary/20 p-4 rounded-2xl text-[11px] font-bold">
-                    <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.calories}</span><span className="text-muted-foreground font-medium">Cal</span></div>
-                    <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.protein}</span><span className="text-muted-foreground font-medium">Prot</span></div>
-                    <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.carbs}</span><span className="text-muted-foreground font-medium">Carbs</span></div>
-                    <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.fats}</span><span className="text-muted-foreground font-medium">Grasa</span></div>
+
+                  <div className="grid grid-cols-3 gap-3 text-center mb-8">
+                    <div className="bg-secondary/10 p-3 rounded-2xl">
+                      <p className="text-primary font-bold">{recipe.nutrition.protein}</p>
+                      <p className="text-[9px] text-muted-foreground uppercase font-bold">Proteína</p>
+                    </div>
+                    <div className="bg-secondary/10 p-3 rounded-2xl">
+                      <p className="text-primary font-bold">{recipe.nutrition.carbs}</p>
+                      <p className="text-[9px] text-muted-foreground uppercase font-bold">Carbs</p>
+                    </div>
+                    <div className="bg-secondary/10 p-3 rounded-2xl">
+                      <p className="text-primary font-bold">{recipe.nutrition.fats}</p>
+                      <p className="text-[9px] text-muted-foreground uppercase font-bold">Grasas</p>
+                    </div>
                   </div>
+
+                  <section className="space-y-4 mb-8">
+                    <h4 className="font-bold text-lg flex items-center gap-2 text-primary">
+                      <ListChecks size={20} /> Ingredientes
+                    </h4>
+                    <ul className="space-y-3">
+                      {recipe.ingredients.map((ing, i) => (
+                        <li key={i} className="flex items-center gap-3 text-sm text-muted-foreground border-b border-border/50 pb-2">
+                          <CheckCircle2 size={16} className="text-primary shrink-0" /> {ing}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <section className="space-y-4">
+                    <h4 className="font-bold text-lg flex items-center gap-2 text-primary">
+                      <Timer size={20} /> Preparación
+                    </h4>
+                    <div className="space-y-6">
+                      {recipe.instructions.map((step, i) => (
+                        <div key={i} className="flex gap-4">
+                          <div className="h-8 w-8 rounded-full bg-primary text-white flex items-center justify-center font-bold shrink-0 text-sm">
+                            {i + 1}
+                          </div>
+                          <p className="text-sm text-muted-foreground leading-relaxed pt-1">
+                            {step}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
                 </CardContent>
               </Card>
-            ))}
+            </div>
+          );
+        }
+        return (
+          <div className="space-y-6 animate-fade-in pb-8">
+            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+              {RECIPE_TABS.map(tab => (
+                <Button 
+                  key={tab}
+                  variant={recipeFilter === tab ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setRecipeFilter(tab)}
+                  className={cn("rounded-full px-4 h-9 font-bold transition-all", recipeFilter === tab ? "bg-primary shadow-md" : "border-primary/20 text-primary")}
+                >
+                  {tab}
+                </Button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              {filteredRecipes.map(recipe => (
+                <Card 
+                  key={recipe.id} 
+                  className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white hover:shadow-md transition-all cursor-pointer group"
+                  onClick={() => setSelectedRecipeId(recipe.id)}
+                >
+                  <div className="relative h-44 overflow-hidden">
+                    <img src={recipe.image} alt={recipe.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-white/90 text-primary border-none rounded-full backdrop-blur-sm px-3 py-1 font-bold">
+                        {recipe.category}
+                      </Badge>
+                    </div>
+                  </div>
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-xl mb-3">{recipe.name}</h3>
+                    <div className="flex gap-4 text-xs text-muted-foreground mb-5 font-medium">
+                      <span className="flex items-center gap-1.5"><Clock size={14} className="text-primary" /> {recipe.time}</span>
+                      <span className="flex items-center gap-1.5"><ChefHat size={14} className="text-primary" /> {recipe.difficulty}</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-3 text-center bg-secondary/20 p-4 rounded-2xl text-[11px] font-bold">
+                      <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.calories}</span><span className="text-muted-foreground font-medium">Cal</span></div>
+                      <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.protein}</span><span className="text-muted-foreground font-medium">Prot</span></div>
+                      <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.carbs}</span><span className="text-muted-foreground font-medium">Carbs</span></div>
+                      <div className="flex flex-col"><span className="text-primary text-sm">{recipe.nutrition.fats}</span><span className="text-muted-foreground font-medium">Grasa</span></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         );
       case 'activa':
@@ -354,11 +464,13 @@ export default function HacerPage() {
   const handleTabChange = (id: string) => {
     setActiveTab(id);
     setSelectedShopId(null);
+    setSelectedRecipeId(null);
   };
 
   const handleBackToCategories = () => {
     setActiveTab(null);
     setSelectedShopId(null);
+    setSelectedRecipeId(null);
   };
 
   return (

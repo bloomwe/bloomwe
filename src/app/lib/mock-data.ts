@@ -32,10 +32,16 @@ export const MOCK_RECIPES = [
     name: 'Bowl de Quinoa y Mango',
     time: '15 min',
     difficulty: 'Fácil',
-    ingredients: ['1 taza quinoa', 'Mango picado', 'Espinacas', 'Aderezo limón'],
-    instructions: ['Cocina la quinoa', 'Mezcla con vegetales', 'Añade el mango', 'Aliña al gusto'],
+    ingredients: ['1 taza quinoa cocida', '1 Mango maduro picado', '2 tazas de Espinacas baby', 'Aderezo de limón y miel', 'Semillas de chía'],
+    instructions: [
+      'Lava bien la quinoa y cocínala siguiendo las instrucciones del paquete.',
+      'En un bowl grande, coloca una base de espinacas frescas.',
+      'Añade la quinoa cocida templada o fría.',
+      'Incorpora el mango picado en cubos.',
+      'Rocía con el aderezo de limón y espolvorea las semillas de chía.'
+    ],
     nutrition: { calories: 320, protein: '12g', carbs: '45g', fats: '8g' },
-    image: 'https://picsum.photos/seed/food1/400/300'
+    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1000'
   },
   {
     id: '2',
@@ -43,10 +49,49 @@ export const MOCK_RECIPES = [
     name: 'Energy Balls de Avena',
     time: '10 min',
     difficulty: 'Muy Fácil',
-    ingredients: ['Avena', 'Crema de maní', 'Miel', 'Chispas de cacao'],
-    instructions: ['Mezcla todo', 'Forma bolitas', 'Refrigera 20 min'],
+    ingredients: ['1 taza de Avena en hojuelas', '1/2 taza de Crema de maní natural', '1/4 taza de Miel o sirope de agave', '2 cucharadas de Chispas de cacao dark'],
+    instructions: [
+      'En un recipiente mediano, mezcla la avena con la crema de maní y la miel.',
+      'Añade las chispas de cacao y mezcla hasta tener una masa homogénea.',
+      'Forma bolitas pequeñas con las manos.',
+      'Colócalas en un plato y refrigera por al menos 20 minutos antes de consumir.'
+    ],
     nutrition: { calories: 150, protein: '5g', carbs: '20g', fats: '6g' },
-    image: 'https://picsum.photos/seed/food2/400/300'
+    image: 'https://images.unsplash.com/photo-1590080875515-8a03b1447a99?q=80&w=1000'
+  },
+  {
+    id: '3',
+    category: 'Fuertes',
+    name: 'Salmón al Horno con Espárragos',
+    time: '25 min',
+    difficulty: 'Media',
+    ingredients: ['1 filete de Salmón fresco', '1 manojo de Espárragos verdes', 'Aceite de oliva extra virgen', 'Limón, sal y pimienta', 'Ajo en polvo'],
+    instructions: [
+      'Precalienta el horno a 200°C.',
+      'Coloca el salmón y los espárragos en una bandeja para horno.',
+      'Sazona con sal, pimienta, ajo en polvo y un chorrito de aceite de oliva.',
+      'Hornea durante 12-15 minutos dependiendo del grosor del pescado.',
+      'Sirve con rodajas de limón fresco encima.'
+    ],
+    nutrition: { calories: 450, protein: '35g', carbs: '10g', fats: '28g' },
+    image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=1000'
+  },
+  {
+    id: '4',
+    category: 'Fuertes',
+    name: 'Tacos de Pollo Saludables',
+    time: '20 min',
+    difficulty: 'Fácil',
+    ingredients: ['Pechuga de pollo desmechada', 'Tortillas de maíz integral', 'Aguacate machacado', 'Pico de gallo (tomate y cebolla)', 'Cilantro fresco'],
+    instructions: [
+      'Cocina el pollo y desméchalo.',
+      'Calienta las tortillas en una sartén.',
+      'Unta un poco de aguacate en cada tortilla.',
+      'Añade el pollo y el pico de gallo.',
+      'Termina con cilantro fresco y unas gotas de limón.'
+    ],
+    nutrition: { calories: 380, protein: '28g', carbs: '32g', fats: '15g' },
+    image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?q=80&w=1000'
   }
 ];
 
