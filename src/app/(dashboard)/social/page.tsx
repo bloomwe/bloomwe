@@ -31,6 +31,23 @@ const ACTIVITIES = [
   'Compartió un tip de meditación'
 ];
 
+const RANDOM_COMMENTS = [
+  "¡Excelente iniciativa!",
+  "Me motiva mucho ver esto.",
+  "¡A darle con toda!",
+  "Increíble progreso, sigue así.",
+  "¿Cómo lo lograste? ¡Pasa el tip!",
+  "Me encanta tu energía.",
+  "¡Qué bien te ves!",
+  "Totalmente de acuerdo contigo.",
+  "Esto es justo lo que necesitaba leer hoy.",
+  "¡Eres una inspiración!",
+  "¡Qué buen hábito!",
+  "Mañana mismo empiezo yo también.",
+  "¡Eso es actitud!",
+  "Brutal el cambio que estás logrando."
+];
+
 export default function SocialPage() {
   const { userData, streak, matches, pendingMatches, addMatchRequest, isMatch, isPending } = useApp();
   const { toast } = useToast();
@@ -45,17 +62,22 @@ export default function SocialPage() {
   useEffect(() => {
     setMounted(true);
     
+    const getRandomComments = () => {
+      const shouldHaveComments = Math.random() > 0.4; // 60% probabilidad de tener comentarios
+      if (!shouldHaveComments) return [];
+      
+      const count = Math.floor(Math.random() * 4) + 1; // 1 a 4 comentarios
+      const shuffled = [...RANDOM_COMMENTS].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    };
+
     // Inicializar el feed en el cliente para evitar errores de hidratación (Math.random)
     const initialFeed = MOCK_SOCIAL_FEED.map(u => ({ 
       ...u, 
       isMe: false, 
       likes: Math.floor(Math.random() * 20) + 5,
       userLiked: false,
-      comments: [
-        "¡Excelente iniciativa!",
-        "Me motiva mucho ver esto.",
-        "¡A darle con toda!"
-      ]
+      comments: getRandomComments()
     }));
     setFeed(initialFeed);
 
@@ -73,7 +95,7 @@ export default function SocialPage() {
         isMe: false,
         likes: Math.floor(Math.random() * 15),
         userLiked: false,
-        comments: []
+        comments: getRandomComments()
       };
       setFeed(prev => [newUser, ...prev]);
     }, 60000);
@@ -87,6 +109,14 @@ export default function SocialPage() {
       const discoverable = feed.filter(u => !isMatch(u.id) && !isPending(u.id) && !u.isMe);
       
       if (discoverable.length === 0 && feed.length > 0) {
+        const getRandomComments = () => {
+          const shouldHaveComments = Math.random() > 0.4;
+          if (!shouldHaveComments) return [];
+          const count = Math.floor(Math.random() * 3) + 1;
+          const shuffled = [...RANDOM_COMMENTS].sort(() => 0.5 - Math.random());
+          return shuffled.slice(0, count);
+        };
+
         const generatedUsers = Array.from({ length: 5 }).map((_, i) => {
           const id = `gen-empty-${Date.now()}-${i}`;
           return {
@@ -100,7 +130,7 @@ export default function SocialPage() {
             isMe: false,
             likes: Math.floor(Math.random() * 15),
             userLiked: false,
-            comments: []
+            comments: getRandomComments()
           };
         });
         setFeed(prev => [...prev, ...generatedUsers]);
