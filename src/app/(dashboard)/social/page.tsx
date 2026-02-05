@@ -322,7 +322,7 @@ export default function SocialPage() {
 
             <div className="flex justify-between items-center pt-1">
               <div className="flex gap-2">
-                <Button size="icon" variant="ghost" className="h-8 w-8 text-primary"><Smile size={20} /></Button>
+                <button className="h-8 w-8 text-primary flex items-center justify-center hover:bg-secondary/20 rounded-full transition-colors"><Smile size={20} /></button>
               </div>
               <Button onClick={handlePost} size="sm" className="bg-primary rounded-full px-6 font-bold shadow-md shadow-primary/20">Publicar</Button>
             </div>
