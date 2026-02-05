@@ -199,82 +199,88 @@ export default function SocialPage() {
       <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
         <DialogContent className="rounded-[2.5rem] max-w-[92vw] p-0 overflow-hidden border-none shadow-2xl">
           {selectedUser && (
-            <div className="flex flex-col">
-              <div className="relative h-40 bg-primary flex items-center justify-center">
-                <div className="absolute top-4 right-4 z-20">
-                  <Badge className="bg-white/20 backdrop-blur-md border-none text-white font-bold flex items-center gap-1">
-                    <Flame size={14} fill="currentColor" /> {selectedUser.streak} días
-                  </Badge>
+            <>
+              <DialogHeader className="sr-only">
+                <DialogTitle>{selectedUser.name}</DialogTitle>
+                <DialogDescription>Detalles del perfil del miembro de la comunidad</DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col">
+                <div className="relative h-40 bg-primary flex items-center justify-center">
+                  <div className="absolute top-4 right-4 z-20">
+                    <Badge className="bg-white/20 backdrop-blur-md border-none text-white font-bold flex items-center gap-1">
+                      <Flame size={14} fill="currentColor" /> {selectedUser.streak} días
+                    </Badge>
+                  </div>
+                  <Avatar className="h-24 w-24 border-4 border-white shadow-xl translate-y-12">
+                    <AvatarImage src={selectedUser.photo} className="object-cover" />
+                    <AvatarFallback className="text-2xl font-bold bg-secondary text-primary">
+                      {selectedUser.name[0]}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
-                <Avatar className="h-24 w-24 border-4 border-white shadow-xl translate-y-12">
-                  <AvatarImage src={selectedUser.photo} className="object-cover" />
-                  <AvatarFallback className="text-2xl font-bold bg-secondary text-primary">
-                    {selectedUser.name[0]}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="pt-16 p-8 space-y-6 text-center">
-                <div>
-                  <h2 className="text-2xl font-bold text-foreground">{selectedUser.name}</h2>
-                  <p className="text-primary font-bold text-xs uppercase tracking-widest mt-1">
-                    {selectedUser.isMe ? 'Mi Perfil BloomWell' : 'Miembro Activo BloomWell'}
-                  </p>
-                </div>
+                <div className="pt-16 p-8 space-y-6 text-center">
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground">{selectedUser.name}</h2>
+                    <p className="text-primary font-bold text-xs uppercase tracking-widest mt-1">
+                      {selectedUser.isMe ? 'Mi Perfil BloomWell' : 'Miembro Activo BloomWell'}
+                    </p>
+                  </div>
 
-                <div className="flex justify-center gap-2 text-[10px] text-muted-foreground font-medium">
-                  <span className="flex items-center gap-1 bg-secondary/30 px-3 py-1.5 rounded-full"><MapPin size={14} className="text-primary" /> {selectedUser.isMe ? userData?.location : 'Bogotá, CO'}</span>
-                  <span className="flex items-center gap-1 bg-secondary/30 px-3 py-1.5 rounded-full"><Award size={14} className="text-primary" /> Nivel 12</span>
-                </div>
+                  <div className="flex justify-center gap-2 text-[10px] text-muted-foreground font-medium">
+                    <span className="flex items-center gap-1 bg-secondary/30 px-3 py-1.5 rounded-full"><MapPin size={14} className="text-primary" /> {selectedUser.isMe ? userData?.location : 'Bogotá, CO'}</span>
+                    <span className="flex items-center gap-1 bg-secondary/30 px-3 py-1.5 rounded-full"><Award size={14} className="text-primary" /> Nivel 12</span>
+                  </div>
 
-                <div className="text-left space-y-2">
-                  <h4 className="font-black text-[10px] text-primary uppercase tracking-widest">Sobre mí</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{selectedUser.bio}</p>
-                </div>
+                  <div className="text-left space-y-2">
+                    <h4 className="font-black text-[10px] text-primary uppercase tracking-widest">Sobre mí</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{selectedUser.bio}</p>
+                  </div>
 
-                <div className="text-left space-y-3">
-                  <h4 className="font-black text-[10px] text-primary uppercase tracking-widest">Intereses</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedUser.interests?.map((i: string) => (
-                      <Badge key={i} variant="secondary" className="bg-primary/5 text-primary text-[10px] px-3 py-1 font-bold rounded-full border-none">
-                        {i}
-                      </Badge>
-                    ))}
+                  <div className="text-left space-y-3">
+                    <h4 className="font-black text-[10px] text-primary uppercase tracking-widest">Intereses</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedUser.interests?.map((i: string) => (
+                        <Badge key={i} variant="secondary" className="bg-primary/5 text-primary text-[10px] px-3 py-1 font-bold rounded-full border-none">
+                          {i}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 space-y-3">
+                    {selectedUser.isMe ? (
+                      <Button 
+                        disabled
+                        className="w-full h-14 rounded-2xl bg-secondary text-primary font-bold shadow-none opacity-100"
+                      >
+                        <User size={20} className="mr-2" /> Es tu propio perfil
+                      </Button>
+                    ) : !matches.includes(selectedUser.id) ? (
+                      <Button 
+                        onClick={() => handleMatchRequest(selectedUser)}
+                        className="w-full h-14 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20"
+                      >
+                        <Zap size={20} fill="currentColor" className="mr-2" /> Hacer Match
+                      </Button>
+                    ) : (
+                      <Button 
+                        disabled
+                        className="w-full h-14 rounded-2xl bg-secondary text-primary font-bold shadow-none opacity-100"
+                      >
+                        <Sparkles size={20} className="mr-2" /> Ya están conectados
+                      </Button>
+                    )}
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setSelectedUser(null)}
+                      className="w-full h-14 rounded-2xl border-primary/20 text-primary font-bold"
+                    >
+                      Cerrar Perfil
+                    </Button>
                   </div>
                 </div>
-
-                <div className="pt-4 space-y-3">
-                  {selectedUser.isMe ? (
-                    <Button 
-                      disabled
-                      className="w-full h-14 rounded-2xl bg-secondary text-primary font-bold shadow-none opacity-100"
-                    >
-                      <User size={20} className="mr-2" /> Es tu propio perfil
-                    </Button>
-                  ) : !matches.includes(selectedUser.id) ? (
-                    <Button 
-                      onClick={() => handleMatchRequest(selectedUser)}
-                      className="w-full h-14 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20"
-                    >
-                      <Zap size={20} fill="currentColor" className="mr-2" /> Hacer Match
-                    </Button>
-                  ) : (
-                    <Button 
-                      disabled
-                      className="w-full h-14 rounded-2xl bg-secondary text-primary font-bold shadow-none opacity-100"
-                    >
-                      <Sparkles size={20} className="mr-2" /> Ya están conectados
-                    </Button>
-                  )}
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setSelectedUser(null)}
-                    className="w-full h-14 rounded-2xl border-primary/20 text-primary font-bold"
-                  >
-                    Cerrar Perfil
-                  </Button>
-                </div>
               </div>
-            </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
