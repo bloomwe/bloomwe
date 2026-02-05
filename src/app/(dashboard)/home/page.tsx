@@ -37,12 +37,13 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [activityToCancel, setActivityToCancel] = useState<RegisteredActivity | null>(null);
 
+  // Efecto corregido para generar tips inmediatamente cuando userData esté listo y no haya tips
   useEffect(() => {
-    if (dailyTips.length === 0) {
+    if (userData && dailyTips.length === 0 && !loading) {
       setLoading(true);
       refreshTips().finally(() => setLoading(false));
     }
-  }, [dailyTips.length, refreshTips]);
+  }, [dailyTips.length, refreshTips, userData, loading]);
 
   const progress = dailyTips.length > 0 ? (completedTipsToday.length / dailyTips.length) * 100 : 0;
   const hasUnreadNotifications = notifications.some(n => n.unread);
@@ -154,6 +155,13 @@ export default function HomePage() {
             <p className="text-muted-foreground text-sm font-medium mt-2">
               Estamos preparando contenido personalizado para tu bienestar.
             </p>
+          </div>
+        ) : dailyTips.length === 0 ? (
+          <div className="flex flex-col items-center justify-center p-12 bg-white rounded-[2.5rem] border border-dashed border-primary/20 text-center">
+            <div className="bg-secondary/30 p-4 rounded-full mb-4">
+              <Zap size={32} className="text-primary/30" />
+            </div>
+            <p className="text-muted-foreground text-sm font-medium">No se pudieron cargar los tips. Inténtalo de nuevo más tarde.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3 w-full px-1">
