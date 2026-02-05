@@ -536,7 +536,7 @@ export default function SocialPage() {
             </Button>
           </div>
         </DialogContent>
-      </div>
+      </Dialog>
     </div>
   );
 }
