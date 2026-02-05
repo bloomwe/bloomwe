@@ -1,4 +1,6 @@
 export const STORAGE_KEYS = {
+  USERS_DB: 'bloomwell_users_database',
+  CURRENT_SESSION: 'bloomwell_current_session_email',
   USER_DATA: 'bloomwell_user_data',
   COMPLETED_TIPS: 'bloomwell_completed_tips',
   EVENTS: 'bloomwell_events',
@@ -27,5 +29,11 @@ export const getFromStorage = <T>(key: string): T | null => {
 export const clearStorage = () => {
   if (typeof window !== 'undefined') {
     localStorage.clear();
+  }
+};
+
+export const removeFromStorage = (key: string) => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(key);
   }
 };

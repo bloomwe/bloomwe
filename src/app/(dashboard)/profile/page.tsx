@@ -33,7 +33,7 @@ const STATS_DATA = [
 ];
 
 export default function ProfilePage() {
-  const { userData, setUserData, streak } = useApp();
+  const { userData, setUserData, streak, logout } = useApp();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -45,7 +45,6 @@ export default function ProfilePage() {
     birthDate: ''
   });
 
-  // Sincronizar el formulario con los datos del usuario cuando se abre el diálogo
   useEffect(() => {
     if (isEditOpen && userData) {
       setEditForm({
@@ -251,7 +250,11 @@ export default function ProfilePage() {
         </div>
       </section>
 
-      <Button variant="destructive" className="w-full h-14 rounded-2xl font-bold bg-red-50 text-red-500 hover:bg-red-100 border-none shadow-none mt-4">
+      <Button 
+        onClick={logout}
+        variant="destructive" 
+        className="w-full h-14 rounded-2xl font-bold bg-red-50 text-red-500 hover:bg-red-100 border-none shadow-none mt-4"
+      >
         <LogOut size={20} className="mr-2" /> Cerrar Sesión
       </Button>
       

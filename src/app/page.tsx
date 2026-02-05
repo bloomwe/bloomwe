@@ -1,23 +1,25 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppProvider, useApp } from './context/AppContext';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function AppInitializer() {
-  const { userData, isLoaded } = useApp();
+  const { userData, currentUser, isLoaded } = useApp();
   const router = useRouter();
 
   useEffect(() => {
     if (isLoaded) {
-      if (!userData || !userData.onboarded) {
+      if (!currentUser) {
+        router.push('/auth');
+      } else if (!userData || !userData.onboarded) {
         router.push('/onboarding');
       } else {
         router.push('/home');
       }
     }
-  }, [isLoaded, userData, router]);
+  }, [isLoaded, currentUser, userData, router]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-8 gap-4">

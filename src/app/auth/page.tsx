@@ -1,0 +1,170 @@
+"use client";
+
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { AppProvider, useApp } from '@/app/context/AppContext';
+import { Sparkles, ArrowRight, Lock, Mail } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+
+const AuthContent = () => {
+  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { login, signup } = useApp();
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Por favor, completa todos los campos.",
+      });
+      return;
+    }
+
+    if (mode === 'signup') {
+      if (password !== confirmPassword) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Las contraseñas no coinciden.",
+        });
+        return;
+      }
+      
+      if (signup(email, password)) {
+        toast({
+          title: "¡Bienvenido!",
+          description: "Cuenta creada con éxito. Vamos a configurar tu perfil.",
+        });
+        router.push('/onboarding');
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Este correo ya está registrado.",
+        });
+      }
+    } else {
+      if (login(email, password)) {
+        toast({
+          title: "Sesión iniciada",
+          description: "¡Qué bueno verte de nuevo!",
+        });
+        router.push('/home');
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Credenciales incorrectas.",
+        });
+      }
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-secondary/10 p-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center space-y-2">
+          <div className="mx-auto w-16 h-16 bg-primary rounded-3xl flex items-center justify-center shadow-xl mb-4">
+            <Sparkles className="text-white" size={32} />
+          </div>
+          <h1 className="text-3xl font-black text-primary">BloomWell</h1>
+          <p className="text-muted-foreground font-medium">Tu camino al bienestar comienza aquí</p>
+        </div>
+
+        <Card className="rounded-[2.5rem] border-none shadow-xl bg-white overflow-hidden">
+          <CardHeader className="pt-8 pb-4 text-center">
+            <CardTitle className="text-xl font-bold">
+              {mode === 'login' ? 'Iniciar Sesión' : 'Crear Cuenta'}
+            </CardTitle>
+            <CardDescription>
+              {mode === 'login' 
+                ? 'Ingresa tus credenciales para continuar' 
+                : 'Regístrate para empezar tu transformación'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-8 pt-0">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold uppercase text-muted-foreground ml-1">Correo Electrónico</Label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                  <Input 
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="tu@correo.com"
+                    className="rounded-2xl h-14 bg-secondary/20 border-none pl-12"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold uppercase text-muted-foreground ml-1">Contraseña</Label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                  <Input 
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="rounded-2xl h-14 bg-secondary/20 border-none pl-12"
+                  />
+                </div>
+              </div>
+
+              {mode === 'signup' && (
+                <div className="space-y-1.5 animate-fade-in">
+                  <Label className="text-xs font-bold uppercase text-muted-foreground ml-1">Confirmar Contraseña</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                    <Input 
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="rounded-2xl h-14 bg-secondary/20 border-none pl-12"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <Button type="submit" className="w-full h-14 rounded-2xl bg-primary text-white font-bold text-lg shadow-lg shadow-primary/20 mt-4">
+                {mode === 'login' ? 'Entrar' : 'Registrarse'} <ArrowRight className="ml-2" size={20} />
+              </Button>
+            </form>
+
+            <div className="mt-8 text-center">
+              <button 
+                onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
+                className="text-sm font-bold text-primary hover:underline"
+              >
+                {mode === 'login' 
+                  ? '¿No tienes cuenta? Regístrate gratis' 
+                  : '¿Ya tienes cuenta? Inicia sesión'}
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default function AuthPage() {
+  return (
+    <AppProvider>
+      <AuthContent />
+    </AppProvider>
+  );
+}
