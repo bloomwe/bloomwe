@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -11,7 +12,7 @@ import { HOBBIES_LIST, LEVELS } from '@/app/lib/mock-data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronRight, ChevronLeft, Camera, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { useToast } from '@/hooks/use-toast';
 
 const STEPS = [
   { id: 1, title: 'Tus Motivaciones' },
@@ -24,6 +25,7 @@ const OnboardingFlow = () => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { setUserData, currentUser } = useApp();
+  const { toast } = useToast();
 
   const [formData, setFormData] = useState({
     motivations: [] as string[],
@@ -67,6 +69,53 @@ const OnboardingFlow = () => {
         setFormData(prev => ({ ...prev, profilePic: reader.result as string }));
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleNextAction = () => {
+    if (step === 2) {
+      if (!formData.name) {
+        toast({
+          variant: "destructive",
+          title: "Dato requerido",
+          description: "Por favor, ingresa tu nombre completo.",
+        });
+        return;
+      }
+      
+      if (!formData.birthDate) {
+        toast({
+          variant: "destructive",
+          title: "Dato requerido",
+          description: "Por favor, ingresa tu fecha de nacimiento.",
+        });
+        return;
+      }
+
+      // Validación de mayoría de edad (18 años)
+      const birthDate = new Date(formData.birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      if (age < 18) {
+        toast({
+          variant: "destructive",
+          title: "Restricción de edad",
+          description: "Debes ser mayor de edad (18+ años) para registrarte en BloomWell.",
+        });
+        return;
+      }
+    }
+    
+    if (step === 3) {
+      handleFinish();
+    } else {
+      nextStep();
     }
   };
 
@@ -193,6 +242,7 @@ const OnboardingFlow = () => {
               <div className="space-y-1">
                 <Label>Fecha de Nacimiento</Label>
                 <Input type="date" value={formData.birthDate} onChange={e => setFormData(p => ({ ...p, birthDate: e.target.value }))} />
+                <p className="text-[10px] text-muted-foreground px-1">Debes ser mayor de edad para continuar.</p>
               </div>
             </div>
           </div>
@@ -243,9 +293,8 @@ const OnboardingFlow = () => {
           </Button>
         )}
         <Button 
-          onClick={step === 3 ? handleFinish : nextStep} 
+          onClick={handleNextAction} 
           className="flex-[2] rounded-2xl h-12 bg-primary hover:bg-primary/90"
-          disabled={step === 2 && (!formData.name || !formData.email)}
         >
           {step === 3 ? 'Comenzar' : 'Siguiente'} <ChevronRight size={20} className="ml-2" />
         </Button>

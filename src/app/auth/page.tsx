@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -35,23 +36,23 @@ const AuthContent = () => {
       if (password !== confirmPassword) {
         toast({
           variant: "destructive",
-          title: "Error",
-          description: "Las contraseñas no coinciden.",
+          title: "Error de contraseñas",
+          description: "Las contraseñas no coinciden. Por favor, verifica.",
         });
         return;
       }
       
       if (signup(email, password)) {
         toast({
-          title: "¡Bienvenido!",
+          title: "¡Bienvenido a BloomWell!",
           description: "Cuenta creada con éxito. Vamos a configurar tu perfil.",
         });
         router.push('/onboarding');
       } else {
         toast({
           variant: "destructive",
-          title: "Error",
-          description: "Este correo ya está registrado.",
+          title: "Error de registro",
+          description: "Este usuario ya existe. Por favor, intenta con otro correo o inicia sesión.",
         });
       }
     } else {
@@ -64,8 +65,8 @@ const AuthContent = () => {
       } else {
         toast({
           variant: "destructive",
-          title: "Error",
-          description: "Credenciales incorrectas.",
+          title: "Error de acceso",
+          description: "El usuario o la contraseña son incorrectos. Por favor, verifica tus datos.",
         });
       }
     }
