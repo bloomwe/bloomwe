@@ -55,8 +55,8 @@ export default function HomePage() {
               <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-white" />
             </Button>
           </Link>
-          <div className="flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full text-primary border border-primary/20">
-            <Flame size={18} fill="currentColor" />
+          <div className="flex items-center gap-1 bg-orange-50 px-3 py-1.5 rounded-full text-orange-600 border border-orange-100 shadow-sm">
+            <Flame size={18} fill="currentColor" className="text-orange-500" />
             <span className="font-bold">{streak}</span>
           </div>
         </div>
