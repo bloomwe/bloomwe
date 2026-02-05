@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -33,12 +34,15 @@ const INITIAL_EVENT_STATE = {
 };
 
 export default function CalendarPage() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [events, setEvents] = useState<Event[]>([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [newEvent, setNewEvent] = useState<typeof INITIAL_EVENT_STATE>(INITIAL_EVENT_STATE);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    setDate(new Date());
     const saved = getFromStorage<Event[]>(STORAGE_KEYS.EVENTS) || [];
     setEvents(saved.map(e => ({ ...e, date: new Date(e.date) })));
   }, []);
@@ -70,6 +74,10 @@ export default function CalendarPage() {
   const dayEvents = events.filter(e => 
     date && e.date.toDateString() === date.toDateString()
   ).sort((a, b) => a.time.localeCompare(b.time));
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-6 p-6 animate-fade-in bg-secondary/5 min-h-screen pb-24">
