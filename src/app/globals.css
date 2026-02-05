@@ -36,6 +36,17 @@
   * {
     @apply border-border;
   }
+  
+  /* Ocultar scrollbars globalmente */
+  * {
+    -ms-overflow-style: none;  /* Internet Explorer y Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari y Opera */
+  }
+
   body {
     @apply bg-background text-foreground font-body;
     -webkit-tap-highlight-color: transparent;
@@ -52,4 +63,15 @@
 
 .tab-bar-shadow {
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Utilidad adicional para asegurar que no haya scrollbars */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
