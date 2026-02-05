@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Flame, Droplets, Dumbbell, Brain, Apple, Clock, CheckCircle2, Zap, MapPin, Calendar as CalendarIcon, Trash2 } from 'lucide-react';
+import { Flame, Droplets, Dumbbell, Brain, Apple, Clock, CheckCircle2, Zap, MapPin, Calendar as CalendarIcon, Trash2, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const CATEGORY_ICONS: Record<string, any> = {
@@ -122,8 +122,14 @@ export default function HomePage() {
         </div>
 
         {loading ? (
-          <div className="space-y-3">
-            {[1, 2, 3].map(i => <div key={i} className="h-24 bg-muted animate-pulse rounded-2xl" />)}
+          <div className="flex flex-col items-center justify-center p-12 bg-white rounded-[2.5rem] border border-dashed border-primary/20 text-center animate-pulse">
+            <div className="bg-primary/10 p-4 rounded-full mb-4">
+              <Sparkles size={32} className="text-primary animate-spin" />
+            </div>
+            <h3 className="font-bold text-lg text-primary">Generando tus tips...</h3>
+            <p className="text-muted-foreground text-sm font-medium mt-2">
+              Estamos preparando contenido personalizado para tu bienestar.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3 w-full px-1">
