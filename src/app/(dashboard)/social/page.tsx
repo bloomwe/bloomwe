@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User, MapPin, Award, Clock } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User, MapPin, Award, Clock, Send } from 'lucide-react';
 import { MOCK_SOCIAL_FEED } from '@/app/lib/mock-data';
 import { useApp } from '@/app/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
@@ -17,7 +18,18 @@ export default function SocialPage() {
   const { userData, streak, matches, pendingMatches, addMatchRequest, isMatch, isPending } = useApp();
   const { toast } = useToast();
   const [post, setPost] = useState('');
-  const [feed, setFeed] = useState(MOCK_SOCIAL_FEED.map(u => ({ ...u, isMe: false })));
+  const [newComment, setNewComment] = useState('');
+  const [feed, setFeed] = useState(MOCK_SOCIAL_FEED.map(u => ({ 
+    ...u, 
+    isMe: false, 
+    likes: Math.floor(Math.random() * 20) + 5,
+    userLiked: false,
+    comments: [
+      "¡Excelente iniciativa!",
+      "Me motiva mucho ver esto.",
+      "¡A darle con toda!"
+    ]
+  })));
   const [matchSuccess, setMatchSuccess] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
@@ -32,13 +44,56 @@ export default function SocialPage() {
       recentActivity: 'Acaba de publicar un estado',
       interests: userData?.activities || [],
       streak: streak,
-      isMe: true
+      isMe: true,
+      likes: 0,
+      userLiked: false,
+      comments: []
     };
     setFeed([newPost, ...feed]);
     setPost('');
     toast({
       title: "Publicado",
       description: "Tu estado se ha compartido con la comunidad.",
+    });
+  };
+
+  const handleLike = (id: string) => {
+    setFeed(prev => prev.map(u => {
+      if (u.id === id) {
+        const isLiking = !u.userLiked;
+        return {
+          ...u,
+          userLiked: isLiking,
+          likes: isLiking ? u.likes + 1 : u.likes - 1
+        };
+      }
+      return u;
+    }));
+  };
+
+  const handleAddComment = () => {
+    if (!newComment || !selectedUser) return;
+    
+    setFeed(prev => prev.map(u => {
+      if (u.id === selectedUser.id) {
+        return {
+          ...u,
+          comments: [...u.comments, newComment]
+        };
+      }
+      return u;
+    }));
+
+    // Actualizamos el usuario seleccionado para que se vea el comentario en el modal
+    setSelectedUser((prev: any) => ({
+      ...prev,
+      comments: [...prev.comments, newComment]
+    }));
+
+    setNewComment('');
+    toast({
+      title: "Comentario enviado",
+      description: "Tu mensaje ha sido añadido.",
     });
   };
 
@@ -50,13 +105,10 @@ export default function SocialPage() {
 
   const filteredFeed = (() => {
     if (activeTab === 'discover') {
-      // Mostramos los que NO son match y NO son pendientes (incluyendo al usuario actual)
       return feed.filter(u => !isMatch(u.id) && !isPending(u.id));
     } else if (activeTab === 'pending') {
-      // Solo los solicitados
       return feed.filter(u => isPending(u.id));
     } else {
-      // Solo los confirmados
       return feed.filter(u => isMatch(u.id));
     }
   })();
@@ -71,7 +123,6 @@ export default function SocialPage() {
         </div>
       </header>
 
-      {/* Tabs de Navegación */}
       <div className="flex gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-border/50">
         <button 
           onClick={() => setActiveTab('discover')}
@@ -185,44 +236,43 @@ export default function SocialPage() {
 
                 <div className="flex items-center gap-6 pt-2 border-t border-border/50">
                   <button 
-                    onClick={(e) => { e.stopPropagation(); toast({ title: "¡Me gusta!", description: `Le diste me gusta al post de ${user.name}` }); }}
-                    className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                    onClick={(e) => { e.stopPropagation(); handleLike(user.id); }}
+                    className={cn(
+                      "flex items-center gap-1.5 transition-colors",
+                      user.userLiked ? "text-red-500" : "text-muted-foreground hover:text-primary"
+                    )}
                   >
-                    <Heart size={20} /> <span className="text-xs">Me gusta</span>
+                    <Heart size={20} fill={user.userLiked ? "currentColor" : "none"} /> 
+                    <span className="text-xs font-bold">{user.likes}</span>
                   </button>
                   <button 
                     onClick={(e) => { e.stopPropagation(); setSelectedUser(user); }}
                     className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
                   >
-                    <MessageCircle size={20} /> <span className="text-xs">Comentar</span>
+                    <MessageCircle size={20} /> 
+                    <span className="text-xs font-bold">{user.comments.length}</span>
                   </button>
                   
-                  {/* Lógica Excluyente de Botones/Estados */}
                   {!user.isMe && !isMatch(user.id) && !isPending(user.id) && (
                     <button 
                       onClick={(e) => { e.stopPropagation(); handleMatchRequestAction(user); }}
                       className="flex items-center gap-2 text-primary font-bold ml-auto hover:scale-105 transition-transform"
                     >
-                      <Zap size={18} fill="currentColor" /> <span className="text-xs">Hacer Match</span>
+                      <Zap size={18} fill="currentColor" /> <span className="text-xs">Match</span>
                     </button>
                   )}
                   {isPending(user.id) && (
                     <div className="ml-auto">
                       <Badge variant="outline" className="bg-secondary/20 text-muted-foreground border-none text-[9px] font-bold flex items-center gap-1">
-                        <Clock size={10} /> Solicitado
+                        <Clock size={10} /> Esperando
                       </Badge>
                     </div>
                   )}
                   {isMatch(user.id) && (
                     <div className="ml-auto">
                       <Badge className="bg-primary/20 text-primary border-none text-[9px] font-bold flex items-center gap-1">
-                        <Sparkles size={10} /> ¡Conectados!
+                        <Sparkles size={10} /> Amigos
                       </Badge>
-                    </div>
-                  )}
-                  {user.isMe && (
-                    <div className="ml-auto">
-                      <Badge variant="outline" className="text-[9px] border-primary/20 text-primary uppercase font-bold">Mi Post</Badge>
                     </div>
                   )}
                 </div>
@@ -232,97 +282,91 @@ export default function SocialPage() {
         )}
       </div>
 
-      {/* Modal de información del usuario */}
       <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
-        <DialogContent className="rounded-[2.5rem] max-w-[92vw] p-0 overflow-hidden border-none shadow-2xl">
+        <DialogContent className="rounded-[2.5rem] max-w-[92vw] p-0 overflow-y-auto max-h-[90vh] border-none shadow-2xl no-scrollbar">
           {selectedUser && (
             <>
               <DialogHeader className="sr-only">
                 <DialogTitle>{selectedUser.name}</DialogTitle>
-                <DialogDescription>Detalles del perfil del miembro de la comunidad</DialogDescription>
+                <DialogDescription>Detalles de la publicación y comentarios</DialogDescription>
               </DialogHeader>
               <div className="flex flex-col">
-                <div className="relative h-40 bg-primary flex items-center justify-center">
-                  <div className="absolute top-4 right-4 z-20">
-                    <Badge className="bg-white/20 backdrop-blur-md border-none text-white font-bold flex items-center gap-1">
-                      <Flame size={14} fill="currentColor" /> {selectedUser.streak} días
-                    </Badge>
-                  </div>
-                  <Avatar className="h-24 w-24 border-4 border-white shadow-xl translate-y-12">
+                <div className="relative h-32 bg-primary flex items-center justify-center shrink-0">
+                  <Avatar className="h-24 w-24 border-4 border-white shadow-xl translate-y-10">
                     <AvatarImage src={selectedUser.photo} className="object-cover" />
                     <AvatarFallback className="text-2xl font-bold bg-secondary text-primary">
                       {selectedUser.name[0]}
                     </AvatarFallback>
                   </Avatar>
                 </div>
-                <div className="pt-16 p-8 space-y-6 text-center">
-                  <div>
-                    <h2 className="text-2xl font-bold text-foreground">{selectedUser.name}</h2>
-                    <p className="text-primary font-bold text-xs uppercase tracking-widest mt-1">
-                      {selectedUser.isMe ? 'Mi Perfil BloomWell' : 'Miembro Activo BloomWell'}
-                    </p>
+                
+                <div className="pt-12 p-6 space-y-6">
+                  <div className="text-center">
+                    <h2 className="text-xl font-bold">{selectedUser.name}</h2>
+                    <div className="flex justify-center gap-2 mt-2">
+                       <Badge variant="secondary" className="bg-primary/10 text-primary text-[9px] border-none">
+                         <Flame size={12} className="mr-1" fill="currentColor" /> {selectedUser.streak} Días
+                       </Badge>
+                    </div>
                   </div>
 
-                  <div className="flex justify-center gap-2 text-[10px] text-muted-foreground font-medium">
-                    <span className="flex items-center gap-1 bg-secondary/30 px-3 py-1.5 rounded-full"><MapPin size={14} className="text-primary" /> {selectedUser.isMe ? userData?.location : 'Bogotá, CO'}</span>
-                    <span className="flex items-center gap-1 bg-secondary/30 px-3 py-1.5 rounded-full"><Award size={14} className="text-primary" /> Nivel 12</span>
+                  <div className="bg-secondary/20 p-4 rounded-2xl">
+                    <p className="text-sm text-foreground/80 leading-relaxed italic">"{selectedUser.bio}"</p>
                   </div>
 
-                  <div className="text-left space-y-2">
-                    <h4 className="font-black text-[10px] text-primary uppercase tracking-widest">Sobre mí</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{selectedUser.bio}</p>
-                  </div>
-
-                  <div className="text-left space-y-3">
-                    <h4 className="font-black text-[10px] text-primary uppercase tracking-widest">Intereses</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedUser.interests?.map((i: string) => (
-                        <Badge key={i} variant="secondary" className="bg-primary/5 text-primary text-[10px] px-3 py-1 font-bold rounded-full border-none">
-                          {i}
-                        </Badge>
+                  {/* Sección de Comentarios */}
+                  <div className="space-y-4">
+                    <h4 className="font-black text-[10px] text-primary uppercase tracking-widest flex items-center gap-2">
+                      <MessageCircle size={14} /> Comentarios ({selectedUser.comments.length})
+                    </h4>
+                    
+                    <div className="space-y-3">
+                      {selectedUser.comments.map((comment: string, i: number) => (
+                        <div key={i} className="bg-white border border-border/50 p-3 rounded-2xl shadow-sm">
+                          <p className="text-xs text-muted-foreground leading-relaxed">{comment}</p>
+                        </div>
                       ))}
+                      {selectedUser.comments.length === 0 && (
+                        <p className="text-[10px] text-center text-muted-foreground py-2 italic">Sé el primero en comentar...</p>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2 pt-2">
+                      <Input 
+                        placeholder="Escribe un comentario..." 
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        className="rounded-xl h-10 bg-secondary/20 border-none text-xs"
+                      />
+                      <Button 
+                        size="icon" 
+                        onClick={handleAddComment}
+                        disabled={!newComment}
+                        className="rounded-xl h-10 w-10 shrink-0 bg-primary"
+                      >
+                        <Send size={16} />
+                      </Button>
                     </div>
                   </div>
 
                   <div className="pt-4 space-y-3">
-                    {selectedUser.isMe ? (
-                      <Button 
-                        disabled
-                        className="w-full h-14 rounded-2xl bg-secondary text-primary font-bold shadow-none opacity-100"
-                      >
-                        <User size={20} className="mr-2" /> Es tu propio perfil
-                      </Button>
-                    ) : isMatch(selectedUser.id) ? (
-                      <Button 
-                        disabled
-                        className="w-full h-14 rounded-2xl bg-secondary text-primary font-bold shadow-none opacity-100"
-                      >
-                        <Sparkles size={20} className="mr-2" /> Ya están conectados
-                      </Button>
-                    ) : isPending(selectedUser.id) ? (
-                      <Button 
-                        disabled
-                        className="w-full h-14 rounded-2xl bg-secondary text-muted-foreground font-bold shadow-none opacity-100"
-                      >
-                        <Clock size={20} className="mr-2" /> Solicitud enviada
-                      </Button>
-                    ) : (
+                    {!selectedUser.isMe && !isMatch(selectedUser.id) && !isPending(selectedUser.id) && (
                       <Button 
                         onClick={() => {
                           handleMatchRequestAction(selectedUser);
                           setSelectedUser(null);
                         }}
-                        className="w-full h-14 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20"
+                        className="w-full h-12 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20"
                       >
-                        <Zap size={20} fill="currentColor" className="mr-2" /> Hacer Match
+                        <Zap size={18} fill="currentColor" className="mr-2" /> Hacer Match
                       </Button>
                     )}
                     <Button 
                       variant="outline" 
                       onClick={() => setSelectedUser(null)}
-                      className="w-full h-14 rounded-2xl border-primary/20 text-primary font-bold"
+                      className="w-full h-12 rounded-2xl border-primary/20 text-primary font-bold"
                     >
-                      Cerrar Perfil
+                      Cerrar
                     </Button>
                   </div>
                 </div>
@@ -332,7 +376,6 @@ export default function SocialPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Modal de éxito de match */}
       <Dialog open={!!matchSuccess} onOpenChange={() => setMatchSuccess(null)}>
         <DialogContent className="rounded-[2.5rem] max-w-[85vw] p-8 text-center border-none shadow-2xl">
           <DialogHeader>
@@ -343,14 +386,12 @@ export default function SocialPage() {
               ¡Solicitud Enviada!
             </DialogTitle>
             <DialogDescription className="text-center pt-2 text-sm font-medium leading-relaxed">
-              La notificación se ha enviado a <span className="text-primary font-bold">{matchSuccess}</span>. 
-              <br /><br />
-              Ahora esta persona aparecerá en tu pestaña de **Pendientes**. Debes esperar a que te devuelva el match para conectar y ver su perfil en tus favoritos.
+              La notificación se ha enviado a <span className="text-primary font-bold">{matchSuccess}</span>.
             </DialogDescription>
           </DialogHeader>
           <div className="pt-6">
             <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20">
-              ¡Entendido!
+              Entendido
             </Button>
           </div>
         </DialogContent>
