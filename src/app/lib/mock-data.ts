@@ -381,6 +381,41 @@ export const MOCK_RELAXATION = {
   ]
 };
 
+export const MOCK_NOTIFICATIONS = [
+  {
+    id: '1',
+    title: '¡Nueva actividad cerca!',
+    description: 'Se ha programado "Yoga al Atardecer" en el Parque de la Salud.',
+    time: 'Hace 5 min',
+    unread: true,
+    category: 'activity'
+  },
+  {
+    id: '2',
+    title: 'Match aceptado',
+    description: 'Valentina Ruiz ha aceptado tu solicitud de conexión. ¡Salúdala!',
+    time: 'Hace 1 hora',
+    unread: true,
+    category: 'match'
+  },
+  {
+    id: '3',
+    title: 'Nueva racha alcanzada',
+    description: '¡Felicidades! Has mantenido tu bienestar por 7 días seguidos.',
+    time: 'Hoy, 8:00 AM',
+    unread: false,
+    category: 'streak'
+  },
+  {
+    id: '4',
+    title: 'Consejo del día',
+    description: 'No olvides hidratarte. Beber agua mejora tu concentración.',
+    time: 'Ayer',
+    unread: false,
+    category: 'tip'
+  }
+];
+
 export const HOBBIES_LIST = [
   'Yoga', 'Gimnasio', 'Ciclismo', 'Meditación', 'Lectura', 'Natación', 'Baile', 'Correr'
 ];

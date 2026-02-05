@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useApp, RegisteredActivity } from '@/app/context/AppContext';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Flame, Droplets, Dumbbell, Brain, Apple, Clock, CheckCircle2, Zap, MapPin, Calendar as CalendarIcon, Trash2, Sparkles } from 'lucide-react';
+import { Flame, Droplets, Dumbbell, Brain, Apple, Clock, CheckCircle2, Zap, MapPin, Calendar as CalendarIcon, Trash2, Sparkles, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const CATEGORY_ICONS: Record<string, any> = {
@@ -47,9 +48,17 @@ export default function HomePage() {
           <p className="text-muted-foreground text-sm font-medium truncate">¡Hola, {userData?.name?.split(' ')[0]}!</p>
           <h1 className="text-2xl font-bold truncate">Tu BloomWell hoy</h1>
         </div>
-        <div className="flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full text-primary border border-primary/20 shrink-0">
-          <Flame size={18} fill="currentColor" />
-          <span className="font-bold">{streak}</span>
+        <div className="flex items-center gap-2 shrink-0">
+          <Link href="/notifications">
+            <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-full bg-white shadow-sm hover:bg-primary/5">
+              <Bell size={20} className="text-primary" />
+              <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-white" />
+            </Button>
+          </Link>
+          <div className="flex items-center gap-1 bg-primary/10 px-3 py-1.5 rounded-full text-primary border border-primary/20">
+            <Flame size={18} fill="currentColor" />
+            <span className="font-bold">{streak}</span>
+          </div>
         </div>
       </header>
 
