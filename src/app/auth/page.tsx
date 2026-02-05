@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { AppProvider, useApp } from '@/app/context/AppContext';
-import { Sparkles, ArrowRight, Lock, Mail, Eye, EyeOff } from 'lucide-react';
+import { Sparkles, ArrowRight, Lock, Mail, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const AuthContent = () => {
@@ -18,29 +18,28 @@ const AuthContent = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { login, signup } = useApp();
   const { toast } = useToast();
   const router = useRouter();
 
+  const handleModeChange = (newMode: 'login' | 'signup') => {
+    setMode(newMode);
+    setError(null);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
     if (!email || !password) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Por favor, completa todos los campos.",
-      });
+      setError("Por favor, completa todos los campos.");
       return;
     }
 
     if (mode === 'signup') {
       if (password !== confirmPassword) {
-        toast({
-          variant: "destructive",
-          title: "Error de contraseñas",
-          description: "Las contraseñas no coinciden. Por favor, verifica.",
-        });
+        setError("Las contraseñas no coinciden.");
         return;
       }
       
@@ -51,11 +50,7 @@ const AuthContent = () => {
         });
         router.push('/onboarding');
       } else {
-        toast({
-          variant: "destructive",
-          title: "Error de registro",
-          description: "Este usuario ya existe. Por favor, intenta con otro correo o inicia sesión.",
-        });
+        setError("Esta cuenta ya existe. Prueba iniciando sesión.");
       }
     } else {
       if (login(email, password)) {
@@ -65,11 +60,7 @@ const AuthContent = () => {
         });
         router.push('/home');
       } else {
-        toast({
-          variant: "destructive",
-          title: "Error de acceso",
-          description: "El usuario o la contraseña son incorrectos. Por favor, verifica tus datos.",
-        });
+        setError("Usuario o contraseña incorrectos.");
       }
     }
   };
@@ -98,6 +89,13 @@ const AuthContent = () => {
           </CardHeader>
           <CardContent className="p-8 pt-0">
             <form onSubmit={handleSubmit} className="space-y-5">
+              {error && (
+                <div className="bg-destructive/10 text-destructive text-xs font-bold p-4 rounded-2xl flex items-center gap-2 animate-fade-in">
+                  <AlertCircle size={16} />
+                  {error}
+                </div>
+              )}
+
               <div className="space-y-1.5">
                 <Label className="text-xs font-bold uppercase text-muted-foreground ml-1">Correo Electrónico</Label>
                 <div className="relative">
@@ -105,7 +103,10 @@ const AuthContent = () => {
                   <Input 
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (error) setError(null);
+                    }}
                     placeholder="tu@correo.com"
                     className="rounded-2xl h-14 bg-secondary/20 border-none pl-12"
                   />
@@ -119,7 +120,10 @@ const AuthContent = () => {
                   <Input 
                     type={showPassword ? "text" : "password"}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (error) setError(null);
+                    }}
                     placeholder="••••••••"
                     className="rounded-2xl h-14 bg-secondary/20 border-none pl-12 pr-12"
                   />
@@ -141,7 +145,10 @@ const AuthContent = () => {
                     <Input 
                       type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        if (error) setError(null);
+                      }}
                       placeholder="••••••••"
                       className="rounded-2xl h-14 bg-secondary/20 border-none pl-12 pr-12"
                     />
@@ -163,7 +170,7 @@ const AuthContent = () => {
 
             <div className="mt-8 text-center">
               <button 
-                onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
+                onClick={() => handleModeChange(mode === 'login' ? 'signup' : 'login')}
                 className="text-sm font-bold text-primary hover:underline"
               >
                 {mode === 'login' 
