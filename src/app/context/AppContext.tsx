@@ -41,7 +41,10 @@ interface AppContextType {
   registerActivity: (activity: RegisteredActivity) => void;
   cancelActivity: (activityId: string) => void;
   matches: string[];
-  addMatch: (userId: string) => void;
+  pendingMatches: string[];
+  addMatchRequest: (userId: string) => void;
+  isMatch: (userId: string) => boolean;
+  isPending: (userId: string) => boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -54,6 +57,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [lastCompletedDate, setLastCompletedDate] = useState<string | null>(null);
   const [registeredActivities, setRegisteredActivities] = useState<RegisteredActivity[]>([]);
   const [matches, setMatches] = useState<string[]>([]);
+  const [pendingMatches, setPendingMatches] = useState<string[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -63,7 +67,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const savedStreak = getFromStorage<number>(STORAGE_KEYS.STREAK) || 0;
     const lastTipsDate = getFromStorage<string>(STORAGE_KEYS.LAST_TIPS_DATE);
     const savedRegistered = getFromStorage<RegisteredActivity[]>(STORAGE_KEYS.REGISTERED_ACTIVITIES) || [];
-    const savedMatches = getFromStorage<string[]>(STORAGE_KEYS.MATCHES) || [];
+    
+    // Initial example data for simulation if empty
+    const savedMatches = getFromStorage<string[]>(STORAGE_KEYS.MATCHES) || ['1']; // Mateo is a favorite by default
+    const savedPending = getFromStorage<string[]>(STORAGE_KEYS.PENDING_MATCHES) || ['3']; // Ricardo is pending by default
 
     if (savedUser) setUserDataState(savedUser);
     
@@ -79,6 +86,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStreak(savedStreak);
     setRegisteredActivities(savedRegistered);
     setMatches(savedMatches);
+    setPendingMatches(savedPending);
     setIsLoaded(true);
   }, []);
 
@@ -135,12 +143,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveToStorage(STORAGE_KEYS.REGISTERED_ACTIVITIES, updated);
   };
 
-  const addMatch = (userId: string) => {
-    if (matches.includes(userId)) return;
-    const updated = [...matches, userId];
-    setMatches(updated);
-    saveToStorage(STORAGE_KEYS.MATCHES, updated);
+  const addMatchRequest = (userId: string) => {
+    if (pendingMatches.includes(userId) || matches.includes(userId)) return;
+    const updated = [...pendingMatches, userId];
+    setPendingMatches(updated);
+    saveToStorage(STORAGE_KEYS.PENDING_MATCHES, updated);
   };
+
+  const isMatch = (userId: string) => matches.includes(userId);
+  const isPending = (userId: string) => pendingMatches.includes(userId);
 
   return (
     <AppContext.Provider value={{
@@ -148,7 +159,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       completedTipsToday, toggleTipCompletion,
       streak, lastCompletedDate, refreshTips, isLoaded,
       registeredActivities, registerActivity, cancelActivity,
-      matches, addMatch
+      matches, pendingMatches, addMatchRequest, isMatch, isPending
     }}>
       {children}
     </AppContext.Provider>

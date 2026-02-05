@@ -299,6 +299,33 @@ export const MOCK_SOCIAL_FEED = [
     recentActivity: 'Corrió 5km en el Parque Central',
     interests: ['Running', 'Ciclismo'],
     streak: 7
+  },
+  {
+    id: '3',
+    name: 'Dr. Ricardo Gómez',
+    photo: 'https://picsum.photos/seed/u3/150/150',
+    bio: 'Como psicólogo, creo que el bienestar mental es la base de todo.',
+    recentActivity: 'Publicó: Tips para la ansiedad',
+    interests: ['Meditación', 'Salud Mental'],
+    streak: 22
+  },
+  {
+    id: '4',
+    name: 'Sofía Mendez',
+    photo: 'https://picsum.photos/seed/u4/150/150',
+    bio: 'Nutricionista apasionada por las recetas fáciles y ricas.',
+    recentActivity: 'Compartió nueva receta de Smoothie',
+    interests: ['Nutrición', 'Culinaria'],
+    streak: 30
+  },
+  {
+    id: '5',
+    name: 'Andrés Pardo',
+    photo: 'https://picsum.photos/seed/u5/150/150',
+    bio: 'Entrenador personal. El secreto es la disciplina.',
+    recentActivity: 'Hizo 100 flexiones hoy',
+    interests: ['Gimnasio', 'Crossfit'],
+    streak: 45
   }
 ];
 

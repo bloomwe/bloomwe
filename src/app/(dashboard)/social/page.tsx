@@ -6,19 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User, MapPin, Award } from 'lucide-react';
+import { Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User, MapPin, Award, Clock } from 'lucide-react';
 import { MOCK_SOCIAL_FEED } from '@/app/lib/mock-data';
 import { useApp } from '@/app/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 export default function SocialPage() {
-  const { userData, streak, matches, addMatch } = useApp();
+  const { userData, streak, matches, pendingMatches, addMatchRequest, isMatch, isPending } = useApp();
   const { toast } = useToast();
   const [post, setPost] = useState('');
   const [feed, setFeed] = useState(MOCK_SOCIAL_FEED.map(u => ({ ...u, isMe: false })));
   const [matchSuccess, setMatchSuccess] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'discover' | 'favorites'>('discover');
+  const [activeTab, setActiveTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   const handlePost = () => {
@@ -41,15 +41,21 @@ export default function SocialPage() {
     });
   };
 
-  const handleMatchRequest = (user: any) => {
+  const handleMatchRequestAction = (user: any) => {
     if (user.isMe) return;
-    addMatch(user.id);
+    addMatchRequest(user.id);
     setMatchSuccess(user.name);
   };
 
-  const filteredFeed = activeTab === 'discover' 
-    ? feed 
-    : feed.filter(u => matches.includes(u.id));
+  const filteredFeed = (() => {
+    if (activeTab === 'discover') {
+      return feed;
+    } else if (activeTab === 'pending') {
+      return feed.filter(u => isPending(u.id));
+    } else {
+      return feed.filter(u => isMatch(u.id));
+    }
+  })();
 
   return (
     <div className="flex flex-col gap-6 p-6 animate-fade-in bg-secondary/10 min-h-screen pb-24">
@@ -66,16 +72,30 @@ export default function SocialPage() {
         <button 
           onClick={() => setActiveTab('discover')}
           className={cn(
-            "flex-1 py-2.5 rounded-xl text-xs font-bold transition-all",
+            "flex-1 py-2.5 rounded-xl text-[10px] font-bold transition-all",
             activeTab === 'discover' ? "bg-primary text-white shadow-md shadow-primary/20" : "text-muted-foreground hover:bg-secondary/20"
           )}
         >
           Descubrir
         </button>
         <button 
+          onClick={() => setActiveTab('pending')}
+          className={cn(
+            "flex-1 py-2.5 rounded-xl text-[10px] font-bold transition-all flex items-center justify-center gap-1",
+            activeTab === 'pending' ? "bg-primary text-white shadow-md shadow-primary/20" : "text-muted-foreground hover:bg-secondary/20"
+          )}
+        >
+          Pendientes
+          {pendingMatches.length > 0 && (
+            <span className={cn("flex h-4 w-4 items-center justify-center rounded-full text-[8px]", activeTab === 'pending' ? "bg-white text-primary" : "bg-primary text-white")}>
+              {pendingMatches.length}
+            </span>
+          )}
+        </button>
+        <button 
           onClick={() => setActiveTab('favorites')}
           className={cn(
-            "flex-1 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2",
+            "flex-1 py-2.5 rounded-xl text-[10px] font-bold transition-all flex items-center justify-center gap-1",
             activeTab === 'favorites' ? "bg-primary text-white shadow-md shadow-primary/20" : "text-muted-foreground hover:bg-secondary/20"
           )}
         >
@@ -119,8 +139,10 @@ export default function SocialPage() {
             <User size={48} className="text-muted-foreground/30 mb-4" />
             <p className="text-muted-foreground font-medium text-sm">
               {activeTab === 'favorites' 
-                ? "Aún no tienes matches. ¡Ve a descubrir personas geniales!" 
-                : "No hay más personas por descubrir en este momento."}
+                ? "Aún no tienes matches aceptados. ¡Sigue conectando!" 
+                : activeTab === 'pending'
+                ? "No tienes solicitudes pendientes de respuesta."
+                : "No hay más personas por descubrir."}
             </p>
           </div>
         ) : (
@@ -170,17 +192,27 @@ export default function SocialPage() {
                   >
                     <MessageCircle size={20} /> <span className="text-xs">Comentar</span>
                   </button>
-                  {!user.isMe && !matches.includes(user.id) && (
+                  
+                  {!user.isMe && !isMatch(user.id) && !isPending(user.id) && (
                     <button 
-                      onClick={(e) => { e.stopPropagation(); handleMatchRequest(user); }}
+                      onClick={(e) => { e.stopPropagation(); handleMatchRequestAction(user); }}
                       className="flex items-center gap-2 text-primary font-bold ml-auto hover:scale-105 transition-transform"
                     >
                       <Zap size={18} fill="currentColor" /> <span className="text-xs">Hacer Match</span>
                     </button>
                   )}
-                  {matches.includes(user.id) && (
+                  {isPending(user.id) && (
                     <div className="ml-auto">
-                      <Badge className="bg-primary/20 text-primary border-none text-[9px] font-bold">¡Hiciste Match!</Badge>
+                      <Badge variant="outline" className="bg-secondary/20 text-muted-foreground border-none text-[9px] font-bold flex items-center gap-1">
+                        <Clock size={10} /> Solicitado
+                      </Badge>
+                    </div>
+                  )}
+                  {isMatch(user.id) && (
+                    <div className="ml-auto">
+                      <Badge className="bg-primary/20 text-primary border-none text-[9px] font-bold flex items-center gap-1">
+                        <Sparkles size={10} /> ¡Conectados!
+                      </Badge>
                     </div>
                   )}
                   {user.isMe && (
@@ -255,19 +287,26 @@ export default function SocialPage() {
                       >
                         <User size={20} className="mr-2" /> Es tu propio perfil
                       </Button>
-                    ) : !matches.includes(selectedUser.id) ? (
-                      <Button 
-                        onClick={() => handleMatchRequest(selectedUser)}
-                        className="w-full h-14 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20"
-                      >
-                        <Zap size={20} fill="currentColor" className="mr-2" /> Hacer Match
-                      </Button>
-                    ) : (
+                    ) : isMatch(selectedUser.id) ? (
                       <Button 
                         disabled
                         className="w-full h-14 rounded-2xl bg-secondary text-primary font-bold shadow-none opacity-100"
                       >
                         <Sparkles size={20} className="mr-2" /> Ya están conectados
+                      </Button>
+                    ) : isPending(selectedUser.id) ? (
+                      <Button 
+                        disabled
+                        className="w-full h-14 rounded-2xl bg-secondary text-muted-foreground font-bold shadow-none opacity-100"
+                      >
+                        <Clock size={20} className="mr-2" /> Solicitud enviada
+                      </Button>
+                    ) : (
+                      <Button 
+                        onClick={() => handleMatchRequestAction(selectedUser)}
+                        className="w-full h-14 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20"
+                      >
+                        <Zap size={20} fill="currentColor" className="mr-2" /> Hacer Match
                       </Button>
                     )}
                     <Button 
@@ -298,12 +337,12 @@ export default function SocialPage() {
             <DialogDescription className="text-center pt-2 text-sm font-medium leading-relaxed">
               La notificación se ha enviado a <span className="text-primary font-bold">{matchSuccess}</span>. 
               <br /><br />
-              Debes esperar a que <span className="text-primary font-bold">{matchSuccess}</span> te devuelva el match para conectar y ver su perfil en tus favoritos.
+              Ahora esta persona aparecerá en tu pestaña de **Pendientes**. Debes esperar a que te devuelva el match para conectar y ver su perfil en tus favoritos.
             </DialogDescription>
           </DialogHeader>
           <div className="pt-6">
             <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20">
-              ¡Genial!
+              ¡Entendido!
             </Button>
           </div>
         </DialogContent>

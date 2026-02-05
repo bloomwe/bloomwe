@@ -6,7 +6,8 @@ export const STORAGE_KEYS = {
   TIPS_CACHE: 'bloomwell_tips_cache',
   LAST_TIPS_DATE: 'bloomwell_last_tips_date',
   REGISTERED_ACTIVITIES: 'bloomwell_registered_activities',
-  MATCHES: 'bloomwell_matches'
+  MATCHES: 'bloomwell_matches',
+  PENDING_MATCHES: 'bloomwell_pending_matches'
 };
 
 export const saveToStorage = (key: string, data: any) => {
