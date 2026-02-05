@@ -1,0 +1,77 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "app_logo",
+      "description": "Logo de BloomWell",
+      "imageUrl": "https://images.unsplash.com/photo-1631880268373-18c7749f34c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3ZWxsbmVzcyUyMGxvZ298ZW58MHx8fHwxNzcwMjI1MDQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wellness logo"
+    },
+    {
+      "id": "user_avatar",
+      "description": "Avatar de usuario por defecto",
+      "imageUrl": "https://images.unsplash.com/photo-1543269664-56d93c1b41a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxoYXBweSUyMHBlcnNvbnxlbnwwfHx8fDE3NzAxODA2NDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "happy person"
+    },
+    {
+      "id": "expert_1",
+      "description": "Doctor profesional",
+      "imageUrl": "https://images.unsplash.com/photo-1685022036245-380a447e03bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkb2N0b3IlMjBtYWxlfGVufDB8fHx8MTc3MDIxMTM5NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "doctor male"
+    },
+    {
+      "id": "expert_2",
+      "description": "Doctora profesional",
+      "imageUrl": "https://images.unsplash.com/photo-1670191247079-f9713ae06dcf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkb2N0b3IlMjBmZW1hbGV8ZW58MHx8fHwxNzcwMjcyMTA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "doctor female"
+    },
+    {
+      "id": "expert_3",
+      "description": "Psicólogo profesional",
+      "imageUrl": "https://images.unsplash.com/photo-1665646458877-90669ce5ccd6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwc3ljaG9sb2dpc3QlMjBtYWxlfGVufDB8fHx8MTc3MDMwNjUzOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "psychologist male"
+    },
+    {
+      "id": "expert_4",
+      "description": "Psicóloga profesional",
+      "imageUrl": "https://images.unsplash.com/photo-1758524944783-0ec215baf777?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwc3ljaG9sb2dpc3QlMjBmZW1hbGV8ZW58MHx8fHwxNzcwMzA2NTM4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "psychologist female"
+    },
+    {
+      "id": "expert_5",
+      "description": "Nutricionista femenina",
+      "imageUrl": "https://images.unsplash.com/photo-1737092691564-e60d2d66cba0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxudXRyaXRpb25pc3QlMjBmZW1hbGV8ZW58MHx8fHwxNzcwMzA2NTM4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nutritionist female"
+    },
+    {
+      "id": "expert_6",
+      "description": "Nutricionista masculino",
+      "imageUrl": "https://images.unsplash.com/photo-1647760922293-566fb287c84a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxudXRyaXRpb25pc3QlMjBtYWxlfGVufDB8fHx8MTc3MDMwNjUzOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nutritionist male"
+    },
+    {
+      "id": "park_simon_bolivar",
+      "description": "Parque Simón Bolívar Bogotá",
+      "imageUrl": "https://picsum.photos/seed/simonbolivar/600/400",
+      "imageHint": "park nature"
+    },
+    {
+      "id": "park_novios",
+      "description": "Parque de los Novios Bogotá",
+      "imageUrl": "https://picsum.photos/seed/novios/600/400",
+      "imageHint": "lake park"
+    },
+    {
+      "id": "park_virrey",
+      "description": "Parque El Virrey Bogotá",
+      "imageUrl": "https://picsum.photos/seed/virrey/600/400",
+      "imageHint": "city park"
+    },
+    {
+      "id": "park_tunal",
+      "description": "Parque El Tunal Bogotá",
+      "imageUrl": "https://picsum.photos/seed/tunal/600/400",
+      "imageHint": "sports park"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+
 export const MOCK_EXPERTS = [
   {
     id: '1',
@@ -152,19 +153,43 @@ export const MOCK_RECIPES = [
 export const MOCK_PLACES = [
   {
     id: '1',
-    name: 'Parque de la Salud',
-    address: 'Av. Bienestar #123',
-    activities: ['Running', 'Calistenia', 'Yoga'],
-    hours: '5am - 9pm',
-    image: 'https://picsum.photos/seed/park1/400/300'
+    name: 'Parque Metropolitano Simón Bolívar',
+    address: 'Av. Calle 63 y Av. Carrera 68',
+    activities: ['Running', 'Ciclismo', 'Eventos Masivos', 'Yoga'],
+    hours: '5am - 7pm',
+    image: 'https://picsum.photos/seed/simonbolivar/600/400'
   },
   {
     id: '2',
-    name: 'Centro Deportivo El Turquesa',
-    address: 'Calle Deporte #45',
-    activities: ['Fútbol', 'Natación'],
-    hours: '6am - 10pm',
-    image: 'https://picsum.photos/seed/gym1/400/300'
+    name: 'Parque de los Novios (El Lago)',
+    address: 'Calle 63 # 45-10',
+    activities: ['Yoga', 'Caminata', 'Navegación en Bote', 'Picnic'],
+    hours: '6am - 6pm',
+    image: 'https://picsum.photos/seed/novios/600/400'
+  },
+  {
+    id: '3',
+    name: 'Parque El Virrey',
+    address: 'Carrera 15 con Calle 88',
+    activities: ['Running', 'Calistenia', 'Paseo de Mascotas'],
+    hours: 'Abierto 24h',
+    image: 'https://picsum.photos/seed/virrey/600/400'
+  },
+  {
+    id: '4',
+    name: 'Parque El Tunal',
+    address: 'Calle 48B Sur y Avenida Boyacá',
+    activities: ['Skateboarding', 'Fútbol', 'Atletismo', 'Ciclismo'],
+    hours: '5am - 6pm',
+    image: 'https://picsum.photos/seed/tunal/600/400'
+  },
+  {
+    id: '5',
+    name: 'Parque de la 93',
+    address: 'Calle 93 # 11A-41',
+    activities: ['Yoga Matutino', 'Eventos Culturales', 'Caminata'],
+    hours: 'Abierto 24h',
+    image: 'https://picsum.photos/seed/p93/600/400'
   }
 ];
 
