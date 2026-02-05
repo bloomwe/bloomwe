@@ -10,10 +10,10 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Clock, Trash2, Calendar as CalendarIcon, MapPin, Activity } from 'lucide-react';
+import { Plus, Clock, Trash2, Calendar as CalendarIcon, MapPin, Activity, ChevronRight } from 'lucide-react';
 import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
 import { HOBBIES_LIST } from '@/app/lib/mock-data';
-import { format } from 'date-fns';
+import { format, isAfter, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
@@ -75,6 +75,10 @@ export default function CalendarPage() {
     date && e.date.toDateString() === date.toDateString()
   ).sort((a, b) => a.time.localeCompare(b.time));
 
+  const upcomingEvents = events.filter(e => 
+    date && isAfter(startOfDay(e.date), startOfDay(date))
+  ).sort((a, b) => a.date.getTime() - b.date.getTime() || a.time.localeCompare(b.time));
+
   if (!mounted) {
     return null;
   }
@@ -84,7 +88,7 @@ export default function CalendarPage() {
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Tu Agenda</h1>
-          <p className="text-xs text-muted-foreground">Gestiona tus hábitos y metas</p>
+          <p className="text-xs text-muted-foreground">Gestiona tus eventos y metas</p>
         </div>
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogTrigger asChild>
@@ -94,7 +98,7 @@ export default function CalendarPage() {
           </DialogTrigger>
           <DialogContent className="rounded-[2.5rem] max-w-[90vw] p-8">
             <DialogHeader>
-              <DialogTitle>Nueva Actividad</DialogTitle>
+              <DialogTitle>Nuevo Evento</DialogTitle>
               <DialogDescription className="text-xs">
                 Programando para el {date ? format(date, "EEEE d 'de' MMMM", { locale: es }) : 'día seleccionado'}
               </DialogDescription>
@@ -156,22 +160,23 @@ export default function CalendarPage() {
         />
       </section>
 
+      {/* Eventos del día seleccionado */}
       <section className="space-y-4">
         <div className="flex items-center justify-between px-2">
           <h2 className="font-bold text-lg text-primary">
             {date ? format(date, "d 'de' MMMM", { locale: es }) : 'Selecciona un día'}
           </h2>
           <Badge variant="secondary" className="bg-primary/10 text-primary border-none">
-            {dayEvents.length} {dayEvents.length === 1 ? 'actividad' : 'actividades'}
+            {dayEvents.length} {dayEvents.length === 1 ? 'evento' : 'eventos'}
           </Badge>
         </div>
 
         {dayEvents.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-12 bg-white rounded-[2.5rem] border border-dashed border-muted-foreground/20 text-center">
-            <div className="bg-secondary/30 p-4 rounded-full mb-4">
-              <CalendarIcon size={32} className="text-primary/40" />
+          <div className="flex flex-col items-center justify-center p-8 bg-white rounded-[2.5rem] border border-dashed border-muted-foreground/20 text-center">
+            <div className="bg-secondary/30 p-3 rounded-full mb-3">
+              <CalendarIcon size={24} className="text-primary/40" />
             </div>
-            <p className="text-muted-foreground text-sm font-medium">No hay actividades para este día.<br/>¡Crea un nuevo hábito!</p>
+            <p className="text-muted-foreground text-xs font-medium">No hay eventos para este día.</p>
           </div>
         ) : (
           <div className="grid gap-3">
@@ -197,6 +202,49 @@ export default function CalendarPage() {
           </div>
         )}
       </section>
+
+      {/* Próximos Eventos */}
+      <section className="space-y-4 pt-2">
+        <div className="flex items-center justify-between px-2">
+          <h2 className="font-bold text-lg text-foreground/80 flex items-center gap-2">
+            Próximos Eventos
+          </h2>
+        </div>
+
+        {upcomingEvents.length === 0 ? (
+          <div className="p-6 bg-white/50 rounded-[2.5rem] border border-dashed border-muted-foreground/10 text-center">
+            <p className="text-muted-foreground text-xs font-medium">No hay próximos eventos en tu agenda.</p>
+          </div>
+        ) : (
+          <div className="grid gap-3">
+            {upcomingEvents.map(event => (
+              <Card 
+                key={event.id} 
+                className="rounded-3xl border-none shadow-none bg-white/60 hover:bg-white transition-all cursor-pointer border border-transparent hover:border-primary/10"
+                onClick={() => setDate(event.date)}
+              >
+                <CardContent className="p-4 flex gap-4 items-center">
+                  <div className="flex flex-col items-center justify-center bg-white rounded-2xl h-12 w-12 shadow-sm border border-border/50 shrink-0">
+                    <span className="text-[10px] font-bold text-primary uppercase">{format(event.date, 'MMM', { locale: es })}</span>
+                    <span className="text-sm font-black leading-none">{format(event.date, 'd')}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-sm truncate">{event.title}</h3>
+                    <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-foreground">
+                      <Clock size={12} className="text-primary/60" /> 
+                      <span>{event.time}</span>
+                      <span className="text-primary/20">•</span>
+                      <span>{event.type}</span>
+                    </div>
+                  </div>
+                  <ChevronRight size={18} className="text-muted-foreground/30" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
+
