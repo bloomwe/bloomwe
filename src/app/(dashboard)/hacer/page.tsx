@@ -324,8 +324,13 @@ export default function HacerPage() {
               {filteredExperts.map(exp => (
                 <Card key={exp.id} className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
                   <CardContent className="p-6 flex gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl shrink-0">
-                      {exp.name.split(' ').length > 1 ? exp.name.split(' ')[1][0] : exp.name[0]}
+                    <div className="w-16 h-16 rounded-2xl bg-secondary/30 overflow-hidden shrink-0">
+                      <img 
+                        src={exp.image} 
+                        alt={exp.name} 
+                        className="w-full h-full object-cover" 
+                        data-ai-hint="doctor portrait"
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start">

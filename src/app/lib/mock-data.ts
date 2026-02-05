@@ -9,7 +9,8 @@ export const MOCK_EXPERTS = [
     phone: '+573001234567',
     email: 'julian.rivera@bloomwell.com',
     location: 'Centro Médico Norte, Piso 4',
-    hours: 'Lun-Vie 8am - 5pm'
+    hours: 'Lun-Vie 8am - 5pm',
+    image: 'https://picsum.photos/seed/expert1/200/200'
   },
   {
     id: '2',
@@ -21,7 +22,8 @@ export const MOCK_EXPERTS = [
     phone: '+573109876543',
     email: 'elena.c@bloomwell.com',
     location: 'Hospital San Lucas, Consultorio 302',
-    hours: 'Mar-Jue 2pm - 7pm'
+    hours: 'Mar-Jue 2pm - 7pm',
+    image: 'https://picsum.photos/seed/expert2/200/200'
   },
   {
     id: '3',
@@ -33,7 +35,8 @@ export const MOCK_EXPERTS = [
     phone: '+573152223344',
     email: 'ricardo.g@bloomwell.com',
     location: 'Torre Empresarial, Of. 901',
-    hours: 'Lun-Vie 9am - 6pm'
+    hours: 'Lun-Vie 9am - 6pm',
+    image: 'https://picsum.photos/seed/expert3/200/200'
   },
   {
     id: '4',
@@ -45,7 +48,8 @@ export const MOCK_EXPERTS = [
     phone: '+573201112233',
     email: 'camila.v@bloomwell.com',
     location: 'Centro Zen, Calle 80',
-    hours: 'Mié-Sáb 8am - 2pm'
+    hours: 'Mié-Sáb 8am - 2pm',
+    image: 'https://picsum.photos/seed/expert4/200/200'
   },
   {
     id: '5',
@@ -57,7 +61,8 @@ export const MOCK_EXPERTS = [
     phone: '+573007654321',
     email: 'sofia.m@bloomwell.com',
     location: 'Consultorio Vitalia 202',
-    hours: 'Lun-Sáb 9am - 1pm'
+    hours: 'Lun-Sáb 9am - 1pm',
+    image: 'https://picsum.photos/seed/expert5/200/200'
   },
   {
     id: '6',
@@ -69,7 +74,8 @@ export const MOCK_EXPERTS = [
     phone: '+573014445566',
     email: 'andres.p@bloomwell.com',
     location: 'Plaza Médica, Local 12',
-    hours: 'Lun-Vie 7am - 4pm'
+    hours: 'Lun-Vie 7am - 4pm',
+    image: 'https://picsum.photos/seed/expert6/200/200'
   }
 ];
 
