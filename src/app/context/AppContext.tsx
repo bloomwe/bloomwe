@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
@@ -35,6 +36,10 @@ interface UserAccount {
   registeredActivities?: RegisteredActivity[];
   matches?: string[];
   pendingMatches?: string[];
+  dailyTips?: DailyTipsOutput;
+  completedTipsToday?: string[];
+  lastTipsDate?: string;
+  lastCompletedDate?: string;
 }
 
 interface AppContextType {
@@ -97,53 +102,76 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setRegisteredActivities(user.registeredActivities || []);
       setMatches(user.matches || []);
       setPendingMatches(user.pendingMatches || []);
+      setLastCompletedDate(user.lastCompletedDate || null);
       
-      const savedTips = getFromStorage<DailyTipsOutput>(STORAGE_KEYS.TIPS_CACHE);
-      const savedCompleted = getFromStorage<string[]>(STORAGE_KEYS.COMPLETED_TIPS) || [];
-      const lastTipsDate = getFromStorage<string>(STORAGE_KEYS.LAST_TIPS_DATE);
       const today = new Date().toDateString();
 
-      if (lastTipsDate === today && savedTips) {
-        setDailyTips(savedTips);
-        setCompletedTipsToday(savedCompleted);
+      // Cargar tips específicos del usuario desde su objeto en la DB
+      if (user.lastTipsDate === today && user.dailyTips) {
+        setDailyTips(user.dailyTips);
+        setCompletedTipsToday(user.completedTipsToday || []);
+      } else {
+        // Es un nuevo día o usuario nuevo, limpiar estado local de tips
+        setDailyTips([]);
+        setCompletedTipsToday([]);
       }
     }
   };
 
-  const login = (email: string, pass: string) => {
+  const saveCurrentUserDataToDb = (updatedData: Partial<UserAccount>) => {
+    if (!currentUser) return;
     const usersDb = getFromStorage<Record<string, UserAccount>>(STORAGE_KEYS.USERS_DB) || {};
-    const user = usersDb[email.toLowerCase()];
+    usersDb[currentUser] = { ...usersDb[currentUser], ...updatedData };
+    saveToStorage(STORAGE_KEYS.USERS_DB, usersDb);
+  };
+
+  const login = (email: string, pass: string) => {
+    const emailKey = email.toLowerCase();
+    const usersDb = getFromStorage<Record<string, UserAccount>>(STORAGE_KEYS.USERS_DB) || {};
+    const user = usersDb[emailKey];
     
     if (user && user.password === pass) {
-      saveToStorage(STORAGE_KEYS.CURRENT_SESSION, email.toLowerCase());
-      setCurrentUser(email.toLowerCase());
-      loadUserData(email.toLowerCase());
+      saveToStorage(STORAGE_KEYS.CURRENT_SESSION, emailKey);
+      setCurrentUser(emailKey);
+      loadUserData(emailKey);
       return true;
     }
     return false;
   };
 
   const signup = (email: string, pass: string) => {
+    const emailKey = email.toLowerCase();
     const usersDb = getFromStorage<Record<string, UserAccount>>(STORAGE_KEYS.USERS_DB) || {};
-    if (usersDb[email.toLowerCase()]) return false;
+    if (usersDb[emailKey]) return false;
 
-    usersDb[email.toLowerCase()] = {
-      email: email.toLowerCase(),
+    usersDb[emailKey] = {
+      email: emailKey,
       password: pass,
       userData: undefined,
       streak: 0,
       registeredActivities: [],
       matches: [],
-      pendingMatches: []
+      pendingMatches: [],
+      dailyTips: [],
+      completedTipsToday: [],
+      lastTipsDate: '',
+      lastCompletedDate: ''
     };
     
     saveToStorage(STORAGE_KEYS.USERS_DB, usersDb);
-    saveToStorage(STORAGE_KEYS.CURRENT_SESSION, email.toLowerCase());
-    setCurrentUser(email.toLowerCase());
+    saveToStorage(STORAGE_KEYS.CURRENT_SESSION, emailKey);
+    setCurrentUser(emailKey);
+    
+    // Resetear estados locales para el nuevo usuario
     setUserDataState(null);
+    setDailyTips([]);
+    setCompletedTipsToday([]);
     setStreak(0);
+    setLastCompletedDate(null);
+    setRegisteredActivities([]);
     setMatches([]);
     setPendingMatches([]);
+    
     return true;
   };
 
@@ -154,17 +182,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setDailyTips([]);
     setCompletedTipsToday([]);
     setStreak(0);
+    setLastCompletedDate(null);
     setRegisteredActivities([]);
     setMatches([]);
     setPendingMatches([]);
     router.push('/auth');
-  };
-
-  const saveCurrentUserDataToDb = (updatedData: Partial<UserAccount>) => {
-    if (!currentUser) return;
-    const usersDb = getFromStorage<Record<string, UserAccount>>(STORAGE_KEYS.USERS_DB) || {};
-    usersDb[currentUser] = { ...usersDb[currentUser], ...updatedData };
-    saveToStorage(STORAGE_KEYS.USERS_DB, usersDb);
   };
 
   const setUserData = (data: UserData) => {
@@ -182,9 +204,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         hobbies: userData.hobbies,
         completedTips: []
       });
+      const today = new Date().toDateString();
       setDailyTips(tips);
-      saveToStorage(STORAGE_KEYS.TIPS_CACHE, tips);
-      saveToStorage(STORAGE_KEYS.LAST_TIPS_DATE, new Date().toDateString());
+      setCompletedTipsToday([]); // Resetear tips completados al generar nuevos
+      
+      saveCurrentUserDataToDb({ 
+        dailyTips: tips, 
+        lastTipsDate: today,
+        completedTipsToday: [] 
+      });
     } catch (e) {
       console.error("Error generating tips", e);
     }
@@ -196,15 +224,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       : [...completedTipsToday, tipId];
     
     setCompletedTipsToday(updated);
-    saveToStorage(STORAGE_KEYS.COMPLETED_TIPS, updated);
-
+    
     const today = new Date().toDateString();
+    let newStreak = streak;
+    let newLastCompletedDate = lastCompletedDate;
+
     if (updated.length > 0 && lastCompletedDate !== today) {
-      const newStreak = streak + 1;
+      newStreak = streak + 1;
+      newLastCompletedDate = today;
       setStreak(newStreak);
-      setLastCompletedDate(today);
-      saveCurrentUserDataToDb({ streak: newStreak });
+      setLastCompletedDate(newLastCompletedDate);
     }
+
+    saveCurrentUserDataToDb({ 
+      completedTipsToday: updated,
+      streak: newStreak,
+      lastCompletedDate: newLastCompletedDate || ''
+    });
   };
 
   const registerActivity = (activity: RegisteredActivity) => {
