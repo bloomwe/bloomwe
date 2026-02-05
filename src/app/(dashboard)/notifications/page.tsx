@@ -5,7 +5,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronLeft, Bell, Zap, Users, Flame, Info } from 'lucide-react';
+import { ChevronLeft, Bell, Zap, Users, Flame, Info, Trash2 } from 'lucide-react';
 import { useApp } from '@/app/context/AppContext';
 import { cn } from '@/lib/utils';
 
@@ -19,23 +19,37 @@ const CATEGORY_ICONS: Record<string, any> = {
 
 export default function NotificationsPage() {
   const router = useRouter();
-  const { notifications, markAllNotificationsAsRead } = useApp();
+  const { notifications, markAllNotificationsAsRead, clearAllNotifications } = useApp();
 
   return (
     <div className="flex flex-col gap-6 p-6 animate-fade-in bg-secondary/5 min-h-screen pb-24">
-      <header className="flex items-center gap-4">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => router.back()} 
-          className="rounded-full bg-white shadow-sm hover:bg-primary/5 shrink-0"
-        >
-          <ChevronLeft size={24} className="text-primary" />
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold">Notificaciones</h1>
-          <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Lo último en BloomWell</p>
+      <header className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => router.back()} 
+            className="rounded-full bg-white shadow-sm hover:bg-primary/5 shrink-0"
+          >
+            <ChevronLeft size={24} className="text-primary" />
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold">Notificaciones</h1>
+            <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Lo último en BloomWell</p>
+          </div>
         </div>
+        
+        {notifications.length > 0 && (
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={clearAllNotifications}
+            className="rounded-full bg-white shadow-sm hover:bg-destructive/10 text-destructive/50 hover:text-destructive shrink-0"
+            title="Borrar todas las notificaciones"
+          >
+            <Trash2 size={20} />
+          </Button>
+        )}
       </header>
 
       <div className="space-y-4">
@@ -89,15 +103,17 @@ export default function NotificationsPage() {
         )}
       </div>
 
-      <div className="mt-4 px-2">
-        <Button 
-          variant="outline" 
-          onClick={markAllNotificationsAsRead}
-          className="w-full h-12 rounded-2xl border-primary/20 text-primary font-bold bg-white shadow-sm"
-        >
-          Marcar todas como leídas
-        </Button>
-      </div>
+      {notifications.length > 0 && (
+        <div className="mt-4 px-2">
+          <Button 
+            variant="outline" 
+            onClick={markAllNotificationsAsRead}
+            className="w-full h-12 rounded-2xl border-primary/20 text-primary font-bold bg-white shadow-sm"
+          >
+            Marcar todas como leídas
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

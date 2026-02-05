@@ -74,6 +74,7 @@ interface AppContextType {
   notifications: Notification[];
   addNotification: (title: string, description: string, category: Notification['category']) => void;
   markAllNotificationsAsRead: () => void;
+  clearAllNotifications: () => void;
   // Auth additions
   currentUser: string | null;
   login: (email: string, pass: string) => boolean;
@@ -316,6 +317,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveCurrentUserDataToDb({ notifications: updated });
   };
 
+  const clearAllNotifications = () => {
+    setNotifications([]);
+    saveCurrentUserDataToDb({ notifications: [] });
+  };
+
   const isMatch = (userId: string) => matches.includes(userId);
   const isPending = (userId: string) => pendingMatches.includes(userId);
 
@@ -326,7 +332,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       streak, lastCompletedDate, refreshTips, isLoaded,
       registeredActivities, registerActivity, cancelActivity,
       matches, pendingMatches, addMatchRequest, isMatch, isPending,
-      notifications, addNotification, markAllNotificationsAsRead,
+      notifications, addNotification, markAllNotificationsAsRead, clearAllNotifications,
       currentUser, login, signup, logout
     }}>
       {children}
