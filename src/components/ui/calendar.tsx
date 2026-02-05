@@ -23,16 +23,16 @@ function Calendar({
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-6",
-        caption: "flex justify-center items-center relative h-10 mb-8",
-        caption_label: "text-base font-bold text-primary",
-        nav: "flex items-center justify-between absolute inset-x-0 w-full px-1",
+        caption: "flex justify-center items-center relative h-10 mb-8 px-10",
+        caption_label: "text-base font-bold text-primary truncate",
+        nav: "flex items-center",
         button_previous: cn(
           buttonVariants({ variant: "outline" }),
-          "h-10 w-10 bg-primary/5 p-0 opacity-80 hover:opacity-100 border-none rounded-2xl transition-all hover:bg-primary hover:text-white shadow-sm absolute left-0 z-10"
+          "h-9 w-9 bg-primary/5 p-0 opacity-80 hover:opacity-100 border-none rounded-xl transition-all hover:bg-primary hover:text-white shadow-sm absolute left-1 z-10"
         ),
         button_next: cn(
           buttonVariants({ variant: "outline" }),
-          "h-10 w-10 bg-primary/5 p-0 opacity-80 hover:opacity-100 border-none rounded-2xl transition-all hover:bg-primary hover:text-white shadow-sm absolute right-0 z-10"
+          "h-9 w-9 bg-primary/5 p-0 opacity-80 hover:opacity-100 border-none rounded-xl transition-all hover:bg-primary hover:text-white shadow-sm absolute right-1 z-10"
         ),
         table: "w-full border-collapse space-y-2",
         head_row: "flex justify-between",
@@ -58,10 +58,10 @@ function Calendar({
       }}
       components={{
         IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("h-6 w-6", className)} {...props} />
+          <ChevronLeft className={cn("h-5 w-5", className)} {...props} />
         ),
         IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("h-6 w-6", className)} {...props} />
+          <ChevronRight className={cn("h-5 w-5", className)} {...props} />
         ),
       }}
       {...props}
