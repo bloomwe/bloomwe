@@ -16,7 +16,7 @@ export default function SocialPage() {
   const { userData, streak, matches, addMatch } = useApp();
   const { toast } = useToast();
   const [post, setPost] = useState('');
-  const [feed, setFeed] = useState(MOCK_SOCIAL_FEED);
+  const [feed, setFeed] = useState(MOCK_SOCIAL_FEED.map(u => ({ ...u, isMe: false })));
   const [matchSuccess, setMatchSuccess] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'discover' | 'favorites'>('discover');
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
@@ -24,13 +24,14 @@ export default function SocialPage() {
   const handlePost = () => {
     if (!post) return;
     const newPost = {
-      id: Math.random().toString(),
+      id: 'me-' + Math.random().toString(),
       name: userData?.name || 'Usuario',
       photo: userData?.profilePic || 'https://picsum.photos/seed/me/150/150',
       bio: post,
       recentActivity: 'Acaba de publicar un estado',
       interests: userData?.activities || [],
-      streak: streak
+      streak: streak,
+      isMe: true
     };
     setFeed([newPost, ...feed]);
     setPost('');
@@ -41,6 +42,7 @@ export default function SocialPage() {
   };
 
   const handleMatchRequest = (user: any) => {
+    if (user.isMe) return;
     addMatch(user.id);
     setMatchSuccess(user.name);
   };
@@ -168,7 +170,7 @@ export default function SocialPage() {
                   >
                     <MessageCircle size={20} /> <span className="text-xs">Comentar</span>
                   </button>
-                  {!matches.includes(user.id) && (
+                  {!user.isMe && !matches.includes(user.id) && (
                     <button 
                       onClick={(e) => { e.stopPropagation(); handleMatchRequest(user); }}
                       className="flex items-center gap-2 text-primary font-bold ml-auto hover:scale-105 transition-transform"
@@ -179,6 +181,11 @@ export default function SocialPage() {
                   {matches.includes(user.id) && (
                     <div className="ml-auto">
                       <Badge className="bg-primary/20 text-primary border-none text-[9px] font-bold">¡Hiciste Match!</Badge>
+                    </div>
+                  )}
+                  {user.isMe && (
+                    <div className="ml-auto">
+                      <Badge variant="outline" className="text-[9px] border-primary/20 text-primary uppercase font-bold">Mi Post</Badge>
                     </div>
                   )}
                 </div>
@@ -209,11 +216,13 @@ export default function SocialPage() {
               <div className="pt-16 p-8 space-y-6 text-center">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">{selectedUser.name}</h2>
-                  <p className="text-primary font-bold text-xs uppercase tracking-widest mt-1">Miembro Activo BloomWell</p>
+                  <p className="text-primary font-bold text-xs uppercase tracking-widest mt-1">
+                    {selectedUser.isMe ? 'Mi Perfil BloomWell' : 'Miembro Activo BloomWell'}
+                  </p>
                 </div>
 
                 <div className="flex justify-center gap-2 text-[10px] text-muted-foreground font-medium">
-                  <span className="flex items-center gap-1 bg-secondary/30 px-3 py-1.5 rounded-full"><MapPin size={14} className="text-primary" /> Bogotá, CO</span>
+                  <span className="flex items-center gap-1 bg-secondary/30 px-3 py-1.5 rounded-full"><MapPin size={14} className="text-primary" /> {selectedUser.isMe ? userData?.location : 'Bogotá, CO'}</span>
                   <span className="flex items-center gap-1 bg-secondary/30 px-3 py-1.5 rounded-full"><Award size={14} className="text-primary" /> Nivel 12</span>
                 </div>
 
@@ -234,7 +243,14 @@ export default function SocialPage() {
                 </div>
 
                 <div className="pt-4 space-y-3">
-                  {!matches.includes(selectedUser.id) ? (
+                  {selectedUser.isMe ? (
+                    <Button 
+                      disabled
+                      className="w-full h-14 rounded-2xl bg-secondary text-primary font-bold shadow-none opacity-100"
+                    >
+                      <User size={20} className="mr-2" /> Es tu propio perfil
+                    </Button>
+                  ) : !matches.includes(selectedUser.id) ? (
                     <Button 
                       onClick={() => handleMatchRequest(selectedUser)}
                       className="w-full h-14 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20"
