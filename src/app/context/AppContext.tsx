@@ -6,6 +6,15 @@ import { getFromStorage, saveToStorage, STORAGE_KEYS, removeFromStorage } from '
 import { generateDailyTips, DailyTipsOutput } from '@/ai/flows/personalized-daily-tips';
 import { useRouter } from 'next/navigation';
 
+export interface Notification {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  unread: boolean;
+  category: 'activity' | 'match' | 'streak' | 'tip' | 'default';
+}
+
 interface UserData {
   onboarded: boolean;
   motivations: string[];
@@ -40,6 +49,7 @@ interface UserAccount {
   completedTipsToday?: string[];
   lastTipsDate?: string;
   lastCompletedDate?: string;
+  notifications?: Notification[];
 }
 
 interface AppContextType {
@@ -61,6 +71,9 @@ interface AppContextType {
   addMatchRequest: (userId: string) => void;
   isMatch: (userId: string) => boolean;
   isPending: (userId: string) => boolean;
+  notifications: Notification[];
+  addNotification: (title: string, description: string, category: Notification['category']) => void;
+  markAllNotificationsAsRead: () => void;
   // Auth additions
   currentUser: string | null;
   login: (email: string, pass: string) => boolean;
@@ -70,8 +83,7 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// Usuarios de ejemplo para que aparezcan en favoritos por defecto
-const DEFAULT_MATCHES = ['1', '2']; // IDs de Mateo González y Valentina Ruiz en MOCK_SOCIAL_FEED
+const DEFAULT_MATCHES = ['1', '2']; 
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
@@ -84,6 +96,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [registeredActivities, setRegisteredActivities] = useState<RegisteredActivity[]>([]);
   const [matches, setMatches] = useState<string[]>(DEFAULT_MATCHES);
   const [pendingMatches, setPendingMatches] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -103,9 +116,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setUserDataState(user.userData || null);
       setStreak(user.streak || 0);
       setRegisteredActivities(user.registeredActivities || []);
-      // Si el usuario no tiene matches guardados, ponemos los de ejemplo
       setMatches(user.matches && user.matches.length > 0 ? user.matches : DEFAULT_MATCHES);
       setPendingMatches(user.pendingMatches || []);
+      setNotifications(user.notifications || []);
       setLastCompletedDate(user.lastCompletedDate || null);
       
       const today = new Date().toDateString();
@@ -146,7 +159,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const usersDb = getFromStorage<Record<string, UserAccount>>(STORAGE_KEYS.USERS_DB) || {};
     if (usersDb[emailKey]) return false;
 
-    // Inicializamos con DEFAULT_MATCHES para que aparezcan en Favoritos
     usersDb[emailKey] = {
       email: emailKey,
       password: pass,
@@ -158,7 +170,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       dailyTips: [],
       completedTipsToday: [],
       lastTipsDate: '',
-      lastCompletedDate: ''
+      lastCompletedDate: '',
+      notifications: [
+        {
+          id: 'welcome',
+          title: '¡Bienvenido a BloomWell!',
+          description: 'Estamos felices de tenerte aquí. Explora tus tips diarios.',
+          time: 'Ahora mismo',
+          unread: true,
+          category: 'tip'
+        }
+      ]
     };
     
     saveToStorage(STORAGE_KEYS.USERS_DB, usersDb);
@@ -173,6 +195,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setRegisteredActivities([]);
     setMatches(DEFAULT_MATCHES);
     setPendingMatches([]);
+    setNotifications(usersDb[emailKey].notifications || []);
     
     return true;
   };
@@ -188,6 +211,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setRegisteredActivities([]);
     setMatches(DEFAULT_MATCHES);
     setPendingMatches([]);
+    setNotifications([]);
     router.push('/auth');
   };
 
@@ -236,6 +260,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       newLastCompletedDate = today;
       setStreak(newStreak);
       setLastCompletedDate(newLastCompletedDate);
+      addNotification('¡Racha Actualizada!', `Has alcanzado una racha de ${newStreak} días. ¡Sigue así!`, 'streak');
     }
 
     saveCurrentUserDataToDb({ 
@@ -250,12 +275,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = [...registeredActivities, activity];
     setRegisteredActivities(updated);
     saveCurrentUserDataToDb({ registeredActivities: updated });
+    addNotification('Inscripción Exitosa', `Te has unido a la actividad: ${activity.title}`, 'activity');
   };
 
   const cancelActivity = (activityId: string) => {
+    const activity = registeredActivities.find(a => a.id === activityId);
     const updated = registeredActivities.filter(a => a.id !== activityId);
     setRegisteredActivities(updated);
     saveCurrentUserDataToDb({ registeredActivities: updated });
+    if (activity) {
+      addNotification('Actividad Cancelada', `Has cancelado tu participación en: ${activity.title}`, 'activity');
+    }
   };
 
   const addMatchRequest = (userId: string) => {
@@ -263,6 +293,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const updated = [...pendingMatches, userId];
     setPendingMatches(updated);
     saveCurrentUserDataToDb({ pendingMatches: updated });
+    addNotification('Solicitud de Match', 'Has enviado una nueva solicitud de conexión.', 'match');
+  };
+
+  const addNotification = (title: string, description: string, category: Notification['category']) => {
+    const newNotif: Notification = {
+      id: Math.random().toString(36).substr(2, 9),
+      title,
+      description,
+      time: 'Justo ahora',
+      unread: true,
+      category
+    };
+    const updated = [newNotif, ...notifications];
+    setNotifications(updated);
+    saveCurrentUserDataToDb({ notifications: updated });
+  };
+
+  const markAllNotificationsAsRead = () => {
+    const updated = notifications.map(n => ({ ...n, unread: false }));
+    setNotifications(updated);
+    saveCurrentUserDataToDb({ notifications: updated });
   };
 
   const isMatch = (userId: string) => matches.includes(userId);
@@ -275,6 +326,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       streak, lastCompletedDate, refreshTips, isLoaded,
       registeredActivities, registerActivity, cancelActivity,
       matches, pendingMatches, addMatchRequest, isMatch, isPending,
+      notifications, addNotification, markAllNotificationsAsRead,
       currentUser, login, signup, logout
     }}>
       {children}

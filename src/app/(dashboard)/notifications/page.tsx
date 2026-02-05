@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -5,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ChevronLeft, Bell, Zap, Users, Flame, Info } from 'lucide-react';
-import { MOCK_NOTIFICATIONS } from '@/app/lib/mock-data';
+import { useApp } from '@/app/context/AppContext';
 import { cn } from '@/lib/utils';
 
 const CATEGORY_ICONS: Record<string, any> = {
@@ -18,6 +19,7 @@ const CATEGORY_ICONS: Record<string, any> = {
 
 export default function NotificationsPage() {
   const router = useRouter();
+  const { notifications, markAllNotificationsAsRead } = useApp();
 
   return (
     <div className="flex flex-col gap-6 p-6 animate-fade-in bg-secondary/5 min-h-screen pb-24">
@@ -37,7 +39,7 @@ export default function NotificationsPage() {
       </header>
 
       <div className="space-y-4">
-        {MOCK_NOTIFICATIONS.length === 0 ? (
+        {notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center bg-white rounded-[2.5rem] border border-dashed border-muted-foreground/20">
             <div className="bg-secondary/30 p-4 rounded-full mb-4">
               <Bell size={32} className="text-primary/30" />
@@ -46,7 +48,7 @@ export default function NotificationsPage() {
           </div>
         ) : (
           <div className="grid gap-3">
-            {MOCK_NOTIFICATIONS.map((notif) => {
+            {notifications.map((notif) => {
               const Icon = CATEGORY_ICONS[notif.category] || CATEGORY_ICONS.default;
               return (
                 <Card 
@@ -88,7 +90,11 @@ export default function NotificationsPage() {
       </div>
 
       <div className="mt-4 px-2">
-        <Button variant="outline" className="w-full h-12 rounded-2xl border-primary/20 text-primary font-bold bg-white shadow-sm">
+        <Button 
+          variant="outline" 
+          onClick={markAllNotificationsAsRead}
+          className="w-full h-12 rounded-2xl border-primary/20 text-primary font-bold bg-white shadow-sm"
+        >
           Marcar todas como leídas
         </Button>
       </div>

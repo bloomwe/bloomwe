@@ -16,6 +16,7 @@ import { HOBBIES_LIST } from '@/app/lib/mock-data';
 import { format, isAfter, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import { useApp } from '@/app/context/AppContext';
 
 interface Event {
   id: string;
@@ -34,6 +35,7 @@ const INITIAL_EVENT_STATE = {
 };
 
 export default function CalendarPage() {
+  const { addNotification } = useApp();
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [events, setEvents] = useState<Event[]>([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -63,12 +65,17 @@ export default function CalendarPage() {
       notes: newEvent.notes
     };
     saveEvents([...events, event]);
+    addNotification('Evento Programado', `Has añadido "${event.title}" a tu agenda.`, 'activity');
     setIsAddOpen(false);
     setNewEvent(INITIAL_EVENT_STATE);
   };
 
   const deleteEvent = (id: string) => {
+    const event = events.find(e => e.id === id);
     saveEvents(events.filter(e => e.id !== id));
+    if (event) {
+      addNotification('Evento Eliminado', `Se ha quitado "${event.title}" de tu agenda.`, 'activity');
+    }
   };
 
   const dayEvents = events.filter(e => 
@@ -247,4 +254,3 @@ export default function CalendarPage() {
     </div>
   );
 }
-
