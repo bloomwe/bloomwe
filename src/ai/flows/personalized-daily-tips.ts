@@ -3,7 +3,8 @@
 /**
  * @fileOverview This file defines a Genkit flow for generating personalized daily health and wellness tips.
  *
- * The flow takes user preferences and activity levels as input and outputs a list of 5-10 personalized tips.
+ * The flow takes user preferences, specifically hobbies and their skill levels, to output 
+ * highly personalized and appropriately difficult wellness tips.
  *
  * @exports generateDailyTips - A function to trigger the daily tips generation flow.
  * @exports DailyTipsInput - The input type for the generateDailyTips function.
@@ -19,7 +20,7 @@ const DailyTipsInputSchema = z.object({
   activities: z.array(z.string()).describe('The types of activities the user enjoys.'),
   timeCommitment: z.string().describe('The amount of time the user can dedicate to their well-being each day (e.g., 10 minutes, 30 minutes, 1 hour).'),
   hobbies: z.record(z.object({
-    level: z.string().describe('The user\'s level of experience in the hobby (e.g., new, medium, advanced, expert).'),
+    level: z.string().describe('The user\'s level of experience in the hobby (e.g., Nuevo, Medio, Avanzado, Experto).'),
   })).describe('The user\'s selected hobbies and their corresponding levels.'),
   completedTips: z.array(z.string()).optional().describe('List of IDs of tips completed by the user.'),
 });
@@ -47,28 +48,32 @@ const dailyTipsPrompt = ai.definePrompt({
   name: 'dailyTipsPrompt',
   input: {schema: DailyTipsInputSchema},
   output: {schema: DailyTipsOutputSchema},
-  prompt: `You are a wellness expert generating personalized daily health and wellness tips for users.
+  prompt: `You are a wellness and sports expert generating personalized daily health and wellness tips for users.
 
-  Based on the user's onboarding preferences and activity levels, create 5-10 unique tips.
+  CRITICAL INSTRUCTION: You must pay extremely close attention to the user's HOBBIES and their corresponding LEVELS. 
+  - If a user is "Nuevo" (Beginner) in a hobby like Yoga, suggest basic poses or introductory concepts.
+  - If a user is "Experto" (Expert) in "Gimnasio", suggest advanced techniques, recovery protocols for high intensity, or specific nutritional optimizations.
+  - Mix general wellness (hydration, mental health) with specific tips based on their selected hobbies.
 
-  The user's motivations are: {{motivation}}
-  The user enjoys these activities: {{activities}}
-  The user can dedicate this much time each day: {{timeCommitment}}
-  The user\'s hobbies and levels are: {{#each hobbies}}{{@key}}: {{this.level}}{{/each}}
+  USER PROFILE:
+  - Motivations: {{#each motivation}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
+  - Enjoyed activities: {{#each activities}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
+  - Daily time commitment: {{{timeCommitment}}}
+  - Hobbies and current levels:
+    {{#each hobbies}}
+    * {{@key}}: {{{this.level}}}
+    {{/each}}
 
-  Completed tips (avoid duplicates if possible): {{completedTips}}
+  Completed tips (avoid duplicates): {{completedTips}}
 
-  Each tip should include:
-  - id: A unique identifier for the tip.
-  - title: A concise title for the tip.
-  - description: A detailed explanation of the tip and its benefits.
-  - category: The category of the tip (e.g., hydration, exercise, nutrition, mental).
-  - activities: A list of related activities.
-  - level: The level of difficulty or expertise required.
-  - timeEstimate: The estimated time in minutes to complete the tip.
+  Requirements:
+  1. Generate 5-10 unique tips.
+  2. Ensure the "level" field in your output matches the difficulty of the task relative to the user's expertise.
+  3. Ensure "timeEstimate" respects their daily commitment of {{{timeCommitment}}}.
+  4. Make the descriptions encouraging and technical enough for their level.
 
-  Format the output as a JSON array of tips.
-  `,config: {
+  Format the output as a JSON array of tips.`,
+  config: {
     safetySettings: [
       {
         category: 'HARM_CATEGORY_HATE_SPEECH',
