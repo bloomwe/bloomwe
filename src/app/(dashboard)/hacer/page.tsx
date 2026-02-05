@@ -229,7 +229,7 @@ export default function HacerPage() {
                 <h4 className="font-bold text-lg px-1 flex items-center gap-2"><Map size={18} className="text-primary" /> Ubicación en el Mapa</h4>
                 <div className="rounded-[2rem] overflow-hidden h-40 bg-secondary/30 relative">
                   <img 
-                    src={mapPlaceholder?.imageUrl || "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1000"} 
+                    src={mapPlaceholder?.imageUrl || "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&q=80&w=1000"} 
                     alt="Mapa de Google" 
                     className="w-full h-full object-cover" 
                     data-ai-hint={mapPlaceholder?.imageHint || "google maps"}
