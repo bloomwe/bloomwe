@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -20,7 +21,18 @@ const CATEGORY_ICONS: Record<string, any> = {
 };
 
 export default function HomePage() {
-  const { userData, dailyTips, completedTipsToday, toggleTipCompletion, streak, refreshTips, registeredActivities, cancelActivity } = useApp();
+  const { 
+    userData, 
+    dailyTips, 
+    completedTipsToday, 
+    toggleTipCompletion, 
+    streak, 
+    refreshTips, 
+    registeredActivities, 
+    cancelActivity,
+    notifications 
+  } = useApp();
+  
   const [selectedTip, setSelectedTip] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [activityToCancel, setActivityToCancel] = useState<RegisteredActivity | null>(null);
@@ -33,6 +45,7 @@ export default function HomePage() {
   }, [dailyTips.length, refreshTips]);
 
   const progress = dailyTips.length > 0 ? (completedTipsToday.length / dailyTips.length) * 100 : 0;
+  const hasUnreadNotifications = notifications.some(n => n.unread);
 
   const handleCancelActivity = () => {
     if (activityToCancel) {
@@ -52,7 +65,9 @@ export default function HomePage() {
           <Link href="/notifications">
             <Button variant="ghost" size="icon" className="relative h-10 w-10 rounded-full bg-white shadow-sm hover:bg-primary/5">
               <Bell size={20} className="text-primary" />
-              <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-white" />
+              {hasUnreadNotifications && (
+                <span className="absolute top-2 right-2 h-2 w-2 bg-red-500 rounded-full border-2 border-white" />
+              )}
             </Button>
           </Link>
           <div className="flex items-center gap-1 bg-orange-50 px-3 py-1.5 rounded-full text-orange-600 border border-orange-100 shadow-sm">
