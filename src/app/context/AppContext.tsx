@@ -39,6 +39,7 @@ interface AppContextType {
   isLoaded: boolean;
   registeredActivities: RegisteredActivity[];
   registerActivity: (activity: RegisteredActivity) => void;
+  cancelActivity: (activityId: string) => void;
   matches: string[];
   addMatch: (userId: string) => void;
 }
@@ -128,6 +129,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveToStorage(STORAGE_KEYS.REGISTERED_ACTIVITIES, updated);
   };
 
+  const cancelActivity = (activityId: string) => {
+    const updated = registeredActivities.filter(a => a.id !== activityId);
+    setRegisteredActivities(updated);
+    saveToStorage(STORAGE_KEYS.REGISTERED_ACTIVITIES, updated);
+  };
+
   const addMatch = (userId: string) => {
     if (matches.includes(userId)) return;
     const updated = [...matches, userId];
@@ -140,7 +147,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       userData, setUserData, dailyTips, setDailyTips,
       completedTipsToday, toggleTipCompletion,
       streak, lastCompletedDate, refreshTips, isLoaded,
-      registeredActivities, registerActivity,
+      registeredActivities, registerActivity, cancelActivity,
       matches, addMatch
     }}>
       {children}

@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useApp } from '@/app/context/AppContext';
+import { useApp, RegisteredActivity } from '@/app/context/AppContext';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Flame, Droplets, Dumbbell, Brain, Apple, Clock, CheckCircle2, Zap, MapPin, Calendar as CalendarIcon } from 'lucide-react';
+import { Flame, Droplets, Dumbbell, Brain, Apple, Clock, CheckCircle2, Zap, MapPin, Calendar as CalendarIcon, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const CATEGORY_ICONS: Record<string, any> = {
@@ -19,9 +19,10 @@ const CATEGORY_ICONS: Record<string, any> = {
 };
 
 export default function HomePage() {
-  const { userData, dailyTips, completedTipsToday, toggleTipCompletion, streak, refreshTips, registeredActivities } = useApp();
+  const { userData, dailyTips, completedTipsToday, toggleTipCompletion, streak, refreshTips, registeredActivities, cancelActivity } = useApp();
   const [selectedTip, setSelectedTip] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [activityToCancel, setActivityToCancel] = useState<RegisteredActivity | null>(null);
 
   useEffect(() => {
     if (dailyTips.length === 0) {
@@ -31,6 +32,13 @@ export default function HomePage() {
   }, [dailyTips.length, refreshTips]);
 
   const progress = dailyTips.length > 0 ? (completedTipsToday.length / dailyTips.length) * 100 : 0;
+
+  const handleCancelActivity = () => {
+    if (activityToCancel) {
+      cancelActivity(activityToCancel.id);
+      setActivityToCancel(null);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 p-6 animate-fade-in max-w-full overflow-x-hidden bg-secondary/5 min-h-screen pb-24">
@@ -66,16 +74,26 @@ export default function HomePage() {
           </div>
           <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-2 px-2">
             {registeredActivities.map((activity) => (
-              <Card key={activity.id} className="min-w-[280px] rounded-3xl border-none shadow-sm bg-white overflow-hidden shrink-0 border border-border/50">
+              <Card key={activity.id} className="min-w-[280px] rounded-3xl border-none shadow-sm bg-white overflow-hidden shrink-0 border border-border/50 relative group">
                 <CardContent className="p-5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="bg-primary/10 p-2 rounded-xl text-primary">
-                      <Dumbbell size={18} />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-primary/10 p-2 rounded-xl text-primary">
+                        <Dumbbell size={18} />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm">{activity.title}</h4>
+                        <p className="text-[10px] text-primary font-bold uppercase">{activity.sport}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-sm">{activity.title}</h4>
-                      <p className="text-[10px] text-primary font-bold uppercase">{activity.sport}</p>
-                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-destructive/40 hover:text-destructive hover:bg-destructive/5 rounded-full transition-colors"
+                      onClick={() => setActivityToCancel(activity)}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-medium">
@@ -147,6 +165,7 @@ export default function HomePage() {
         )}
       </section>
 
+      {/* Modal de Detalle de Tip */}
       <Dialog open={!!selectedTip} onOpenChange={() => setSelectedTip(null)}>
         <DialogContent className="sm:max-w-md rounded-[2.5rem] p-0 overflow-hidden border-none max-w-[92vw]">
           {selectedTip && (
@@ -198,6 +217,45 @@ export default function HomePage() {
                     {completedTipsToday.includes(selectedTip.id) ? 'Marcar como pendiente' : '¡Completado!'}
                   </Button>
                 </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Confirmación de Cancelación */}
+      <Dialog open={!!activityToCancel} onOpenChange={() => setActivityToCancel(null)}>
+        <DialogContent className="rounded-[2.5rem] max-w-[85vw] p-8 text-center border-none shadow-2xl">
+          {activityToCancel && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-center text-2xl font-black text-destructive flex flex-col items-center gap-4">
+                  <div className="bg-destructive/10 p-4 rounded-full">
+                    <Trash2 size={40} className="text-destructive" />
+                  </div>
+                  ¿Cancelar actividad?
+                </DialogTitle>
+                <DialogDescription className="text-center pt-2 text-sm font-medium leading-relaxed">
+                  Estás a punto de cancelar tu inscripción para <span className="text-primary font-bold">{activityToCancel.title}</span>. 
+                  <br /><br />
+                  ¿Estás seguro de que quieres eliminarla de tus actividades?
+                </DialogDescription>
+              </DialogHeader>
+              <div className="pt-6 flex gap-3">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setActivityToCancel(null)} 
+                  className="flex-1 h-12 rounded-2xl border-primary/20 text-primary font-bold"
+                >
+                  Volver
+                </Button>
+                <Button 
+                  variant="destructive"
+                  onClick={handleCancelActivity} 
+                  className="flex-[1.5] h-12 rounded-2xl font-bold shadow-lg shadow-destructive/20"
+                >
+                  Sí, Cancelar
+                </Button>
               </div>
             </>
           )}
