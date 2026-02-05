@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,6 +11,7 @@ import { HOBBIES_LIST, LEVELS } from '@/app/lib/mock-data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronRight, ChevronLeft, Camera, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const STEPS = [
   { id: 1, title: 'Tus Motivaciones' },
@@ -21,6 +22,7 @@ const STEPS = [
 const OnboardingFlow = () => {
   const [step, setStep] = useState(1);
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { setUserData, currentUser } = useApp();
 
   const [formData, setFormData] = useState({
@@ -31,10 +33,10 @@ const OnboardingFlow = () => {
     email: '',
     location: '',
     birthDate: '',
+    profilePic: '',
     hobbies: {} as Record<string, { level: string }>
   });
 
-  // Sincronizar el correo del usuario actual al cargar
   useEffect(() => {
     if (currentUser) {
       setFormData(prev => ({ ...prev, email: currentUser }));
@@ -53,6 +55,21 @@ const OnboardingFlow = () => {
     }));
   };
 
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, profilePic: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleFinish = () => {
     setUserData({
       onboarded: true,
@@ -63,7 +80,7 @@ const OnboardingFlow = () => {
       email: formData.email,
       location: formData.location,
       birthDate: formData.birthDate,
-      profilePic: 'https://picsum.photos/seed/user/150/150',
+      profilePic: formData.profilePic || 'https://picsum.photos/seed/user/150/150',
       hobbies: formData.hobbies
     });
     router.push('/home');
@@ -126,13 +143,27 @@ const OnboardingFlow = () => {
 
         {step === 2 && (
           <div className="space-y-6 animate-fade-in">
-            <h1 className="text-2xl font-bold">Cuéntanos sobre ti</h1>
+            <h1 className="text-2xl font-bold text-center">Cuéntanos sobre ti</h1>
             <div className="flex justify-center mb-6">
-              <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-primary cursor-pointer relative group">
-                <User size={40} className="text-muted-foreground group-hover:text-primary" />
-                <div className="absolute bottom-0 right-0 p-1 bg-primary rounded-full text-white">
+              <div 
+                onClick={handleImageClick}
+                className="w-24 h-24 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-primary cursor-pointer relative group overflow-hidden"
+              >
+                {formData.profilePic ? (
+                  <img src={formData.profilePic} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                  <User size={40} className="text-muted-foreground group-hover:text-primary" />
+                )}
+                <div className="absolute bottom-0 right-0 p-1 bg-primary rounded-full text-white shadow-lg">
                   <Camera size={16} />
                 </div>
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  onChange={handleImageChange} 
+                  accept="image/*" 
+                  className="hidden" 
+                />
               </div>
             </div>
             <div className="space-y-4">
