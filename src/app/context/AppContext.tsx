@@ -70,6 +70,9 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+// Usuarios de ejemplo para que aparezcan en favoritos por defecto
+const DEFAULT_MATCHES = ['1', '2']; // IDs de Mateo González y Valentina Ruiz en MOCK_SOCIAL_FEED
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<string | null>(null);
@@ -79,7 +82,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [streak, setStreak] = useState(0);
   const [lastCompletedDate, setLastCompletedDate] = useState<string | null>(null);
   const [registeredActivities, setRegisteredActivities] = useState<RegisteredActivity[]>([]);
-  const [matches, setMatches] = useState<string[]>([]);
+  const [matches, setMatches] = useState<string[]>(DEFAULT_MATCHES);
   const [pendingMatches, setPendingMatches] = useState<string[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -100,18 +103,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setUserDataState(user.userData || null);
       setStreak(user.streak || 0);
       setRegisteredActivities(user.registeredActivities || []);
-      setMatches(user.matches || []);
+      // Si el usuario no tiene matches guardados, ponemos los de ejemplo
+      setMatches(user.matches && user.matches.length > 0 ? user.matches : DEFAULT_MATCHES);
       setPendingMatches(user.pendingMatches || []);
       setLastCompletedDate(user.lastCompletedDate || null);
       
       const today = new Date().toDateString();
 
-      // Cargar tips específicos del usuario desde su objeto en la DB
       if (user.lastTipsDate === today && user.dailyTips) {
         setDailyTips(user.dailyTips);
         setCompletedTipsToday(user.completedTipsToday || []);
       } else {
-        // Es un nuevo día o usuario nuevo, limpiar estado local de tips
         setDailyTips([]);
         setCompletedTipsToday([]);
       }
@@ -144,13 +146,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const usersDb = getFromStorage<Record<string, UserAccount>>(STORAGE_KEYS.USERS_DB) || {};
     if (usersDb[emailKey]) return false;
 
+    // Inicializamos con DEFAULT_MATCHES para que aparezcan en Favoritos
     usersDb[emailKey] = {
       email: emailKey,
       password: pass,
       userData: undefined,
       streak: 0,
       registeredActivities: [],
-      matches: [],
+      matches: DEFAULT_MATCHES,
       pendingMatches: [],
       dailyTips: [],
       completedTipsToday: [],
@@ -162,14 +165,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveToStorage(STORAGE_KEYS.CURRENT_SESSION, emailKey);
     setCurrentUser(emailKey);
     
-    // Resetear estados locales para el nuevo usuario
     setUserDataState(null);
     setDailyTips([]);
     setCompletedTipsToday([]);
     setStreak(0);
     setLastCompletedDate(null);
     setRegisteredActivities([]);
-    setMatches([]);
+    setMatches(DEFAULT_MATCHES);
     setPendingMatches([]);
     
     return true;
@@ -184,7 +186,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStreak(0);
     setLastCompletedDate(null);
     setRegisteredActivities([]);
-    setMatches([]);
+    setMatches(DEFAULT_MATCHES);
     setPendingMatches([]);
     router.push('/auth');
   };
@@ -206,7 +208,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       });
       const today = new Date().toDateString();
       setDailyTips(tips);
-      setCompletedTipsToday([]); // Resetear tips completados al generar nuevos
+      setCompletedTipsToday([]);
       
       saveCurrentUserDataToDb({ 
         dailyTips: tips, 
