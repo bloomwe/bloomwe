@@ -112,7 +112,7 @@ export const MOCK_RECIPES = [
       'Colócalas en un plato y refrigera por al menos 20 minutos antes de consumir.'
     ],
     nutrition: { calories: 150, protein: '5g', carbs: '20g', fats: '6g' },
-    image: 'https://images.unsplash.com/photo-1590080875515-8a03b1447a99?q=80&w=1000'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323174/50ed4977-25f2-4e7d-a122-69a4ff289b79.png'
   },
   {
     id: '3',
@@ -367,7 +367,7 @@ export const MOCK_RELAXATION = {
       title: 'Mente Serena', 
       duration: '20 min', 
       author: 'Dr. Calma', 
-      image: 'https://images.unsplash.com/photo-1478737270239-2fccd27ee10f?q=80&w=1000',
+      image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323282/f67f2d8c-99f8-4fe3-bc0a-9056b09e67fe.png',
       description: 'Una guía diaria para reducir el estrés y encontrar paz mental en minutos.'
     },
     { 
