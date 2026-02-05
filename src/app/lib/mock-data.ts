@@ -157,7 +157,7 @@ export const MOCK_PLACES = [
     address: 'Av. Calle 63 y Av. Carrera 68',
     activities: ['Running', 'Ciclismo', 'Eventos Masivos', 'Yoga'],
     hours: '5am - 7pm',
-    image: 'https://picsum.photos/seed/simonbolivar/600/400'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323625/a7261b44-1ce1-41dc-878d-b89168baad35.png'
   },
   {
     id: '2',
@@ -165,7 +165,7 @@ export const MOCK_PLACES = [
     address: 'Calle 63 # 45-10',
     activities: ['Yoga', 'Caminata', 'Navegación en Bote', 'Picnic'],
     hours: '6am - 6pm',
-    image: 'https://picsum.photos/seed/novios/600/400'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323648/1c3564ef-eaad-4e7e-8386-1532b38b1944.png'
   },
   {
     id: '3',
@@ -173,7 +173,7 @@ export const MOCK_PLACES = [
     address: 'Carrera 15 con Calle 88',
     activities: ['Running', 'Calistenia', 'Paseo de Mascotas'],
     hours: 'Abierto 24h',
-    image: 'https://picsum.photos/seed/virrey/600/400'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323666/39cefa5c-6590-48dd-b9b9-6167d8320e0b.png'
   },
   {
     id: '4',
@@ -189,7 +189,7 @@ export const MOCK_PLACES = [
     address: 'Calle 93 # 11A-41',
     activities: ['Yoga Matutino', 'Eventos Culturales', 'Caminata'],
     hours: 'Abierto 24h',
-    image: 'https://picsum.photos/seed/p93/600/400'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323713/8d4ddf3a-efe2-4e51-a8fa-6ba7d912885a.png'
   }
 ];
 
