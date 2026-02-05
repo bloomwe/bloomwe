@@ -152,7 +152,7 @@ export default function CalendarPage() {
         </Dialog>
       </header>
 
-      <section className="bg-white rounded-[2.5rem] p-4 shadow-sm border border-border/50 overflow-hidden">
+      <section className="bg-white rounded-[2.5rem] p-4 shadow-sm border border-border/50 overflow-hidden min-h-[400px] flex flex-col justify-center">
         <Calendar
           mode="single"
           selected={date}
