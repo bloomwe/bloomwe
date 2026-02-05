@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -49,10 +50,13 @@ export default function SocialPage() {
 
   const filteredFeed = (() => {
     if (activeTab === 'discover') {
-      return feed;
+      // Mostramos los que NO son match y NO son pendientes (incluyendo al usuario actual)
+      return feed.filter(u => !isMatch(u.id) && !isPending(u.id));
     } else if (activeTab === 'pending') {
+      // Solo los solicitados
       return feed.filter(u => isPending(u.id));
     } else {
+      // Solo los confirmados
       return feed.filter(u => isMatch(u.id));
     }
   })();
@@ -193,6 +197,7 @@ export default function SocialPage() {
                     <MessageCircle size={20} /> <span className="text-xs">Comentar</span>
                   </button>
                   
+                  {/* Lógica Excluyente de Botones/Estados */}
                   {!user.isMe && !isMatch(user.id) && !isPending(user.id) && (
                     <button 
                       onClick={(e) => { e.stopPropagation(); handleMatchRequestAction(user); }}
@@ -303,7 +308,10 @@ export default function SocialPage() {
                       </Button>
                     ) : (
                       <Button 
-                        onClick={() => handleMatchRequestAction(selectedUser)}
+                        onClick={() => {
+                          handleMatchRequestAction(selectedUser);
+                          setSelectedUser(null);
+                        }}
                         className="w-full h-14 rounded-2xl bg-primary font-bold shadow-lg shadow-primary/20"
                       >
                         <Zap size={20} fill="currentColor" className="mr-2" /> Hacer Match
