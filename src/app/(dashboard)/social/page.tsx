@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -13,6 +13,23 @@ import { MOCK_SOCIAL_FEED } from '@/app/lib/mock-data';
 import { useApp } from '@/app/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+
+const NAMES = ['Lucas', 'Martina', 'Daniel', 'Isabella', 'Santi', 'Elena', 'Diego', 'Lucía', 'Javier', 'Sara'];
+const LAST_NAMES = ['Silva', 'Pérez', 'Torres', 'Sánchez', 'Ramírez', 'Díaz', 'Morales', 'Castro'];
+const BIOS = [
+  'Enfocado en mi mejor versión. ¡Vamos con toda!',
+  'Amante de la naturaleza y el ejercicio al aire libre.',
+  'Cocinando saludable y viviendo feliz.',
+  'Buscando equilibrio entre estudio y bienestar.',
+  'Día a día construyendo mejores hábitos.'
+];
+const ACTIVITIES = [
+  'Acaba de completar un reto de hidratación',
+  'Subió una nueva foto de su entrenamiento',
+  'Se unió a BloomWell hoy',
+  'Alcanzó su meta de pasos diaria',
+  'Compartió un tip de meditación'
+];
 
 export default function SocialPage() {
   const { userData, streak, matches, pendingMatches, addMatchRequest, isMatch, isPending } = useApp();
@@ -33,6 +50,33 @@ export default function SocialPage() {
   const [matchSuccess, setMatchSuccess] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
+
+  // Efecto para autogenerar usuarios si Descubrir está vacío
+  useEffect(() => {
+    if (activeTab === 'discover') {
+      const discoverable = feed.filter(u => !isMatch(u.id) && !isPending(u.id) && !u.isMe);
+      
+      if (discoverable.length === 0) {
+        const generatedUsers = Array.from({ length: 5 }).map((_, i) => {
+          const id = `gen-${Date.now()}-${i}`;
+          return {
+            id,
+            name: `${NAMES[Math.floor(Math.random() * NAMES.length)]} ${LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]}`,
+            photo: `https://picsum.photos/seed/${id}/150/150`,
+            bio: BIOS[Math.floor(Math.random() * BIOS.length)],
+            recentActivity: ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)],
+            interests: ['Bienestar', 'Salud'],
+            streak: Math.floor(Math.random() * 10) + 1,
+            isMe: false,
+            likes: Math.floor(Math.random() * 15),
+            userLiked: false,
+            comments: []
+          };
+        });
+        setFeed(prev => [...prev, ...generatedUsers]);
+      }
+    }
+  }, [activeTab, feed, isMatch, isPending]);
 
   const handlePost = () => {
     if (!post) return;
@@ -84,7 +128,6 @@ export default function SocialPage() {
       return u;
     }));
 
-    // Actualizamos el usuario seleccionado para que se vea el comentario en el modal
     setSelectedUser((prev: any) => ({
       ...prev,
       comments: [...prev.comments, newComment]
@@ -314,7 +357,6 @@ export default function SocialPage() {
                     <p className="text-sm text-foreground/80 leading-relaxed italic">"{selectedUser.bio}"</p>
                   </div>
 
-                  {/* Sección de Comentarios */}
                   <div className="space-y-4">
                     <h4 className="font-black text-[10px] text-primary uppercase tracking-widest flex items-center gap-2">
                       <MessageCircle size={14} /> Comentarios ({selectedUser.comments.length})
