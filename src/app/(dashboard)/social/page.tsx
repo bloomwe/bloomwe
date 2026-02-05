@@ -8,7 +8,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User, MapPin, Award, Clock, Send } from 'lucide-react';
+import { Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User, MapPin, Award, Clock, Send, Tag as TagIcon } from 'lucide-react';
 import { MOCK_SOCIAL_FEED } from '@/app/lib/mock-data';
 import { useApp } from '@/app/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
@@ -55,10 +55,13 @@ const ALL_INTERESTS = [
   'Baile', 'Senderismo', 'Tenis', 'Vegano', 'Keto', 'Calistenia'
 ];
 
+const QUICK_TAGS = ['Yoga', 'Nutrición', 'Mental', 'Deporte'];
+
 export default function SocialPage() {
   const { userData, streak, matches, pendingMatches, addMatchRequest, isMatch, isPending } = useApp();
   const { toast } = useToast();
   const [post, setPost] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [newComment, setNewComment] = useState('');
   const [mounted, setMounted] = useState(false);
   const [feed, setFeed] = useState<any[]>([]);
@@ -75,7 +78,7 @@ export default function SocialPage() {
   };
 
   const getRandomInterests = () => {
-    const count = Math.floor(Math.random() * 3) + 1; // 1 a 3 intereses
+    const count = Math.floor(Math.random() * 3) + 1; 
     const shuffled = [...ALL_INTERESTS].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   };
@@ -83,18 +86,16 @@ export default function SocialPage() {
   useEffect(() => {
     setMounted(true);
     
-    // Inicializar el feed en el cliente
     const initialFeed = MOCK_SOCIAL_FEED.map(u => ({ 
       ...u, 
       isMe: false, 
       likes: Math.floor(Math.random() * 20) + 5,
       userLiked: false,
       comments: getRandomComments(),
-      interests: getRandomInterests() // Randomizar intereses iniciales
+      interests: getRandomInterests() 
     }));
     setFeed(initialFeed);
 
-    // Generar una nueva publicación cada minuto
     const interval = setInterval(() => {
       const id = `gen-${Date.now()}`;
       const newUser = {
@@ -142,6 +143,12 @@ export default function SocialPage() {
     }
   }, [activeTab, feed, isMatch, isPending, mounted]);
 
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+    );
+  };
+
   const handlePost = () => {
     if (!post) return;
     const newPost = {
@@ -150,7 +157,7 @@ export default function SocialPage() {
       photo: userData?.profilePic || 'https://picsum.photos/seed/me/150/150',
       bio: post,
       recentActivity: 'Acaba de publicar un estado',
-      interests: userData?.activities || getRandomInterests(),
+      interests: selectedTags.length > 0 ? selectedTags : (userData?.activities || getRandomInterests()),
       streak: streak,
       isMe: true,
       likes: 0,
@@ -159,6 +166,7 @@ export default function SocialPage() {
     };
     setFeed([newPost, ...feed]);
     setPost('');
+    setSelectedTags([]);
     toast({
       title: "Publicado",
       description: "Tu estado se ha compartido con la comunidad.",
@@ -274,24 +282,49 @@ export default function SocialPage() {
 
       {activeTab === 'discover' && (
         <Card className="rounded-3xl border-none shadow-sm overflow-hidden bg-white">
-          <CardContent className="p-4 flex gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={userData?.profilePic} />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 space-y-3">
-              <textarea
-                placeholder="¿Qué estás haciendo por tu bienestar?"
-                value={post}
-                onChange={(e) => setPost(e.target.value)}
-                className="w-full bg-secondary/30 rounded-2xl p-3 text-sm focus:outline-none min-h-[80px] border-none resize-none"
-              />
-              <div className="flex justify-between items-center">
-                <div className="flex gap-2">
-                  <Button size="icon" variant="ghost" className="h-8 w-8 text-primary"><Smile size={20} /></Button>
-                </div>
-                <Button onClick={handlePost} size="sm" className="bg-primary rounded-full px-4 font-bold">Publicar</Button>
+          <CardContent className="p-4 flex flex-col gap-3">
+            <div className="flex gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={userData?.profilePic} />
+                <AvatarFallback>U</AvatarFallback>
+              </Avatar>
+              <div className="flex-1 space-y-3">
+                <textarea
+                  placeholder="¿Qué estás haciendo por tu bienestar?"
+                  value={post}
+                  onChange={(e) => setPost(e.target.value)}
+                  className="w-full bg-secondary/30 rounded-2xl p-3 text-sm focus:outline-none min-h-[80px] border-none resize-none"
+                />
               </div>
+            </div>
+            
+            <div className="flex flex-col gap-3 px-1">
+              <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase">
+                <TagIcon size={12} className="text-primary" /> Añadir Etiquetas
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {QUICK_TAGS.map(tag => (
+                  <button
+                    key={tag}
+                    onClick={() => toggleTag(tag)}
+                    className={cn(
+                      "px-3 py-1 rounded-full text-[10px] font-bold transition-all border",
+                      selectedTags.includes(tag) 
+                        ? "bg-primary text-white border-primary shadow-sm" 
+                        : "bg-secondary/20 text-muted-foreground border-transparent hover:bg-secondary/40"
+                    )}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center pt-1">
+              <div className="flex gap-2">
+                <Button size="icon" variant="ghost" className="h-8 w-8 text-primary"><Smile size={20} /></Button>
+              </div>
+              <Button onClick={handlePost} size="sm" className="bg-primary rounded-full px-6 font-bold shadow-md shadow-primary/20">Publicar</Button>
             </div>
           </CardContent>
         </Card>
@@ -503,7 +536,7 @@ export default function SocialPage() {
             </Button>
           </div>
         </DialogContent>
-      </Dialog>
+      </div>
     </div>
   );
 }
