@@ -39,6 +39,8 @@ interface AppContextType {
   isLoaded: boolean;
   registeredActivities: RegisteredActivity[];
   registerActivity: (activity: RegisteredActivity) => void;
+  matches: string[];
+  addMatch: (userId: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -50,6 +52,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [streak, setStreak] = useState(0);
   const [lastCompletedDate, setLastCompletedDate] = useState<string | null>(null);
   const [registeredActivities, setRegisteredActivities] = useState<RegisteredActivity[]>([]);
+  const [matches, setMatches] = useState<string[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -59,6 +62,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const savedStreak = getFromStorage<number>(STORAGE_KEYS.STREAK) || 0;
     const lastTipsDate = getFromStorage<string>(STORAGE_KEYS.LAST_TIPS_DATE);
     const savedRegistered = getFromStorage<RegisteredActivity[]>(STORAGE_KEYS.REGISTERED_ACTIVITIES) || [];
+    const savedMatches = getFromStorage<string[]>(STORAGE_KEYS.MATCHES) || [];
 
     if (savedUser) setUserDataState(savedUser);
     
@@ -73,6 +77,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setStreak(savedStreak);
     setRegisteredActivities(savedRegistered);
+    setMatches(savedMatches);
     setIsLoaded(true);
   }, []);
 
@@ -123,12 +128,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveToStorage(STORAGE_KEYS.REGISTERED_ACTIVITIES, updated);
   };
 
+  const addMatch = (userId: string) => {
+    if (matches.includes(userId)) return;
+    const updated = [...matches, userId];
+    setMatches(updated);
+    saveToStorage(STORAGE_KEYS.MATCHES, updated);
+  };
+
   return (
     <AppContext.Provider value={{
       userData, setUserData, dailyTips, setDailyTips,
       completedTipsToday, toggleTipCompletion,
       streak, lastCompletedDate, refreshTips, isLoaded,
-      registeredActivities, registerActivity
+      registeredActivities, registerActivity,
+      matches, addMatch
     }}>
       {children}
     </AppContext.Provider>
