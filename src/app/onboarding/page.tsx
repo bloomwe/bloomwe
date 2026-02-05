@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,7 +21,7 @@ const STEPS = [
 const OnboardingFlow = () => {
   const [step, setStep] = useState(1);
   const router = useRouter();
-  const { setUserData } = useApp();
+  const { setUserData, currentUser } = useApp();
 
   const [formData, setFormData] = useState({
     motivations: [] as string[],
@@ -33,6 +33,13 @@ const OnboardingFlow = () => {
     birthDate: '',
     hobbies: {} as Record<string, { level: string }>
   });
+
+  // Sincronizar el correo del usuario actual al cargar
+  useEffect(() => {
+    if (currentUser) {
+      setFormData(prev => ({ ...prev, email: currentUser }));
+    }
+  }, [currentUser]);
 
   const nextStep = () => setStep(s => Math.min(s + 1, 3));
   const prevStep = () => setStep(s => Math.max(s - 1, 1));
@@ -135,7 +142,13 @@ const OnboardingFlow = () => {
               </div>
               <div className="space-y-1">
                 <Label>Correo Electrónico</Label>
-                <Input value={formData.email} onChange={e => setFormData(p => ({ ...p, email: e.target.value }))} placeholder="ejemplo@correo.com" />
+                <Input 
+                  value={formData.email} 
+                  readOnly 
+                  className="bg-muted/50 text-muted-foreground cursor-not-allowed border-none shadow-none"
+                  placeholder="ejemplo@correo.com" 
+                />
+                <p className="text-[10px] text-muted-foreground px-1">Tu correo se vinculó al registrarte.</p>
               </div>
               <div className="space-y-1">
                 <Label>¿Dónde vives?</Label>
