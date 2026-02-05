@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -229,10 +228,9 @@ export default function HacerPage() {
                 <h4 className="font-bold text-lg px-1 flex items-center gap-2"><Map size={18} className="text-primary" /> Ubicación en el Mapa</h4>
                 <div className="rounded-[2rem] overflow-hidden h-40 bg-secondary/30 relative">
                   <img 
-                    src={mapPlaceholder?.imageUrl || "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&q=80&w=1000"} 
+                    src="https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322532/0c37f40a-2fc0-4cb4-bb5a-4faa8a61f711.png" 
                     alt="Mapa de Google" 
                     className="w-full h-full object-cover" 
-                    data-ai-hint={mapPlaceholder?.imageHint || "google maps"}
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-primary p-3 rounded-full text-white shadow-xl animate-bounce">

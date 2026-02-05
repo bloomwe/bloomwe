@@ -51,7 +51,7 @@
     {
       "id": "google_maps_placeholder",
       "description": "Mapa de ubicación estilo Google Maps",
-      "imageUrl": "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1000",
+      "imageUrl": "https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322532/0c37f40a-2fc0-4cb4-bb5a-4faa8a61f711.png",
       "imageHint": "google maps"
     }
   ]
