@@ -26,6 +26,9 @@ const AuthContent = () => {
   const handleModeChange = (newMode: 'login' | 'signup') => {
     setMode(newMode);
     setError(null);
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -90,7 +93,7 @@ const AuthContent = () => {
           <CardContent className="p-8 pt-0">
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
-                <div className="bg-destructive/10 text-destructive text-xs font-bold p-4 rounded-2xl flex items-center gap-2 animate-fade-in">
+                <div className="bg-destructive/10 text-destructive text-xs font-bold p-4 rounded-2xl flex items-center gap-2 animate-fade-in border border-destructive/20">
                   <AlertCircle size={16} />
                   {error}
                 </div>
@@ -108,7 +111,7 @@ const AuthContent = () => {
                       if (error) setError(null);
                     }}
                     placeholder="tu@correo.com"
-                    className="rounded-2xl h-14 bg-secondary/20 border-none pl-12"
+                    className="rounded-2xl h-14 bg-secondary/20 border-none pl-12 focus-visible:ring-primary/30"
                   />
                 </div>
               </div>
@@ -125,7 +128,7 @@ const AuthContent = () => {
                       if (error) setError(null);
                     }}
                     placeholder="••••••••"
-                    className="rounded-2xl h-14 bg-secondary/20 border-none pl-12 pr-12"
+                    className="rounded-2xl h-14 bg-secondary/20 border-none pl-12 pr-12 focus-visible:ring-primary/30"
                   />
                   <button
                     type="button"
@@ -150,7 +153,7 @@ const AuthContent = () => {
                         if (error) setError(null);
                       }}
                       placeholder="••••••••"
-                      className="rounded-2xl h-14 bg-secondary/20 border-none pl-12 pr-12"
+                      className="rounded-2xl h-14 bg-secondary/20 border-none pl-12 pr-12 focus-visible:ring-primary/30"
                     />
                     <button
                       type="button"
@@ -163,7 +166,7 @@ const AuthContent = () => {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-14 rounded-2xl bg-primary text-white font-bold text-lg shadow-lg shadow-primary/20 mt-4">
+              <Button type="submit" className="w-full h-14 rounded-2xl bg-primary text-white font-bold text-lg shadow-lg shadow-primary/20 mt-4 active:scale-[0.98] transition-transform">
                 {mode === 'login' ? 'Entrar' : 'Registrarse'} <ArrowRight className="ml-2" size={20} />
               </Button>
             </form>
