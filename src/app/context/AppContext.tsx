@@ -15,6 +15,15 @@ export interface Notification {
   category: 'activity' | 'match' | 'streak' | 'tip' | 'default';
 }
 
+export interface CalendarEvent {
+  id: string;
+  date: Date;
+  title: string;
+  time: string;
+  type: string;
+  notes?: string;
+}
+
 interface UserData {
   onboarded: boolean;
   motivations: string[];
@@ -50,6 +59,7 @@ interface UserAccount {
   lastTipsDate?: string;
   lastCompletedDate?: string;
   notifications?: Notification[];
+  events?: any[]; // Stored as JSON with strings for dates
 }
 
 interface AppContextType {
@@ -75,6 +85,9 @@ interface AppContextType {
   addNotification: (title: string, description: string, category: Notification['category']) => void;
   markAllNotificationsAsRead: () => void;
   clearAllNotifications: () => void;
+  events: CalendarEvent[];
+  addCalendarEvent: (event: CalendarEvent) => void;
+  deleteCalendarEvent: (eventId: string) => void;
   // Auth additions
   currentUser: string | null;
   login: (email: string, pass: string) => boolean;
@@ -98,6 +111,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [matches, setMatches] = useState<string[]>(DEFAULT_MATCHES);
   const [pendingMatches, setPendingMatches] = useState<string[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -121,6 +135,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setPendingMatches(user.pendingMatches || []);
       setNotifications(user.notifications || []);
       setLastCompletedDate(user.lastCompletedDate || null);
+      setEvents((user.events || []).map(e => ({ ...e, date: new Date(e.date) })));
       
       const today = new Date().toDateString();
 
@@ -172,6 +187,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       completedTipsToday: [],
       lastTipsDate: '',
       lastCompletedDate: '',
+      events: [],
       notifications: [
         {
           id: 'welcome',
@@ -196,6 +212,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setRegisteredActivities([]);
     setMatches(DEFAULT_MATCHES);
     setPendingMatches([]);
+    setEvents([]);
     setNotifications(usersDb[emailKey].notifications || []);
     
     return true;
@@ -212,6 +229,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setRegisteredActivities([]);
     setMatches(DEFAULT_MATCHES);
     setPendingMatches([]);
+    setEvents([]);
     setNotifications([]);
     router.push('/auth');
   };
@@ -322,6 +340,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveCurrentUserDataToDb({ notifications: [] });
   };
 
+  const addCalendarEvent = (event: CalendarEvent) => {
+    const updated = [...events, event];
+    setEvents(updated);
+    saveCurrentUserDataToDb({ events: updated });
+  };
+
+  const deleteCalendarEvent = (eventId: string) => {
+    const updated = events.filter(e => e.id !== eventId);
+    setEvents(updated);
+    saveCurrentUserDataToDb({ events: updated });
+  };
+
   const isMatch = (userId: string) => matches.includes(userId);
   const isPending = (userId: string) => pendingMatches.includes(userId);
 
@@ -333,6 +363,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       registeredActivities, registerActivity, cancelActivity,
       matches, pendingMatches, addMatchRequest, isMatch, isPending,
       notifications, addNotification, markAllNotificationsAsRead, clearAllNotifications,
+      events, addCalendarEvent, deleteCalendarEvent,
       currentUser, login, signup, logout
     }}>
       {children}

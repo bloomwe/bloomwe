@@ -10,22 +10,12 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Clock, Trash2, Calendar as CalendarIcon, MapPin, Activity, ChevronRight } from 'lucide-react';
-import { getFromStorage, saveToStorage, STORAGE_KEYS } from '@/lib/storage';
+import { Plus, Clock, Trash2, Calendar as CalendarIcon, Activity, ChevronRight } from 'lucide-react';
 import { HOBBIES_LIST } from '@/app/lib/mock-data';
 import { format, isAfter, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { useApp } from '@/app/context/AppContext';
-
-interface Event {
-  id: string;
-  date: Date;
-  title: string;
-  time: string;
-  type: string;
-  notes?: string;
-}
+import { useApp, CalendarEvent } from '@/app/context/AppContext';
 
 const INITIAL_EVENT_STATE = {
   title: '',
@@ -35,9 +25,8 @@ const INITIAL_EVENT_STATE = {
 };
 
 export default function CalendarPage() {
-  const { addNotification } = useApp();
+  const { addNotification, events, addCalendarEvent, deleteCalendarEvent } = useApp();
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [events, setEvents] = useState<Event[]>([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [newEvent, setNewEvent] = useState<typeof INITIAL_EVENT_STATE>(INITIAL_EVENT_STATE);
   const [mounted, setMounted] = useState(false);
@@ -45,18 +34,11 @@ export default function CalendarPage() {
   useEffect(() => {
     setMounted(true);
     setDate(new Date());
-    const saved = getFromStorage<Event[]>(STORAGE_KEYS.EVENTS) || [];
-    setEvents(saved.map(e => ({ ...e, date: new Date(e.date) })));
   }, []);
-
-  const saveEvents = (updated: Event[]) => {
-    setEvents(updated);
-    saveToStorage(STORAGE_KEYS.EVENTS, updated);
-  };
 
   const handleAddEvent = () => {
     if (!newEvent.title || !date) return;
-    const event: Event = {
+    const event: CalendarEvent = {
       id: Math.random().toString(36).substr(2, 9),
       title: newEvent.title,
       time: newEvent.time,
@@ -64,15 +46,15 @@ export default function CalendarPage() {
       date: date,
       notes: newEvent.notes
     };
-    saveEvents([...events, event]);
+    addCalendarEvent(event);
     addNotification('Evento Programado', `Has añadido "${event.title}" a tu agenda.`, 'activity');
     setIsAddOpen(false);
     setNewEvent(INITIAL_EVENT_STATE);
   };
 
-  const deleteEvent = (id: string) => {
+  const handleDeleteEvent = (id: string) => {
     const event = events.find(e => e.id === id);
-    saveEvents(events.filter(e => e.id !== id));
+    deleteCalendarEvent(id);
     if (event) {
       addNotification('Evento Eliminado', `Se ha quitado "${event.title}" de tu agenda.`, 'activity');
     }
@@ -200,7 +182,7 @@ export default function CalendarPage() {
                       <span className="flex items-center gap-1"><Badge variant="outline" className="text-[8px] py-0 px-1.5 border-primary/20 text-primary">{event.type}</Badge></span>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" onClick={() => deleteEvent(event.id)} className="text-destructive/40 hover:text-destructive hover:bg-destructive/5 rounded-xl">
+                  <Button variant="ghost" size="icon" onClick={() => handleDeleteEvent(event.id)} className="text-destructive/40 hover:text-destructive hover:bg-destructive/5 rounded-xl">
                     <Trash2 size={18} />
                   </Button>
                 </CardContent>
