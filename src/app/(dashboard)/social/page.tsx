@@ -36,29 +36,59 @@ export default function SocialPage() {
   const { toast } = useToast();
   const [post, setPost] = useState('');
   const [newComment, setNewComment] = useState('');
-  const [feed, setFeed] = useState(MOCK_SOCIAL_FEED.map(u => ({ 
-    ...u, 
-    isMe: false, 
-    likes: Math.floor(Math.random() * 20) + 5,
-    userLiked: false,
-    comments: [
-      "¡Excelente iniciativa!",
-      "Me motiva mucho ver esto.",
-      "¡A darle con toda!"
-    ]
-  })));
+  const [mounted, setMounted] = useState(false);
+  const [feed, setFeed] = useState<any[]>([]);
   const [matchSuccess, setMatchSuccess] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
+  useEffect(() => {
+    setMounted(true);
+    
+    // Inicializar el feed en el cliente para evitar errores de hidratación (Math.random)
+    const initialFeed = MOCK_SOCIAL_FEED.map(u => ({ 
+      ...u, 
+      isMe: false, 
+      likes: Math.floor(Math.random() * 20) + 5,
+      userLiked: false,
+      comments: [
+        "¡Excelente iniciativa!",
+        "Me motiva mucho ver esto.",
+        "¡A darle con toda!"
+      ]
+    }));
+    setFeed(initialFeed);
+
+    // Generar una nueva publicación cada minuto
+    const interval = setInterval(() => {
+      const id = `gen-${Date.now()}`;
+      const newUser = {
+        id,
+        name: `${NAMES[Math.floor(Math.random() * NAMES.length)]} ${LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]}`,
+        photo: `https://picsum.photos/seed/${id}/150/150`,
+        bio: BIOS[Math.floor(Math.random() * BIOS.length)],
+        recentActivity: ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)],
+        interests: ['Bienestar', 'Salud'],
+        streak: Math.floor(Math.random() * 10) + 1,
+        isMe: false,
+        likes: Math.floor(Math.random() * 15),
+        userLiked: false,
+        comments: []
+      };
+      setFeed(prev => [newUser, ...prev]);
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   // Efecto para autogenerar usuarios si Descubrir está vacío
   useEffect(() => {
-    if (activeTab === 'discover') {
+    if (mounted && activeTab === 'discover') {
       const discoverable = feed.filter(u => !isMatch(u.id) && !isPending(u.id) && !u.isMe);
       
-      if (discoverable.length === 0) {
+      if (discoverable.length === 0 && feed.length > 0) {
         const generatedUsers = Array.from({ length: 5 }).map((_, i) => {
-          const id = `gen-${Date.now()}-${i}`;
+          const id = `gen-empty-${Date.now()}-${i}`;
           return {
             id,
             name: `${NAMES[Math.floor(Math.random() * NAMES.length)]} ${LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)]}`,
@@ -76,12 +106,12 @@ export default function SocialPage() {
         setFeed(prev => [...prev, ...generatedUsers]);
       }
     }
-  }, [activeTab, feed, isMatch, isPending]);
+  }, [activeTab, feed, isMatch, isPending, mounted]);
 
   const handlePost = () => {
     if (!post) return;
     const newPost = {
-      id: 'me-' + Math.random().toString(),
+      id: 'me-' + Date.now(),
       name: userData?.name || 'Usuario',
       photo: userData?.profilePic || 'https://picsum.photos/seed/me/150/150',
       bio: post,
@@ -155,6 +185,8 @@ export default function SocialPage() {
       return feed.filter(u => isMatch(u.id));
     }
   })();
+
+  if (!mounted) return null;
 
   return (
     <div className="flex flex-col gap-6 p-6 animate-fade-in bg-secondary/10 min-h-screen pb-24">
