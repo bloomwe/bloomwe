@@ -11,7 +11,7 @@ export const MOCK_EXPERTS = [
     email: 'julian.rivera@bloomwell.com',
     location: 'Centro Médico Norte, Piso 4',
     hours: 'Lun-Vie 8am - 5pm',
-    image: 'https://picsum.photos/seed/expert1/200/200'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322773/2c36d6ef-677c-4318-8ded-ef0184074d05.png'
   },
   {
     id: '2',
@@ -24,7 +24,7 @@ export const MOCK_EXPERTS = [
     email: 'elena.c@bloomwell.com',
     location: 'Hospital San Lucas, Consultorio 302',
     hours: 'Mar-Jue 2pm - 7pm',
-    image: 'https://picsum.photos/seed/expert2/200/200'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322799/01167078-9403-45fe-88f0-47e23a9abe8b.png'
   },
   {
     id: '3',
@@ -37,7 +37,7 @@ export const MOCK_EXPERTS = [
     email: 'ricardo.g@bloomwell.com',
     location: 'Torre Empresarial, Of. 901',
     hours: 'Lun-Vie 9am - 6pm',
-    image: 'https://picsum.photos/seed/expert3/200/200'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322763/f53d1073-a2b2-4169-a987-0029f6569ae2.png'
   },
   {
     id: '4',
@@ -50,7 +50,7 @@ export const MOCK_EXPERTS = [
     email: 'camila.v@bloomwell.com',
     location: 'Centro Zen, Calle 80',
     hours: 'Mié-Sáb 8am - 2pm',
-    image: 'https://picsum.photos/seed/expert4/200/200'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322679/b4ad95ce-e7dc-40f4-b3c2-ee28ce9e9e53.png'
   },
   {
     id: '5',
@@ -63,7 +63,7 @@ export const MOCK_EXPERTS = [
     email: 'sofia.m@bloomwell.com',
     location: 'Consultorio Vitalia 202',
     hours: 'Lun-Sáb 9am - 1pm',
-    image: 'https://picsum.photos/seed/expert5/200/200'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322650/efbadf20-6ab5-452a-9490-1e36ef7f9420.png'
   },
   {
     id: '6',
@@ -76,7 +76,7 @@ export const MOCK_EXPERTS = [
     email: 'andres.p@bloomwell.com',
     location: 'Plaza Médica, Local 12',
     hours: 'Lun-Vie 7am - 4pm',
-    image: 'https://picsum.photos/seed/expert6/200/200'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322644/6cf77b39-6200-498d-a8cc-cac2a3063730.png'
   }
 ];
 
