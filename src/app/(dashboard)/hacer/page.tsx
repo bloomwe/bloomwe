@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -16,6 +17,7 @@ import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_R
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useApp } from '@/app/context/AppContext';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const CATEGORIES = [
   { id: 'deportes', name: 'Deportes', icon: Dumbbell, color: 'bg-orange-100 text-orange-600' },
@@ -70,6 +72,8 @@ export default function HacerPage() {
   const filteredExperts = expertFilter === 'Todos'
     ? MOCK_EXPERTS
     : MOCK_EXPERTS.filter(e => e.category === expertFilter);
+
+  const mapPlaceholder = PlaceHolderImages.find(img => img.id === 'google_maps_placeholder');
 
   const renderContent = () => {
     switch (activeTab) {
@@ -224,7 +228,12 @@ export default function HacerPage() {
               <section className="space-y-4">
                 <h4 className="font-bold text-lg px-1 flex items-center gap-2"><Map size={18} className="text-primary" /> Ubicación en el Mapa</h4>
                 <div className="rounded-[2rem] overflow-hidden h-40 bg-secondary/30 relative">
-                  <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=1000" alt="Mapa" className="w-full h-full object-cover opacity-50" />
+                  <img 
+                    src={mapPlaceholder?.imageUrl || "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=1000"} 
+                    alt="Mapa de Google" 
+                    className="w-full h-full object-cover opacity-80" 
+                    data-ai-hint={mapPlaceholder?.imageHint || "google map"}
+                  />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-primary p-3 rounded-full text-white shadow-xl animate-bounce">
                       <MapPin size={24} fill="white" />
