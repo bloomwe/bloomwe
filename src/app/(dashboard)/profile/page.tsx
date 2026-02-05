@@ -17,7 +17,7 @@ import {
 } from 'recharts';
 import { 
   Settings, LogOut, Edit2, Flame, Trophy, Calendar, 
-  ChevronRight, MapPin, Mail, Bell, Shield, Info, Camera
+  ChevronRight, MapPin, Mail, Bell, Shield, Info, Camera, Lock, Eye, EyeOff
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -37,6 +37,7 @@ export default function ProfilePage() {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   
   const [editForm, setEditForm] = useState({
     name: '',
@@ -233,13 +234,76 @@ export default function ProfilePage() {
             </div>
             <Switch defaultChecked />
           </div>
-          <div className="bg-white p-5 rounded-3xl flex items-center justify-between shadow-sm border border-border/30">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-purple-100 rounded-2xl text-purple-600"><Shield size={20} /></div>
-              <Label className="font-bold">Privacidad</Label>
-            </div>
-            <ChevronRight size={20} className="text-muted-foreground" />
-          </div>
+
+          <Dialog open={isPrivacyOpen} onOpenChange={setIsPrivacyOpen}>
+            <DialogTrigger asChild>
+              <button className="bg-white p-5 rounded-3xl flex items-center justify-between shadow-sm border border-border/30 hover:bg-secondary/10 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-purple-100 rounded-2xl text-purple-600"><Shield size={20} /></div>
+                  <Label className="font-bold cursor-pointer">Privacidad</Label>
+                </div>
+                <ChevronRight size={20} className="text-muted-foreground" />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="rounded-[2.5rem] max-w-[92vw] p-8 border-none overflow-hidden">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                  <Lock className="text-primary" size={24} /> Configuración de Privacidad
+                </DialogTitle>
+                <DialogDescription className="text-xs">
+                  Gestiona quién puede ver tu actividad y cómo protegemos tus datos.
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-6 py-4">
+                <div className="bg-secondary/20 p-5 rounded-2xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="font-bold flex items-center gap-2">
+                        <Eye size={16} className="text-primary" /> Perfil Público
+                      </Label>
+                      <p className="text-[10px] text-muted-foreground">Otros usuarios podrán ver tu racha y logros.</p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="font-bold flex items-center gap-2">
+                        <MapPin size={16} className="text-primary" /> Compartir Ubicación
+                      </Label>
+                      <p className="text-[10px] text-muted-foreground">Mostrar tiendas y eventos cerca de ti.</p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="text-xs font-black uppercase text-primary tracking-widest ml-1">Sobre tus datos</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-3 p-3 bg-white border border-border/50 rounded-xl">
+                      <div className="p-1.5 bg-green-100 rounded-lg text-green-600"><Shield size={14} /></div>
+                      <p className="text-[11px] leading-relaxed text-muted-foreground">
+                        Tus datos personales están encriptados y nunca se comparten con terceros sin tu consentimiento.
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-white border border-border/50 rounded-xl">
+                      <div className="p-1.5 bg-orange-100 rounded-lg text-orange-600"><Info size={14} /></div>
+                      <p className="text-[11px] leading-relaxed text-muted-foreground">
+                        Puedes solicitar la eliminación permanente de tu cuenta y todos tus datos en cualquier momento.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button onClick={() => setIsPrivacyOpen(false)} className="w-full h-12 rounded-2xl bg-primary font-bold">
+                  Entendido
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
           <div className="bg-white p-5 rounded-3xl flex items-center justify-between shadow-sm border border-border/30">
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-green-100 rounded-2xl text-green-600"><Calendar size={20} /></div>
