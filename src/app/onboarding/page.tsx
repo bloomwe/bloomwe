@@ -145,18 +145,23 @@ const OnboardingFlow = () => {
           <div className="space-y-6 animate-fade-in">
             <h1 className="text-2xl font-bold text-center">Cuéntanos sobre ti</h1>
             <div className="flex justify-center mb-6">
-              <div 
-                onClick={handleImageClick}
-                className="w-24 h-24 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-primary cursor-pointer relative group overflow-hidden"
-              >
-                {formData.profilePic ? (
-                  <img src={formData.profilePic} alt="Preview" className="w-full h-full object-cover" />
-                ) : (
-                  <User size={40} className="text-muted-foreground group-hover:text-primary" />
-                )}
-                <div className="absolute bottom-0 right-0 p-1 bg-primary rounded-full text-white shadow-lg">
-                  <Camera size={16} />
+              <div className="relative">
+                <div 
+                  onClick={handleImageClick}
+                  className="w-24 h-24 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-primary cursor-pointer group overflow-hidden"
+                >
+                  {formData.profilePic ? (
+                    <img src={formData.profilePic} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={40} className="text-muted-foreground group-hover:text-primary" />
+                  )}
                 </div>
+                <button 
+                  onClick={handleImageClick}
+                  className="absolute bottom-0 right-0 p-2 bg-primary rounded-full text-white border-2 border-white shadow-lg hover:scale-110 transition-transform"
+                >
+                  <Camera size={14} />
+                </button>
                 <input 
                   type="file" 
                   ref={fileInputRef} 
