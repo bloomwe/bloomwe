@@ -205,7 +205,7 @@ export default function HomePage() {
 
       {/* Modal de Detalle de Tip */}
       <Dialog open={!!selectedTip} onOpenChange={() => setSelectedTip(null)}>
-        <DialogContent className="sm:max-w-md rounded-[2.5rem] p-0 overflow-hidden border-none max-w-[92vw]">
+        <DialogContent className="sm:max-w-md rounded-[2.5rem] p-0 overflow-y-auto max-h-[90vh] border-none max-w-[92vw] no-scrollbar">
           {selectedTip && (
             <>
               <DialogHeader className="p-0 space-y-0 h-0 overflow-hidden">
@@ -213,7 +213,7 @@ export default function HomePage() {
                 <DialogDescription className="sr-only">{selectedTip.description}</DialogDescription>
               </DialogHeader>
               <div className="flex flex-col">
-                <div className="h-44 bg-primary flex items-center justify-center text-white p-8 text-center relative overflow-hidden">
+                <div className="h-44 bg-primary flex items-center justify-center text-white p-8 text-center relative overflow-hidden shrink-0">
                   <div className="absolute top-0 right-0 p-12 bg-white/10 rounded-full -mr-12 -mt-12" />
                   <div className="absolute bottom-0 left-0 p-8 bg-black/5 rounded-full -ml-8 -mb-8" />
                   <h2 className="text-2xl font-black relative z-10">{selectedTip.title}</h2>
