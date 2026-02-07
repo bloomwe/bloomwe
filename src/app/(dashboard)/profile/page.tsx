@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -17,7 +18,8 @@ import {
 } from 'recharts';
 import { 
   Settings, LogOut, Edit2, Flame, Trophy, Calendar, 
-  ChevronRight, MapPin, Mail, Bell, Shield, Info, Camera, Lock, Eye, EyeOff
+  ChevronRight, MapPin, Mail, Bell, Shield, Info, Camera, Lock, Eye, EyeOff,
+  Crown, Medal, Award, Star, CheckCircle2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -32,12 +34,46 @@ const STATS_DATA = [
   { name: 'Dom', value: 1 },
 ];
 
+const PLANS = [
+  {
+    id: 'bronce',
+    name: 'Bronce',
+    price: 'Gratis',
+    icon: Award,
+    color: 'text-amber-700',
+    bgColor: 'bg-amber-100',
+    features: ['Tips básicos', 'Calendario limitado', 'Comunidad básica'],
+    active: false
+  },
+  {
+    id: 'plata',
+    name: 'Plata',
+    price: '$9.99/mes',
+    icon: Medal,
+    color: 'text-slate-400',
+    bgColor: 'bg-slate-100',
+    features: ['Tips personalizados', 'Calendario completo', 'Registro de actividades'],
+    active: false
+  },
+  {
+    id: 'oro',
+    name: 'Oro',
+    price: '$19.99/mes',
+    icon: Crown,
+    color: 'text-yellow-500',
+    bgColor: 'bg-yellow-100',
+    features: ['Todas las funcionalidades', 'Asesoría con expertos', 'Estadísticas avanzadas'],
+    active: true
+  }
+];
+
 export default function ProfilePage() {
   const { userData, setUserData, streak, logout } = useApp();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isPlansOpen, setIsPlansOpen] = useState(false);
   
   const [editForm, setEditForm] = useState({
     name: '',
@@ -193,6 +229,80 @@ export default function ProfilePage() {
             <p className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">Logros</p>
           </div>
         </div>
+      </section>
+
+      {/* Seccion de Membresía */}
+      <section className="space-y-4">
+        <h2 className="font-bold text-lg px-2 text-primary flex items-center gap-2">
+          <Star size={20} /> Membresía
+        </h2>
+        <Card className="rounded-[2.5rem] border-none shadow-sm bg-gradient-to-br from-yellow-400/20 to-yellow-600/10 overflow-hidden border border-yellow-500/20">
+          <CardContent className="p-6 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-yellow-400 rounded-2xl text-white shadow-lg shadow-yellow-500/20">
+                <Crown size={24} />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm">Plan Oro</h3>
+                <p className="text-[10px] text-muted-foreground font-medium">Todas las funcionalidades activas</p>
+              </div>
+            </div>
+            <Dialog open={isPlansOpen} onOpenChange={setIsPlansOpen}>
+              <DialogTrigger asChild>
+                <Button variant="ghost" className="text-xs font-bold text-primary hover:bg-white/50 rounded-xl">
+                  Gestionar Plan <ChevronRight size={16} />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="rounded-[2.5rem] max-w-[95vw] p-6 border-none overflow-y-auto max-h-[90vh]">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-black text-center mb-2">Planes de bloomWe</DialogTitle>
+                  <DialogDescription className="text-center">Elige el plan que mejor se adapte a tu estilo de vida.</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-6">
+                  {PLANS.map((plan) => (
+                    <div 
+                      key={plan.id}
+                      className={cn(
+                        "relative p-5 rounded-[2rem] border-2 transition-all",
+                        plan.active ? "border-primary bg-primary/5 shadow-xl shadow-primary/10" : "border-border bg-white"
+                      )}
+                    >
+                      {plan.active && (
+                        <Badge className="absolute top-4 right-4 bg-primary text-white text-[8px] uppercase tracking-widest font-black rounded-full px-2">
+                          Actual
+                        </Badge>
+                      )}
+                      <div className="flex gap-4 items-center mb-4">
+                        <div className={cn("p-3 rounded-2xl", plan.bgColor, plan.color)}>
+                          <plan.icon size={24} />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg">{plan.name}</h4>
+                          <p className="text-xs font-black text-primary/60">{plan.price}</p>
+                        </div>
+                      </div>
+                      <ul className="space-y-2">
+                        {plan.features.map((feature, i) => (
+                          <li key={i} className="flex items-center gap-2 text-[11px] text-muted-foreground font-medium">
+                            <CheckCircle2 size={14} className="text-primary shrink-0" /> {feature}
+                          </li>
+                        ))}
+                      </ul>
+                      {!plan.active && (
+                        <Button className="w-full mt-4 h-10 rounded-xl bg-secondary text-primary hover:bg-primary hover:text-white font-bold transition-all">
+                          Cambiar a {plan.name}
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <Button onClick={() => setIsPlansOpen(false)} className="w-full h-12 rounded-2xl bg-primary font-bold">
+                  Listo
+                </Button>
+              </DialogContent>
+            </Dialog>
+          </CardContent>
+        </Card>
       </section>
 
       <section className="space-y-4">
