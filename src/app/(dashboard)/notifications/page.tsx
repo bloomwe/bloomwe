@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -35,7 +34,7 @@ export default function NotificationsPage() {
           </Button>
           <div>
             <h1 className="text-2xl font-bold">Notificaciones</h1>
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Lo último en BloomWell</p>
+            <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Lo último en bloomWe</p>
           </div>
         </div>
         

@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -60,7 +59,7 @@ export default function HomePage() {
       <header className="flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="text-muted-foreground text-sm font-medium truncate">¡Hola, {userData?.name?.split(' ')[0]}!</p>
-          <h1 className="text-2xl font-bold truncate">Tu BloomWell hoy</h1>
+          <h1 className="text-2xl font-bold truncate">Tu bloomWe hoy</h1>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Link href="/notifications">

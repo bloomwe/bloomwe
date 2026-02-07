@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
@@ -191,7 +190,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       notifications: [
         {
           id: 'welcome',
-          title: '¡Bienvenido a BloomWell!',
+          title: '¡Bienvenido a bloomWe!',
           description: 'Estamos felices de tenerte aquí. Explora tus tips diarios.',
           time: 'Ahora mismo',
           unread: true,

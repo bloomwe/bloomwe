@@ -1,4 +1,3 @@
-
 export const MOCK_EXPERTS = [
   {
     id: '1',
@@ -8,7 +7,7 @@ export const MOCK_EXPERTS = [
     experience: 8,
     bio: 'Especialista en salud joven y prevención de enfermedades crónicas con enfoque en hábitos saludables.',
     phone: '+573001234567',
-    email: 'julian.rivera@bloomwell.com',
+    email: 'julian.rivera@bloomwe.com',
     location: 'Centro Médico Norte, Piso 4',
     hours: 'Lun-Vie 8am - 5pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322773/2c36d6ef-677c-4318-8ded-ef0184074d05.png'
@@ -21,7 +20,7 @@ export const MOCK_EXPERTS = [
     experience: 12,
     bio: 'Dedicada al diagnóstico integral y manejo de condiciones de salud en adultos jóvenes.',
     phone: '+573109876543',
-    email: 'elena.c@bloomwell.com',
+    email: 'elena.c@bloomwe.com',
     location: 'Hospital San Lucas, Consultorio 302',
     hours: 'Mar-Jue 2pm - 7pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322799/01167078-9403-45fe-88f0-47e23a9abe8b.png'
@@ -34,7 +33,7 @@ export const MOCK_EXPERTS = [
     experience: 10,
     bio: 'Experto en manejo de ansiedad, estrés académico y desarrollo personal en jóvenes.',
     phone: '+573152223344',
-    email: 'ricardo.g@bloomwell.com',
+    email: 'ricardo.g@bloomwe.com',
     location: 'Torre Empresarial, Of. 901',
     hours: 'Lun-Vie 9am - 6pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322763/f53d1073-a2b2-4169-a987-0029f6569ae2.png'
@@ -47,7 +46,7 @@ export const MOCK_EXPERTS = [
     experience: 6,
     bio: 'Enfoque empático para tratar temas de autoestima, relaciones y bienestar emocional.',
     phone: '+573201112233',
-    email: 'camila.v@bloomwell.com',
+    email: 'camila.v@bloomwe.com',
     location: 'Centro Zen, Calle 80',
     hours: 'Mié-Sáb 8am - 2pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322679/b4ad95ce-e7dc-40f4-b3c2-ee28ce9e9e53.png'
@@ -60,7 +59,7 @@ export const MOCK_EXPERTS = [
     experience: 5,
     bio: 'Ayudo a jóvenes a optimizar su rendimiento físico y mental a través de una alimentación balanceada.',
     phone: '+573007654321',
-    email: 'sofia.m@bloomwell.com',
+    email: 'sofia.m@bloomwe.com',
     location: 'Consultorio Vitalia 202',
     hours: 'Lun-Sáb 9am - 1pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322650/efbadf20-6ab5-452a-9490-1e36ef7f9420.png'
@@ -73,7 +72,7 @@ export const MOCK_EXPERTS = [
     experience: 7,
     bio: 'Especialista en planes de alimentación personalizados para mejorar la salud metabólica.',
     phone: '+573014445566',
-    email: 'andres.p@bloomwell.com',
+    email: 'andres.p@bloomwe.com',
     location: 'Plaza Médica, Local 12',
     hours: 'Lun-Vie 7am - 4pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322644/6cf77b39-6200-498d-a8cc-cac2a3063730.png'

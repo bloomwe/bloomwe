@@ -107,7 +107,7 @@ export default function ProfilePage() {
           <DialogContent className="rounded-[2.5rem] max-w-[92vw] p-8 border-none">
             <DialogHeader>
               <DialogTitle className="text-xl font-bold">Editar Perfil</DialogTitle>
-              <DialogDescription className="text-xs">Actualiza tu información personal de BloomWell.</DialogDescription>
+              <DialogDescription className="text-xs">Actualiza tu información personal de bloomWe.</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-1">
@@ -176,7 +176,7 @@ export default function ProfilePage() {
           />
         </div>
         <div className="text-center">
-          <h2 className="text-2xl font-bold">{userData?.name || 'Usuario BloomWell'}</h2>
+          <h2 className="text-2xl font-bold">{userData?.name || 'Usuario bloomWe'}</h2>
           <p className="text-muted-foreground text-sm flex items-center justify-center gap-1.5 mt-1 font-medium">
             <MapPin size={14} className="text-primary" /> {userData?.location || 'Mundo Saludable'}
           </p>
@@ -323,7 +323,7 @@ export default function ProfilePage() {
       </Button>
       
       <div className="text-center pb-8">
-        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">BloomWell v1.0.0 • Tu Bienestar es nuestra meta</p>
+        <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">bloomWe v1.0.0 • Tu Bienestar es nuestra meta</p>
       </div>
     </div>
   );

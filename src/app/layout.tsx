@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'BloomWell - Tu Bienestar Juvenil',
+  title: 'bloomWe - Tu Bienestar Juvenil',
   description: 'Aplicación de salud y bienestar para jóvenes con tips personalizados y seguimiento.',
 };
 
