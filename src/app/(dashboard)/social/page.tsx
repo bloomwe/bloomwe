@@ -14,7 +14,7 @@ import {
   Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User as UserIcon, 
   MapPin, Send, Tag as TagIcon, Star, MessageSquare, 
   Search, ChevronRight, Clock, Plus, X, Calendar as CalendarIcon,
-  Activity
+  Activity, ArrowLeft
 } from 'lucide-react';
 import { MOCK_SOCIAL_FEED, MOCK_CHATS, MOCK_PLACES, HOBBIES_LIST } from '@/app/lib/mock-data';
 import { useApp, CalendarEvent } from '@/app/context/AppContext';
@@ -79,6 +79,14 @@ interface SocialPost {
   comments: Comment[];
 }
 
+const MOCK_CONVERSATION = [
+  { id: 'm1', sender: 'them', text: '¡Hola! ¿Cómo vas con tu racha de hoy?' },
+  { id: 'm2', sender: 'me', text: '¡Todo bien! Acabo de terminar mi sesión de yoga.' },
+  { id: 'm3', sender: 'them', text: '¡Qué nota! Yo saldré a correr más tarde.' },
+  { id: 'm4', sender: 'me', text: '¿Vas para el Simón Bolívar?' },
+  { id: 'm5', sender: 'them', text: 'Sí, sobre las 5:00 PM. ¿Te animas?' },
+];
+
 export default function SocialPage() {
   const { 
     userData, 
@@ -104,6 +112,10 @@ export default function SocialPage() {
   const [selectedPostDetail, setSelectedPostDetail] = useState<SocialPost | null>(null);
   
   const [invitingFriend, setInvitingFriend] = useState<SocialPost | null>(null);
+  const [searchTermMessages, setSearchTermMessages] = useState('');
+  const [activeChat, setActiveChat] = useState<any | null>(null);
+  const [chatInput, setChatInput] = useState('');
+
   const [activityForm, setActivityForm] = useState({
     type: 'Yoga',
     date: format(new Date(), 'yyyy-MM-dd'),
@@ -277,11 +289,26 @@ export default function SocialPage() {
     });
   };
 
+  const handleSendMessage = () => {
+    if (!chatInput.trim()) return;
+    // In a real app we'd add to state, here we just clear and toast for mock
+    setChatInput('');
+    toast({
+      title: "Mensaje enviado",
+      description: "Tu mensaje ha sido enviado correctamente.",
+    });
+  };
+
   const filteredFeed = comunidadTab === 'discover' 
     ? feed.filter(u => !isMatch(u.id) && !isPending(u.id)) 
     : comunidadTab === 'pending' 
     ? feed.filter(u => isPending(u.id)) 
     : feed.filter(u => isMatch(u.id));
+
+  const filteredChats = MOCK_CHATS.filter(chat => 
+    chat.name.toLowerCase().includes(searchTermMessages.toLowerCase()) ||
+    chat.lastMessage.toLowerCase().includes(searchTermMessages.toLowerCase())
+  );
 
   const pendingCount = feed.filter(u => isPending(u.id)).length;
   const friendsCount = feed.filter(u => isMatch(u.id)).length;
@@ -503,7 +530,11 @@ export default function SocialPage() {
         <div className="space-y-6 animate-fade-in">
           <div className="flex gap-4 overflow-x-auto no-scrollbar -mx-2 px-2 pb-2">
             {MOCK_CHATS.map(chat => (
-              <div key={chat.id} className="flex flex-col items-center gap-1 shrink-0">
+              <div 
+                key={chat.id} 
+                className="flex flex-col items-center gap-1 shrink-0 cursor-pointer"
+                onClick={() => setActiveChat(chat)}
+              >
                 <div className="relative">
                   <Avatar className="h-14 w-14 border-2 border-primary">
                     <AvatarImage src={chat.photo} />
@@ -516,9 +547,23 @@ export default function SocialPage() {
             ))}
           </div>
 
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+            <Input 
+              placeholder="Buscar conversaciones..." 
+              value={searchTermMessages}
+              onChange={(e) => setSearchTermMessages(e.target.value)}
+              className="pl-10 h-10 rounded-2xl bg-white border-none shadow-sm" 
+            />
+          </div>
+
           <div className="grid gap-2">
-            {MOCK_CHATS.map(chat => (
-              <Card key={chat.id} className="rounded-2xl border-none shadow-none bg-white hover:bg-secondary/10 transition-colors cursor-pointer group">
+            {filteredChats.map(chat => (
+              <Card 
+                key={chat.id} 
+                className="rounded-2xl border-none shadow-none bg-white hover:bg-secondary/10 transition-colors cursor-pointer group"
+                onClick={() => setActiveChat(chat)}
+              >
                 <CardContent className="p-4 flex items-center gap-4">
                   <Avatar className="h-12 w-12 shadow-sm">
                     <AvatarImage src={chat.photo} />
@@ -542,6 +587,11 @@ export default function SocialPage() {
                 </CardContent>
               </Card>
             ))}
+            {filteredChats.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-xs text-muted-foreground">No se encontraron conversaciones.</p>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -764,6 +814,81 @@ export default function SocialPage() {
                 >
                   Cancelar
                 </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Chat / Conversación */}
+      <Dialog open={!!activeChat} onOpenChange={() => setActiveChat(null)}>
+        <DialogContent className="rounded-[2rem] max-w-[95vw] p-0 border-none overflow-hidden h-[85vh] flex flex-col shadow-2xl">
+          {activeChat && (
+            <>
+              <DialogHeader className="p-4 border-b border-border/50 shrink-0 bg-white">
+                <div className="flex items-center gap-3">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setActiveChat(null)}
+                    className="h-8 w-8 rounded-full"
+                  >
+                    <ArrowLeft size={18} />
+                  </Button>
+                  <div className="relative">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={activeChat.photo} />
+                      <AvatarFallback>{activeChat.name[0]}</AvatarFallback>
+                    </Avatar>
+                    {activeChat.online && <div className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-green-500 border-2 border-white rounded-full" />}
+                  </div>
+                  <div>
+                    <DialogTitle className="text-sm font-bold">{activeChat.name}</DialogTitle>
+                    <p className="text-[9px] text-green-500 font-bold uppercase tracking-wider">
+                      {activeChat.online ? 'En línea' : 'Desconectado'}
+                    </p>
+                  </div>
+                </div>
+              </DialogHeader>
+
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-secondary/5 no-scrollbar">
+                {MOCK_CONVERSATION.map((msg) => (
+                  <div 
+                    key={msg.id} 
+                    className={cn(
+                      "flex max-w-[80%] flex-col gap-1",
+                      msg.sender === 'me' ? "ml-auto items-end" : "items-start"
+                    )}
+                  >
+                    <div className={cn(
+                      "px-4 py-2.5 rounded-2xl text-sm shadow-sm",
+                      msg.sender === 'me' 
+                        ? "bg-primary text-white rounded-tr-none" 
+                        : "bg-white text-foreground rounded-tl-none border border-border/50"
+                    )}>
+                      {msg.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="p-4 bg-white border-t border-border/50 shrink-0">
+                <div className="flex gap-2 items-center bg-secondary/20 p-1.5 rounded-2xl">
+                  <Input 
+                    placeholder="Escribe un mensaje..." 
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    className="bg-transparent border-none text-sm placeholder:text-muted-foreground/50 shadow-none focus-visible:ring-0"
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  />
+                  <Button 
+                    size="icon" 
+                    className="h-10 w-10 rounded-full bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 shrink-0"
+                    onClick={handleSendMessage}
+                  >
+                    <Send size={18} />
+                  </Button>
+                </div>
               </div>
             </>
           )}
