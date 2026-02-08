@@ -72,7 +72,6 @@ export default function SocialPage() {
   const [comunidadTab, setComunidadTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
   const [commentInput, setCommentInput] = useState<{ [postId: string]: string }>({});
 
-  // Función para generar posts aleatorios
   const generateRandomPosts = useCallback((count: number): SocialPost[] => {
     return Array.from({ length: count }).map((_, i) => {
       const id = Math.random().toString(36).substr(2, 9);
@@ -95,7 +94,6 @@ export default function SocialPage() {
 
   useEffect(() => {
     setMounted(true);
-    // Cargar feed inicial mezclando mock data con posts generados
     const initialFeed: SocialPost[] = MOCK_SOCIAL_FEED.map(u => ({ 
       ...u, 
       isMe: false, 
@@ -106,7 +104,6 @@ export default function SocialPage() {
     setFeed([...initialFeed, ...generateRandomPosts(3)]);
   }, [generateRandomPosts]);
 
-  // Asegurar que el feed de descubrimiento nunca esté vacío
   useEffect(() => {
     if (mounted && mainTab === 'comunidad' && comunidadTab === 'discover') {
       const discoverableCount = feed.filter(u => !isMatch(u.id) && !isPending(u.id) && !u.isMe).length;
@@ -212,7 +209,6 @@ export default function SocialPage() {
         </div>
       </header>
 
-      {/* Selector de Pestaña Principal */}
       <div className="bg-white p-1 rounded-2xl shadow-sm border border-border/50 flex gap-1">
         <button 
           onClick={() => setMainTab('comunidad')}
@@ -324,7 +320,6 @@ export default function SocialPage() {
                     </div>
                   </div>
 
-                  {/* Sección de Comentarios */}
                   <div className="mt-4 pt-4 border-t border-border/30 space-y-3">
                     {user.comments.length > 0 && (
                       <div className="space-y-2">
@@ -465,7 +460,6 @@ export default function SocialPage() {
         </div>
       )}
 
-      {/* Diálogos y confirmaciones */}
       <Dialog open={!!matchSuccess} onOpenChange={() => setMatchSuccess(null)}>
         <DialogContent className="rounded-[2.5rem] max-w-[85vw] p-8 text-center border-none">
           <DialogHeader>
@@ -474,14 +468,13 @@ export default function SocialPage() {
                 <Zap size={40} className="text-primary fill-primary" />
               </div>
               ¡Solicitud Enviada!
-            </div>
-            ¡Solicitud Enviada!
-          </DialogTitle>
-          <DialogDescription className="text-center pt-2 font-medium">
-            Se ha enviado tu interés a <span className="text-primary font-bold">{matchSuccess}</span>. Lo verás en tu pestaña de pendientes.
-          </DialogDescription>
-        </DialogHeader>
-        <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary mt-6 font-bold shadow-lg shadow-primary/20">Entendido</Button>
+            </DialogTitle>
+            <DialogDescription className="text-center pt-2 font-medium">
+              Se ha enviado tu interés a <span className="text-primary font-bold">{matchSuccess}</span>. Lo verás en tu pestaña de pendientes.
+            </DialogDescription>
+          </DialogHeader>
+          <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary mt-6 font-bold shadow-lg shadow-primary/20">Entendido</Button>
+        </DialogContent>
       </Dialog>
     </div>
   );
