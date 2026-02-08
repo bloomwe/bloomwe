@@ -219,15 +219,15 @@ export const MOCK_SHOPS = [
   {
     id: 'olu',
     name: 'OLU',
-    category: 'Fitness & Wellness',
+    category: 'Helados y Postres',
     distance: '1.1 km',
     address: 'Av. Carrera 11 #94-12',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523608/0e858cec-69da-45be-9878-fd52c2b20e26.png',
-    description: 'Ropa y equipamiento deportivo de alta tecnología para potenciar tu rendimiento.',
+    description: 'Es de helados y postres saludables para disfrutar sin culpa.',
     products: [
-      { name: 'Leggings Tech', price: '$120.000' },
-      { name: 'Top Deportivo Pro', price: '$85.000' },
-      { name: 'Mochila de Entrenamiento', price: '$150.000' }
+      { name: 'Helado de Yogurt Fit', price: '$12.000' },
+      { name: 'Mousse de Cacao 70%', price: '$9.500' },
+      { name: 'Cheesecake Vegano', price: '$14.000' }
     ],
     coupons: [
       { code: 'OLUFIRST', discount: '15% OFF', description: 'En tu primera compra' }
@@ -253,15 +253,15 @@ export const MOCK_SHOPS = [
   {
     id: 'paranice',
     name: 'Paranice',
-    category: 'Heladería Saludable',
+    category: 'Snacks Saludables',
     distance: '2.0 km',
     address: 'Carrera 13 #78-05',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523621/f95d6dc2-ba18-4ec2-a789-b94d6dd647d3.png',
-    description: 'Helados artesanales sin azúcar y con ingredientes 100% naturales.',
+    description: 'Snack sano y delicioso — Disfruta granola sin azúcar ni gluten, rica en proteína y con sabores irresistibles.',
     products: [
-      { name: 'Paleta Frutos Rojos', price: '$7.000' },
-      { name: 'Copa de Acai', price: '$18.000' },
-      { name: 'Helado de Coco Keto', price: '$9.500' }
+      { name: 'Granola Proteica 500g', price: '$25.000' },
+      { name: 'Mix Energético', price: '$12.000' },
+      { name: 'Barras de Avena y Miel', price: '$4.500' }
     ],
     coupons: [
       { code: 'NICEICE', discount: '20% OFF', description: 'En la segunda unidad' }
@@ -287,15 +287,15 @@ export const MOCK_SHOPS = [
   {
     id: 'nuve_verde',
     name: 'Nuve Verde',
-    category: 'Mercado Eco',
+    category: 'Alimentación Saludable',
     distance: '3.1 km',
     address: 'Calle 100 #19-45',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523631/f9f4a460-ba30-46bc-bc89-64c3659f36b0.png',
-    description: 'Tienda de productos sostenibles, a granel y cuidado personal consciente.',
+    description: 'Ensaladas y comida saludable preparada con los mejores ingredientes frescos.',
     products: [
-      { name: 'Champú Sólido Natural', price: '$25.000' },
-      { name: 'Frutos Secos Mix 250g', price: '$18.000' },
-      { name: 'Aceite de Coco Orgánico', price: '$32.000' }
+      { name: 'Ensalada César Fit', price: '$18.000' },
+      { name: 'Bowl de Pollo y Vegetales', price: '$24.000' },
+      { name: 'Wrap Integral de Pavo', price: '$15.500' }
     ],
     coupons: [
       { code: 'NUVE20', discount: '20% OFF', description: 'En productos a granel' }
@@ -304,15 +304,15 @@ export const MOCK_SHOPS = [
   {
     id: 'cana_y_bijao',
     name: 'Caña y Bijao',
-    category: 'Tradición Natural',
+    category: 'Restaurante',
     distance: '3.5 km',
     address: 'Carrera 7 #65-33',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523640/52d0a1d4-c702-43fa-a9fc-4e0e0bf01f9f.png',
-    description: 'Sabores tradicionales colombianos con ingredientes frescos y procesos artesanales.',
+    description: 'Restaurante de comida saludable tipo buffet con gran variedad de opciones.',
     products: [
-      { name: 'Panela Orgánica Pulverizada', price: '$6.500' },
-      { name: 'Café de Origen 500g', price: '$28.000' },
-      { name: 'Aromáticas de la Casa', price: '$4.000' }
+      { name: 'Buffet Saludable (Almuerzo)', price: '$28.000' },
+      { name: 'Jugo Natural de la Casa', price: '$6.000' },
+      { name: 'Postre de la Casa (Sin Azúcar)', price: '$8.000' }
     ],
     coupons: [
       { code: 'TRADICION', discount: '10% OFF', description: 'En toda la despensa' }
