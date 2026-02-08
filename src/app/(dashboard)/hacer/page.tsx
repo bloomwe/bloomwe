@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -10,7 +11,8 @@ import {
   Dumbbell, Moon, ShoppingBag, TreePine, Utensils, Award, 
   ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, 
   Timer, Play, BookOpen, Download, Music, Tag, Map, Star, ArrowLeft,
-  CheckCircle2, ListChecks, ChefHat, Sparkles, MessageSquare, User
+  CheckCircle2, ListChecks, ChefHat, Sparkles, MessageSquare, User,
+  Ticket
 } from 'lucide-react';
 import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION, MOCK_SHOPS, MOCK_TALKS } from '@/app/lib/mock-data';
 import { cn } from '@/lib/utils';
@@ -35,6 +37,7 @@ export default function HacerPage() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [selectedShopId, setSelectedShopId] = useState<string | null>(null);
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
+  const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null);
   const [recipeFilter, setRecipeFilter] = useState('Todos');
   const [expertFilter, setExpertFilter] = useState('Todos');
   const [expertSubtab, setExpertSubtab] = useState('Especialistas');
@@ -59,7 +62,7 @@ export default function HacerPage() {
     registerActivity({
       id: activity.id,
       title: activity.title,
-      date: activity.date || activity.time, // Fallback
+      date: activity.date || activity.time, 
       time: activity.time,
       location: activity.location,
       sport: activity.sport || activity.topic || 'General'
@@ -82,11 +85,125 @@ export default function HacerPage() {
   const renderContent = () => {
     switch (activeTab) {
       case 'deportes':
+        if (selectedActivityId) {
+          const activity = MOCK_SPORTS_ACTIVITIES.find(a => a.id === selectedActivityId);
+          if (!activity) return null;
+          return (
+            <div className="space-y-6 animate-fade-in pb-8">
+              <Button variant="ghost" onClick={() => setSelectedActivityId(null)} className="mb-2 p-0 h-auto font-bold text-primary hover:bg-transparent">
+                <ArrowLeft size={18} className="mr-2" /> Volver a Deportes
+              </Button>
+              
+              <Card className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white">
+                <div className="relative h-60">
+                  <img src={activity.image} alt={activity.title} className="w-full h-full object-cover" />
+                  <div className="absolute top-4 left-4">
+                    <Badge className="bg-white/90 text-primary border-none rounded-full px-4 py-1 font-bold shadow-sm">
+                      {activity.sport}
+                    </Badge>
+                  </div>
+                </div>
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-2xl mb-4 text-foreground">{activity.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-6 leading-relaxed">{activity.description}</p>
+                  
+                  <div className="grid grid-cols-3 gap-3 mb-8">
+                    <div className="flex flex-col items-center gap-1 bg-secondary/20 p-3 rounded-2xl text-center">
+                      <CalendarIcon size={18} className="text-primary" />
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase">Fecha</span>
+                      <span className="text-[11px] font-black">{activity.date.split(',')[1]}</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-1 bg-secondary/20 p-3 rounded-2xl text-center">
+                      <Clock size={18} className="text-primary" />
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase">Hora</span>
+                      <span className="text-[11px] font-black">{activity.time}</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-1 bg-secondary/20 p-3 rounded-2xl text-center">
+                      <Timer size={18} className="text-primary" />
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase">Duración</span>
+                      <span className="text-[11px] font-black">{activity.duration}</span>
+                    </div>
+                  </div>
+
+                  <section className="space-y-4 mb-8">
+                    <h4 className="font-bold text-lg px-1 flex items-center gap-2 text-primary">
+                      <MapPin size={20} /> Ubicación
+                    </h4>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3 px-1">
+                      <span className="font-medium">{activity.location}</span>
+                    </div>
+                    <div className="rounded-[2rem] overflow-hidden h-44 bg-secondary/30 relative border border-border/50">
+                      <img 
+                        src="https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322532/0c37f40a-2fc0-4cb4-bb5a-4faa8a61f711.png" 
+                        alt="Mapa de la ubicación" 
+                        className="w-full h-full object-cover" 
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="bg-primary p-3 rounded-full text-white shadow-xl animate-bounce">
+                          <MapPin size={24} fill="white" />
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section className="space-y-4 mb-8">
+                    <h4 className="font-bold text-lg px-1 flex items-center gap-2 text-primary">
+                      <Ticket size={20} /> Cupones Especiales
+                    </h4>
+                    <div className="grid gap-3">
+                      <Card className="rounded-2xl border-dashed border-2 border-primary/30 bg-primary/5 overflow-hidden">
+                        <CardContent className="p-4 flex items-center justify-between">
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-primary uppercase">20% DESCUENTO</p>
+                            <p className="text-[10px] text-muted-foreground truncate">Inscripción grupal (3+ personas)</p>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            className="h-9 rounded-xl bg-primary text-[10px] font-bold px-4"
+                            onClick={() => handleCopyCoupon('BLOOMSPORT20')}
+                          >
+                            BLOOMSPORT20
+                          </Button>
+                        </CardContent>
+                      </Card>
+                      <Card className="rounded-2xl border-dashed border-2 border-primary/30 bg-primary/5 overflow-hidden">
+                        <CardContent className="p-4 flex items-center justify-between">
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-primary uppercase">REGALO EXTRA</p>
+                            <p className="text-[10px] text-muted-foreground truncate">Kit de hidratación bloomWe incluido</p>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            className="h-9 rounded-xl bg-primary text-[10px] font-bold px-4"
+                            onClick={() => handleCopyCoupon('HYDRAKIT')}
+                          >
+                            HYDRAKIT
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </section>
+                  
+                  <Button 
+                    onClick={() => handleRegister(activity)}
+                    className="w-full h-14 rounded-[1.8rem] bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
+                  >
+                    Inscribirse Ahora
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          );
+        }
         return (
           <div className="space-y-6 animate-fade-in pb-8">
             <p className="text-xs text-muted-foreground px-1">Próximos eventos y sesiones disponibles</p>
             {MOCK_SPORTS_ACTIVITIES.map(activity => (
-              <Card key={activity.id} className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white hover:shadow-md transition-all group">
+              <Card 
+                key={activity.id} 
+                className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white hover:shadow-md transition-all group cursor-pointer"
+                onClick={() => setSelectedActivityId(activity.id)}
+              >
                 <div className="relative h-48 w-full overflow-hidden">
                   <img 
                     src={activity.image} 
@@ -100,7 +217,7 @@ export default function HacerPage() {
                   </div>
                 </div>
                 <CardContent className="p-6">
-                  <h3 className="font-bold text-xl mb-3 text-foreground">{activity.title}</h3>
+                  <h3 className="font-bold text-xl mb-3 text-foreground group-hover:text-primary transition-colors">{activity.title}</h3>
                   <p className="text-xs text-muted-foreground mb-5 line-clamp-2">{activity.description}</p>
                   
                   <div className="grid grid-cols-2 gap-4">
@@ -119,10 +236,9 @@ export default function HacerPage() {
                   </div>
                   
                   <Button 
-                    onClick={() => handleRegister(activity)}
                     className="w-full mt-6 h-12 rounded-2xl bg-primary text-white font-bold shadow-lg shadow-primary/20 group-hover:bg-primary/90 transition-colors"
                   >
-                    Inscribirse Ahora
+                    Ver Detalles e Inscribirse
                   </Button>
                 </CardContent>
               </Card>
@@ -611,12 +727,14 @@ export default function HacerPage() {
     setActiveTab(id);
     setSelectedShopId(null);
     setSelectedRecipeId(null);
+    setSelectedActivityId(null);
   };
 
   const handleBackToCategories = () => {
     setActiveTab(null);
     setSelectedShopId(null);
     setSelectedRecipeId(null);
+    setSelectedActivityId(null);
   };
 
   return (
