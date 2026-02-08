@@ -2,15 +2,15 @@ export const MOCK_EXPERTS = [
   {
     id: '1',
     category: 'Médicos',
-    name: 'Dr. Julián Rivera',
+    name: 'Dr. Carlos Castro',
     specialty: 'Medicina General y Preventiva',
     experience: 8,
     bio: 'Especialista en salud joven y prevención de enfermedades crónicas con enfoque en hábitos saludables.',
     phone: '+573001234567',
-    email: 'julian.rivera@bloomwe.com',
+    email: 'carlos.castro@bloomwe.com',
     location: 'Centro Médico Norte, Piso 4',
     hours: 'Lun-Vie 8am - 5pm',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322773/2c36d6ef-677c-4318-8ded-ef0184074d05.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523408/76044a1e-e275-4988-8990-45b519617d96_tjlxx5.jpg'
   },
   {
     id: '2',
@@ -217,6 +217,108 @@ export const MOCK_SHOPS = [
     ]
   },
   {
+    id: 'olu',
+    name: 'OLU',
+    category: 'Helados y Postres',
+    distance: '1.1 km',
+    address: 'Av. Carrera 11 #94-12',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523608/0e858cec-69da-45be-9878-fd52c2b20e26.png',
+    description: 'Es de helados y postres saludables para disfrutar sin culpa.',
+    products: [
+      { name: 'Helado de Yogurt Fit', price: '$12.000' },
+      { name: 'Mousse de Cacao 70%', price: '$9.500' },
+      { name: 'Cheesecake Vegano', price: '$14.000' }
+    ],
+    coupons: [
+      { code: 'OLUFIRST', discount: '15% OFF', description: 'En tu primera compra' }
+    ]
+  },
+  {
+    id: 'avocalia',
+    name: 'Avocalia',
+    category: 'Alimentación Saludable',
+    distance: '1.5 km',
+    address: 'Calle 85 #12-44',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523612/4d096da8-910e-4617-972e-cd0cca00681a.png',
+    description: 'Bowls, ensaladas y snacks donde el aguacate es el protagonista saludable.',
+    products: [
+      { name: 'Avo-Bowl Clásico', price: '$22.000' },
+      { name: 'Toast de Aguacate', price: '$16.500' },
+      { name: 'Batido Green Power', price: '$12.000' }
+    ],
+    coupons: [
+      { code: 'AVOHEALTH', discount: '10% OFF', description: 'Válido en combos' }
+    ]
+  },
+  {
+    id: 'paranice',
+    name: 'Paranice',
+    category: 'Snacks Saludables',
+    distance: '2.0 km',
+    address: 'Carrera 13 #78-05',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523621/f95d6dc2-ba18-4ec2-a789-b94d6dd647d3.png',
+    description: 'Snack sano y delicioso — Disfruta granola sin azúcar ni gluten, rica en proteína y con sabores irresistibles.',
+    products: [
+      { name: 'Granola Proteica 500g', price: '$25.000' },
+      { name: 'Mix Energético', price: '$12.000' },
+      { name: 'Barras de Avena y Miel', price: '$4.500' }
+    ],
+    coupons: [
+      { code: 'NICEICE', discount: '20% OFF', description: 'En la segunda unidad' }
+    ]
+  },
+  {
+    id: 'madame_sucree',
+    name: 'Madame Sucrée',
+    category: 'Repostería Saludable',
+    distance: '2.2 km',
+    address: 'Calle 90 #14-26',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523625/c37ec9cf-ef94-4827-8534-1c510200d139.png',
+    description: 'Pastelería fina con opciones sin gluten, veganas y bajas en calorías.',
+    products: [
+      { name: 'Muffin de Arándanos', price: '$8.000' },
+      { name: 'Tarta de Chocolate Vegana', price: '$14.000' },
+      { name: 'Galletas de Avena y Chía', price: '$5.500' }
+    ],
+    coupons: [
+      { code: 'SWEETBLOOM', discount: '10% OFF', description: 'En tortas completas' }
+    ]
+  },
+  {
+    id: 'nuve_verde',
+    name: 'Nuve Verde',
+    category: 'Alimentación Saludable',
+    distance: '3.1 km',
+    address: 'Calle 100 #19-45',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523631/f9f4a460-ba30-46bc-bc89-64c3659f36b0.png',
+    description: 'Ensaladas y comida saludable preparada con los mejores ingredientes frescos.',
+    products: [
+      { name: 'Ensalada César Fit', price: '$18.000' },
+      { name: 'Bowl de Pollo y Vegetales', price: '$24.000' },
+      { name: 'Wrap Integral de Pavo', price: '$15.500' }
+    ],
+    coupons: [
+      { code: 'NUVE20', discount: '20% OFF', description: 'En productos a granel' }
+    ]
+  },
+  {
+    id: 'cana_y_bijao',
+    name: 'Caña y Bijao',
+    category: 'Restaurante',
+    distance: '3.5 km',
+    address: 'Carrera 7 #65-33',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523640/52d0a1d4-c702-43fa-a9fc-4e0e0bf01f9f.png',
+    description: 'Restaurante de comida saludable tipo buffet con gran variedad de opciones.',
+    products: [
+      { name: 'Buffet Saludable (Almuerzo)', price: '$28.000' },
+      { name: 'Jugo Natural de la Casa', price: '$6.000' },
+      { name: 'Postre de la Casa (Sin Azúcar)', price: '$8.000' }
+    ],
+    coupons: [
+      { code: 'TRADICION', discount: '10% OFF', description: 'En toda la despensa' }
+    ]
+  },
+  {
     id: 'shop2',
     name: 'SportXtreme',
     category: 'Ropa Deportiva',
@@ -366,7 +468,7 @@ export const MOCK_SPORTS_ACTIVITIES = [
   },
   {
     id: 's6',
-    sport: 'Baile',
+    sport: 'Danza',
     title: 'Ritmos Latinos y Cardio',
     date: 'Viernes, 27 Oct',
     time: '06:30 PM',
@@ -374,6 +476,72 @@ export const MOCK_SPORTS_ACTIVITIES = [
     location: 'Plaza Principal del Parque',
     image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=1000',
     description: 'Diviértete mientras te ejercitas al ritmo de los mejores hits latinos. ¡No se requiere experiencia previa!'
+  },
+  {
+    id: 's7',
+    sport: 'Danza',
+    title: 'Space Dance Studio - Hip Hop',
+    date: 'Miércoles, 1 Nov',
+    time: '07:00 PM',
+    duration: '90 min',
+    location: 'Sede Principal Space',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523800/0d48e693-bb2c-4f56-8268-52363e12b7e5.png',
+    description: 'Aprende las mejores coreografías de danza urbana en el estudio más tecnológico de la ciudad.'
+  },
+  {
+    id: 's8',
+    sport: 'Danza',
+    title: 'Umaima Shek - Danza Oriental',
+    date: 'Jueves, 2 Nov',
+    time: '06:00 PM',
+    duration: '60 min',
+    location: 'Estudio Umaima',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523809/f5deb1a4-799f-4368-8444-a2e6413471af.png',
+    description: 'Descubre el arte de la danza oriental y mejora tu flexibilidad y fuerza abdominal.'
+  },
+  {
+    id: 's9',
+    sport: 'Fútbol',
+    title: 'Kanteranos - Entrenamiento Elite',
+    date: 'Viernes, 3 Nov',
+    time: '04:00 PM',
+    duration: '120 min',
+    location: 'Canchas El Campincito',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523819/65a91507-6850-4ed1-87d3-c31aa0e17f5f.png',
+    description: 'Entrenamiento técnico de alto nivel para jóvenes que quieren llevar su juego al siguiente nivel.'
+  },
+  {
+    id: 's10',
+    sport: 'Fútbol',
+    title: 'Six Sensations - Torneo Mixto',
+    date: 'Sábado, 4 Nov',
+    time: '11:00 AM',
+    duration: '180 min',
+    location: 'Club Six Sensations',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523822/9890551d-1ab4-4d83-aa09-60f7c3e4c55d.png',
+    description: 'Participa en nuestro torneo relámpago mixto con premios y hidratación incluida.'
+  },
+  {
+    id: 's11',
+    sport: 'Pilates',
+    title: 'Pulse Pilates - Reformer Session',
+    date: 'Domingo, 5 Nov',
+    time: '10:00 AM',
+    duration: '50 min',
+    location: 'Sede Pulse 93',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523885/74715870-8804-4334-aa53-612281d34d26.png',
+    description: 'Sesión de Pilates Reformer enfocada en el control y la tonificación profunda.'
+  },
+  {
+    id: 's12',
+    sport: 'Pilates',
+    title: 'Ulai Pilates - Power Flow',
+    date: 'Lunes, 6 Nov',
+    time: '08:00 AM',
+    duration: '60 min',
+    location: 'Ulai Studio',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523890/0fbd1c00-1bc9-4cfd-9266-f0e58ffeaf72.png',
+    description: 'Un flujo dinámico de Pilates que combina fuerza tradicional con movimientos modernos.'
   }
 ];
 
@@ -396,7 +564,7 @@ export const MOCK_TALKS = [
     location: 'Sala de Conferencias B',
     date: '26 de Octubre',
     time: '02:00 PM',
-    expert: 'Dr. Julián Rivera',
+    expert: 'Dr. Carlos Castro',
     duration: '60 min',
     description: 'Charla sobre hábitos saludables para prevenir el sobrepeso desde joven.'
   },
@@ -585,7 +753,7 @@ export const MOCK_NOTIFICATIONS = [
 ];
 
 export const HOBBIES_LIST = [
-  'Yoga', 'Gimnasio', 'Ciclismo', 'Meditación', 'Lectura', 'Natación', 'Baile', 'Correr', 'Pilates'
+  'Yoga', 'Gimnasio', 'Ciclismo', 'Meditación', 'Lectura', 'Natación', 'Danza', 'Correr', 'Pilates'
 ];
 
 export const LEVELS = ['Nuevo', 'Medio', 'Avanzado', 'Experto'];

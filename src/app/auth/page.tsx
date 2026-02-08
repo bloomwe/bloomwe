@@ -7,8 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { AppProvider, useApp } from '@/app/context/AppContext';
-import { Sparkles, ArrowRight, Lock, Mail, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { ArrowRight, Lock, Mail, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 const AuthContent = () => {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
@@ -71,8 +72,14 @@ const AuthContent = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-secondary/10 p-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-2">
-          <div className="mx-auto w-16 h-16 bg-primary rounded-3xl flex items-center justify-center shadow-xl mb-4">
-            <Sparkles className="text-white" size={32} />
+          <div className="mx-auto w-24 h-24 relative mb-4">
+            <Image 
+              src="https://res.cloudinary.com/dwoyltoyd/image/upload/v1770524240/dcfa7675-cd52-4d56-8a44-ee3279d51914.png"
+              alt="bloomWe Logo"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
           <h1 className="text-3xl font-black text-primary">bloomWe</h1>
           <p className="text-muted-foreground font-medium">Tu camino al bienestar comienza aquí</p>

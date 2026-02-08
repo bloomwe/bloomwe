@@ -31,7 +31,7 @@ const RECIPE_TABS = ['Todos', 'Ligeras', 'Fuertes', 'Snacks'];
 const EXPERT_SUBTABS = ['Especialistas', 'Charlas'];
 const EXPERT_TABS = ['Todos', 'Médicos', 'Psicólogos', 'Nutricionistas'];
 const TALK_TOPICS = ['Todos', 'Obesidad', 'Nutrición', 'Salud Mental', 'Covid'];
-const SPORT_TABS = ['Todos', 'Yoga', 'Running', 'Fútbol', 'Natación', 'Pilates', 'Baile'];
+const SPORT_TABS = ['Todos', 'Yoga', 'Running', 'Fútbol', 'Natación', 'Pilates', 'Danza'];
 
 export default function HacerPage() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
@@ -113,7 +113,7 @@ export default function HacerPage() {
                     </Badge>
                     {registered && (
                       <Badge className="bg-green-500 text-white border-none rounded-full px-4 py-1 font-bold shadow-sm flex items-center gap-1">
-                        <Check size={14} /> Inscrito
+                        Inscrito
                       </Badge>
                     )}
                   </div>
@@ -256,7 +256,7 @@ export default function HacerPage() {
                       </Badge>
                       {registered && (
                         <Badge className="bg-green-500 text-white border-none rounded-full px-4 py-1 font-bold shadow-sm flex items-center gap-1">
-                          <Check size={12} /> Inscrito
+                          Inscrito
                         </Badge>
                       )}
                     </div>
@@ -583,7 +583,7 @@ export default function HacerPage() {
                               </Badge>
                               {registered && (
                                 <Badge className="bg-green-500 text-white border-none px-2 text-[9px] flex items-center gap-1 font-bold">
-                                  <Check size={10} /> Inscrito
+                                  Inscrito
                                 </Badge>
                               )}
                             </div>

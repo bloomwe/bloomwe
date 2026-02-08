@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AppProvider, useApp } from './context/AppContext';
 import { Skeleton } from '@/components/ui/skeleton';
+import Image from 'next/image';
 
 function AppInitializer() {
   const { userData, currentUser, isLoaded } = useApp();
@@ -23,8 +24,14 @@ function AppInitializer() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-8 gap-4">
-      <div className="w-24 h-24 bg-primary rounded-3xl flex items-center justify-center animate-bounce shadow-xl">
-        <span className="text-white text-4xl font-bold">BW</span>
+      <div className="w-32 h-32 relative animate-bounce">
+        <Image 
+          src="https://res.cloudinary.com/dwoyltoyd/image/upload/v1770524240/dcfa7675-cd52-4d56-8a44-ee3279d51914.png"
+          alt="bloomWe Logo"
+          fill
+          className="object-contain"
+          priority
+        />
       </div>
       <h1 className="text-2xl font-bold text-primary">bloomWe</h1>
       <Skeleton className="h-4 w-48" />
