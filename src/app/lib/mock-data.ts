@@ -352,6 +352,28 @@ export const MOCK_SPORTS_ACTIVITIES = [
     location: 'Complejo Acuático Municipal',
     image: 'https://images.unsplash.com/photo-1519315901367-f34ff9154487?q=80&w=1000',
     description: 'Mejora tu brazada con consejos de instructores profesionales en piscina climatizada.'
+  },
+  {
+    id: 's5',
+    sport: 'Pilates',
+    title: 'Pilates Integral para Jóvenes',
+    date: 'Martes, 24 Oct',
+    time: '09:00 AM',
+    duration: '55 min',
+    location: 'Estudio de Bienestar bloomWe',
+    image: 'https://images.unsplash.com/photo-1518611012118-29a8d63ee0c2?q=80&w=1000',
+    description: 'Mejora tu postura y fortalece tu core con nuestra sesión especializada de Pilates mat.'
+  },
+  {
+    id: 's6',
+    sport: 'Baile',
+    title: 'Ritmos Latinos y Cardio',
+    date: 'Viernes, 27 Oct',
+    time: '06:30 PM',
+    duration: '60 min',
+    location: 'Plaza Principal del Parque',
+    image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=1000',
+    description: 'Diviértete mientras te ejercitas al ritmo de los mejores hits latinos. ¡No se requiere experiencia previa!'
   }
 ];
 
@@ -563,7 +585,7 @@ export const MOCK_NOTIFICATIONS = [
 ];
 
 export const HOBBIES_LIST = [
-  'Yoga', 'Gimnasio', 'Ciclismo', 'Meditación', 'Lectura', 'Natación', 'Baile', 'Correr'
+  'Yoga', 'Gimnasio', 'Ciclismo', 'Meditación', 'Lectura', 'Natación', 'Baile', 'Correr', 'Pilates'
 ];
 
 export const LEVELS = ['Nuevo', 'Medio', 'Avanzado', 'Experto'];
