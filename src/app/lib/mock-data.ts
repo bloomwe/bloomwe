@@ -421,7 +421,11 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Amante del yoga y la vida sana. ¡Vamos por esos 30 días!',
     recentActivity: 'Completó sesión de Yoga 20 min',
     interests: ['Yoga', 'Lectura'],
-    streak: 15
+    streak: 15,
+    comments: [
+      { id: 'com1', name: 'Valentina Ruiz', text: '¡Increíble Mateo! Yo también quiero llegar a los 30 días.' },
+      { id: 'com2', name: 'Dr. Ricardo Gómez', text: 'Excelente disciplina, Mateo.' }
+    ]
   },
   {
     id: '2',
@@ -430,7 +434,10 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Correr me hace libre. Busco partners para el parque.',
     recentActivity: 'Corrió 5km en el Parque Central',
     interests: ['Running', 'Ciclismo'],
-    streak: 7
+    streak: 7,
+    comments: [
+      { id: 'com3', name: 'Mateo González', text: '¿Qué días vas? Me encantaría unirme.' }
+    ]
   },
   {
     id: '3',
@@ -439,7 +446,10 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Como psicólogo, creo que el bienestar mental es la base de todo.',
     recentActivity: 'Publicó: Tips para la ansiedad',
     interests: ['Meditación', 'Salud Mental'],
-    streak: 22
+    streak: 22,
+    comments: [
+      { id: 'com4', name: 'Sofía Mendez', text: 'Muy necesarios estos consejos hoy en día, doctor.' }
+    ]
   },
   {
     id: '4',
@@ -448,7 +458,10 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Nutricionista apasionada por las recetas fáciles y ricas.',
     recentActivity: 'Compartió nueva receta de Smoothie',
     interests: ['Nutrición', 'Culinaria'],
-    streak: 30
+    streak: 30,
+    comments: [
+      { id: 'com5', name: 'Valentina Ruiz', text: '¡Se ve delicioso! Lo probaré después de correr.' }
+    ]
   },
   {
     id: '5',
@@ -457,7 +470,8 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Entrenador personal. El secreto es la disciplina.',
     recentActivity: 'Hizo 100 flexiones hoy',
     interests: ['Gimnasio', 'Crossfit'],
-    streak: 45
+    streak: 45,
+    comments: []
   }
 ];
 

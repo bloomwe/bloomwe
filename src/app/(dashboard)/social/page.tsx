@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -41,19 +40,40 @@ const RANDOM_ACTIVITIES = [
 
 const QUICK_TAGS = ['Yoga', 'Nutrición', 'Mental', 'Deporte'];
 
+interface Comment {
+  id: string;
+  name: string;
+  text: string;
+}
+
+interface SocialPost {
+  id: string;
+  name: string;
+  photo: string;
+  bio: string;
+  recentActivity: string;
+  interests: string[];
+  streak: number;
+  isMe: boolean;
+  likes: number;
+  userLiked: boolean;
+  comments: Comment[];
+}
+
 export default function SocialPage() {
   const { userData, streak, matches, pendingMatches, addMatchRequest, isMatch, isPending } = useApp();
   const { toast } = useToast();
   const [post, setPost] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
-  const [feed, setFeed] = useState<any[]>([]);
+  const [feed, setFeed] = useState<SocialPost[]>([]);
   const [matchSuccess, setMatchSuccess] = useState<string | null>(null);
   const [mainTab, setMainTab] = useState<'comunidad' | 'lugares' | 'mensajes'>('comunidad');
   const [comunidadTab, setComunidadTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
+  const [commentInput, setCommentInput] = useState<{ [postId: string]: string }>({});
 
   // Función para generar posts aleatorios
-  const generateRandomPosts = useCallback((count: number) => {
+  const generateRandomPosts = useCallback((count: number): SocialPost[] => {
     return Array.from({ length: count }).map((_, i) => {
       const id = Math.random().toString(36).substr(2, 9);
       const name = MOCK_SOCIAL_FEED[Math.floor(Math.random() * MOCK_SOCIAL_FEED.length)].name;
@@ -76,12 +96,12 @@ export default function SocialPage() {
   useEffect(() => {
     setMounted(true);
     // Cargar feed inicial mezclando mock data con posts generados
-    const initialFeed = MOCK_SOCIAL_FEED.map(u => ({ 
+    const initialFeed: SocialPost[] = MOCK_SOCIAL_FEED.map(u => ({ 
       ...u, 
       isMe: false, 
       likes: Math.floor(Math.random() * 20) + 5,
       userLiked: false,
-      comments: []
+      comments: (u as any).comments || []
     }));
     setFeed([...initialFeed, ...generateRandomPosts(3)]);
   }, [generateRandomPosts]);
@@ -104,7 +124,7 @@ export default function SocialPage() {
 
   const handlePost = () => {
     if (!post) return;
-    const newPost = {
+    const newPost: SocialPost = {
       id: 'me-' + Date.now(),
       name: userData?.name || 'Usuario',
       photo: userData?.profilePic || 'https://picsum.photos/seed/me/150/150',
@@ -140,7 +160,35 @@ export default function SocialPage() {
     }));
   };
 
-  const handleMatchRequestAction = (user: any) => {
+  const handleAddComment = (postId: string) => {
+    const text = commentInput[postId];
+    if (!text) return;
+
+    setFeed(prev => prev.map(p => {
+      if (p.id === postId) {
+        return {
+          ...p,
+          comments: [
+            ...p.comments,
+            {
+              id: Math.random().toString(36).substr(2, 9),
+              name: userData?.name || 'Usuario',
+              text
+            }
+          ]
+        };
+      }
+      return p;
+    }));
+
+    setCommentInput(prev => ({ ...prev, [postId]: '' }));
+    toast({
+      title: "Comentario añadido",
+      description: "Tu comentario se ha publicado correctamente.",
+    });
+  };
+
+  const handleMatchRequestAction = (user: SocialPost) => {
     if (user.isMe) return;
     addMatchRequest(user.id);
     setMatchSuccess(user.name);
@@ -258,7 +306,10 @@ export default function SocialPage() {
                       <Heart size={18} fill={user.userLiked ? "currentColor" : "none"} /> 
                       <span className="text-xs font-bold">{user.likes}</span>
                     </button>
-                    <button className="flex items-center gap-2 text-muted-foreground"><MessageCircle size={18} /> <span className="text-xs font-bold">0</span></button>
+                    <button className="flex items-center gap-2 text-muted-foreground">
+                      <MessageCircle size={18} /> 
+                      <span className="text-xs font-bold">{user.comments.length}</span>
+                    </button>
                     
                     <div className="ml-auto">
                       {isMatch(user.id) ? (
@@ -270,6 +321,36 @@ export default function SocialPage() {
                           <Zap size={16} fill="currentColor" /> <span className="text-xs">Match</span>
                         </button>
                       )}
+                    </div>
+                  </div>
+
+                  {/* Sección de Comentarios */}
+                  <div className="mt-4 pt-4 border-t border-border/30 space-y-3">
+                    {user.comments.length > 0 && (
+                      <div className="space-y-2">
+                        {user.comments.map((comment) => (
+                          <div key={comment.id} className="flex flex-col bg-secondary/10 p-2.5 rounded-2xl">
+                            <span className="text-[10px] font-black text-primary uppercase mb-0.5">{comment.name}</span>
+                            <p className="text-xs text-muted-foreground leading-tight">{comment.text}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <div className="flex gap-2 items-center bg-secondary/20 p-2 rounded-2xl">
+                      <Input 
+                        placeholder="Añadir un comentario..." 
+                        value={commentInput[user.id] || ''}
+                        onChange={(e) => setCommentInput(prev => ({ ...prev, [user.id]: e.target.value }))}
+                        className="h-8 bg-transparent border-none text-[11px] placeholder:text-muted-foreground/50 shadow-none focus-visible:ring-0"
+                      />
+                      <Button 
+                        size="icon" 
+                        variant="ghost" 
+                        className="h-7 w-7 rounded-full text-primary hover:bg-primary/10 shrink-0"
+                        onClick={() => handleAddComment(user.id)}
+                      >
+                        <Send size={14} />
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -393,13 +474,14 @@ export default function SocialPage() {
                 <Zap size={40} className="text-primary fill-primary" />
               </div>
               ¡Solicitud Enviada!
-            </DialogTitle>
-            <DialogDescription className="text-center pt-2 font-medium">
-              Se ha enviado tu interés a <span className="text-primary font-bold">{matchSuccess}</span>. Lo verás en tu pestaña de pendientes.
-            </DialogDescription>
-          </DialogHeader>
-          <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary mt-6 font-bold shadow-lg shadow-primary/20">Entendido</Button>
-        </DialogContent>
+            </div>
+            ¡Solicitud Enviada!
+          </DialogTitle>
+          <DialogDescription className="text-center pt-2 font-medium">
+            Se ha enviado tu interés a <span className="text-primary font-bold">{matchSuccess}</span>. Lo verás en tu pestaña de pendientes.
+          </DialogDescription>
+        </DialogHeader>
+        <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary mt-6 font-bold shadow-lg shadow-primary/20">Entendido</Button>
       </Dialog>
     </div>
   );
