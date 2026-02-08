@@ -217,6 +217,108 @@ export const MOCK_SHOPS = [
     ]
   },
   {
+    id: 'olu',
+    name: 'OLU',
+    category: 'Fitness & Wellness',
+    distance: '1.1 km',
+    address: 'Av. Carrera 11 #94-12',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523608/0e858cec-69da-45be-9878-fd52c2b20e26.png',
+    description: 'Ropa y equipamiento deportivo de alta tecnología para potenciar tu rendimiento.',
+    products: [
+      { name: 'Leggings Tech', price: '$120.000' },
+      { name: 'Top Deportivo Pro', price: '$85.000' },
+      { name: 'Mochila de Entrenamiento', price: '$150.000' }
+    ],
+    coupons: [
+      { code: 'OLUFIRST', discount: '15% OFF', description: 'En tu primera compra' }
+    ]
+  },
+  {
+    id: 'avocalia',
+    name: 'Avocalia',
+    category: 'Alimentación Saludable',
+    distance: '1.5 km',
+    address: 'Calle 85 #12-44',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523612/4d096da8-910e-4617-972e-cd0cca00681a.png',
+    description: 'Bowls, ensaladas y snacks donde el aguacate es el protagonista saludable.',
+    products: [
+      { name: 'Avo-Bowl Clásico', price: '$22.000' },
+      { name: 'Toast de Aguacate', price: '$16.500' },
+      { name: 'Batido Green Power', price: '$12.000' }
+    ],
+    coupons: [
+      { code: 'AVOHEALTH', discount: '10% OFF', description: 'Válido en combos' }
+    ]
+  },
+  {
+    id: 'paranice',
+    name: 'Paranice',
+    category: 'Heladería Saludable',
+    distance: '2.0 km',
+    address: 'Carrera 13 #78-05',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523621/f95d6dc2-ba18-4ec2-a789-b94d6dd647d3.png',
+    description: 'Helados artesanales sin azúcar y con ingredientes 100% naturales.',
+    products: [
+      { name: 'Paleta Frutos Rojos', price: '$7.000' },
+      { name: 'Copa de Acai', price: '$18.000' },
+      { name: 'Helado de Coco Keto', price: '$9.500' }
+    ],
+    coupons: [
+      { code: 'NICEICE', discount: '20% OFF', description: 'En la segunda unidad' }
+    ]
+  },
+  {
+    id: 'madame_sucree',
+    name: 'Madame Sucrée',
+    category: 'Repostería Saludable',
+    distance: '2.2 km',
+    address: 'Calle 90 #14-26',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523625/c37ec9cf-ef94-4827-8534-1c510200d139.png',
+    description: 'Pastelería fina con opciones sin gluten, veganas y bajas en calorías.',
+    products: [
+      { name: 'Muffin de Arándanos', price: '$8.000' },
+      { name: 'Tarta de Chocolate Vegana', price: '$14.000' },
+      { name: 'Galletas de Avena y Chía', price: '$5.500' }
+    ],
+    coupons: [
+      { code: 'SWEETBLOOM', discount: '10% OFF', description: 'En tortas completas' }
+    ]
+  },
+  {
+    id: 'nuve_verde',
+    name: 'Nuve Verde',
+    category: 'Mercado Eco',
+    distance: '3.1 km',
+    address: 'Calle 100 #19-45',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523631/f9f4a460-ba30-46bc-bc89-64c3659f36b0.png',
+    description: 'Tienda de productos sostenibles, a granel y cuidado personal consciente.',
+    products: [
+      { name: 'Champú Sólido Natural', price: '$25.000' },
+      { name: 'Frutos Secos Mix 250g', price: '$18.000' },
+      { name: 'Aceite de Coco Orgánico', price: '$32.000' }
+    ],
+    coupons: [
+      { code: 'NUVE20', discount: '20% OFF', description: 'En productos a granel' }
+    ]
+  },
+  {
+    id: 'cana_y_bijao',
+    name: 'Caña y Bijao',
+    category: 'Tradición Natural',
+    distance: '3.5 km',
+    address: 'Carrera 7 #65-33',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523640/52d0a1d4-c702-43fa-a9fc-4e0e0bf01f9f.png',
+    description: 'Sabores tradicionales colombianos con ingredientes frescos y procesos artesanales.',
+    products: [
+      { name: 'Panela Orgánica Pulverizada', price: '$6.500' },
+      { name: 'Café de Origen 500g', price: '$28.000' },
+      { name: 'Aromáticas de la Casa', price: '$4.000' }
+    ],
+    coupons: [
+      { code: 'TRADICION', discount: '10% OFF', description: 'En toda la despensa' }
+    ]
+  },
+  {
     id: 'shop2',
     name: 'SportXtreme',
     category: 'Ropa Deportiva',
