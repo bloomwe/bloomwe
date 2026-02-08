@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -205,7 +204,7 @@ export default function HacerPage() {
                       disabled
                       className="w-full h-14 rounded-[1.8rem] bg-green-500 text-white font-black text-lg opacity-100 cursor-default"
                     >
-                      ¡Ya estás inscrito! ✅
+                      ¡Ya estás inscrito!
                     </Button>
                   ) : (
                     <Button 
@@ -287,7 +286,7 @@ export default function HacerPage() {
                         registered ? "bg-green-500 hover:bg-green-600 text-white" : "bg-primary text-white shadow-primary/20 group-hover:bg-primary/90"
                       )}
                     >
-                      {registered ? "Ver mi inscripción ✅" : "Ver Detalles e Inscribirse"}
+                      {registered ? "Ver mi inscripción" : "Ver Detalles e Inscribirse"}
                     </Button>
                   </CardContent>
                 </Card>
@@ -622,7 +621,7 @@ export default function HacerPage() {
                               registered ? "bg-green-500 text-white opacity-100" : "bg-primary text-white"
                             )}
                           >
-                            {registered ? "¡Ya estás inscrito! ✅" : "Inscribirme a la Charla"}
+                            {registered ? "¡Ya estás inscrito!" : "Inscribirme a la Charla"}
                           </Button>
                         </CardContent>
                       </Card>

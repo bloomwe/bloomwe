@@ -15,11 +15,12 @@ import {
 } from '@/components/ui/dialog';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, LineChart, Line
 } from 'recharts';
 import { 
   Settings, LogOut, Edit2, Flame, Trophy, Calendar, 
   ChevronRight, MapPin, Mail, Bell, Shield, Info, Camera, Lock, Eye, EyeOff,
-  Crown, Medal, Award, Star, CheckCircle2
+  Crown, Medal, Award, Star, CheckCircle2, Activity, Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -33,6 +34,25 @@ const STATS_DATA = [
   { name: 'Sab', value: 6 },
   { name: 'Dom', value: 1 },
 ];
+
+const WELLNESS_DISTRIBUTION = [
+  { name: 'Ejercicio', value: 35 },
+  { name: 'Nutrición', value: 25 },
+  { name: 'Mente', value: 20 },
+  { name: 'Hidratación', value: 20 },
+];
+
+const ENERGY_LEVELS = [
+  { day: 'Lun', level: 65 },
+  { day: 'Mar', level: 80 },
+  { day: 'Mie', level: 55 },
+  { day: 'Jue', level: 95 },
+  { day: 'Vie', level: 75 },
+  { day: 'Sab', level: 90 },
+  { day: 'Dom', level: 70 },
+];
+
+const COLORS = ['#17B5B5', '#4FD1C5', '#38B2AC', '#2C7A7B'];
 
 const PLANS = [
   {
@@ -309,6 +329,8 @@ export default function ProfilePage() {
         <h2 className="font-bold text-lg px-2 text-primary flex items-center gap-2">
           <BarChart size={20} /> Mis Estadísticas
         </h2>
+        
+        {/* Gráfico 1: Tips Semanales */}
         <Card className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs font-bold text-muted-foreground uppercase flex items-center justify-between tracking-wider">
@@ -330,6 +352,78 @@ export default function ProfilePage() {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+
+        <div className="grid grid-cols-1 gap-4">
+          {/* Gráfico 2: Balance de Bienestar */}
+          <Card className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs font-bold text-muted-foreground uppercase flex items-center justify-between tracking-wider">
+                Balance de Bienestar
+                <Activity size={16} className="text-primary" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="h-56 pt-0 flex flex-col items-center">
+              <ResponsiveContainer width="100%" height="80%">
+                <PieChart>
+                  <Pie
+                    data={WELLNESS_DISTRIBUTION}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {WELLNESS_DISTRIBUTION.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 mt-2">
+                {WELLNESS_DISTRIBUTION.map((entry, index) => (
+                  <div key={entry.name} className="flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                    <span className="text-[10px] font-bold text-muted-foreground">{entry.name}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Gráfico 3: Nivel de Energía Semanal */}
+          <Card className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs font-bold text-muted-foreground uppercase flex items-center justify-between tracking-wider">
+                Rendimiento de Energía
+                <Zap size={16} className="text-primary" fill="currentColor" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="h-48 pt-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={ENERGY_LEVELS}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#999' }} />
+                  <YAxis hide domain={[0, 100]} />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="level" 
+                    stroke="#17B5B5" 
+                    strokeWidth={4} 
+                    dot={{ r: 4, fill: '#17B5B5', strokeWidth: 2, stroke: '#fff' }} 
+                    activeDot={{ r: 6, shadow: '0 0 10px rgba(23, 181, 181, 0.4)' }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
       </section>
 
       <section className="space-y-4">

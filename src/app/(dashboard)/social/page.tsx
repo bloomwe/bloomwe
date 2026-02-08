@@ -291,7 +291,6 @@ export default function SocialPage() {
 
   const handleSendMessage = () => {
     if (!chatInput.trim()) return;
-    // In a real app we'd add to state, here we just clear and toast for mock
     setChatInput('');
     toast({
       title: "Mensaje enviado",
@@ -454,7 +453,7 @@ export default function SocialPage() {
                             className="h-9 px-4 rounded-full bg-primary text-white text-[10px] font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-105 transition-all border-none"
                             onClick={() => handleInviteToActivity(user)}
                           >
-                            <CalendarIcon size={14} /> ¡Invitar ahora!
+                            <CalendarIcon size={14} /> Invitar
                           </Button>
                           <Badge className="bg-green-100 text-green-600 border-none px-3 py-1 font-bold text-[10px]">Amigos</Badge>
                         </div>
@@ -527,7 +526,7 @@ export default function SocialPage() {
       )}
 
       {mainTab === 'mensajes' && (
-        <div className="space-y-6 animate-fade-in">
+        <div className="space-y-6 animate-fade-in px-0.5">
           <div className="flex gap-4 overflow-x-auto no-scrollbar -mx-2 px-2 pb-2">
             {MOCK_CHATS.map(chat => (
               <div 
@@ -547,49 +546,49 @@ export default function SocialPage() {
             ))}
           </div>
 
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+          <div className="relative px-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
             <Input 
               placeholder="Buscar conversaciones..." 
               value={searchTermMessages}
               onChange={(e) => setSearchTermMessages(e.target.value)}
-              className="pl-10 h-10 rounded-2xl bg-white border-none shadow-sm" 
+              className="pl-11 h-12 rounded-2xl bg-white border-none shadow-sm" 
             />
           </div>
 
-          <div className="grid gap-2">
+          <div className="grid gap-2 px-1">
             {filteredChats.map(chat => (
               <Card 
                 key={chat.id} 
                 className="rounded-2xl border-none shadow-none bg-white hover:bg-secondary/10 transition-colors cursor-pointer group"
                 onClick={() => setActiveChat(chat)}
               >
-                <CardContent className="p-4 flex items-center gap-4">
-                  <Avatar className="h-12 w-12 shadow-sm">
+                <CardContent className="p-4 pr-5 flex items-center gap-4">
+                  <Avatar className="h-12 w-12 shadow-sm shrink-0">
                     <AvatarImage src={chat.photo} />
                     <AvatarFallback>{chat.name[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start mb-0.5">
                       <h3 className="font-bold text-sm truncate">{chat.name}</h3>
-                      <span className="text-[9px] text-muted-foreground font-medium">{chat.time}</span>
+                      <span className="text-[9px] text-muted-foreground font-medium ml-2 shrink-0">{chat.time}</span>
                     </div>
                     <p className={cn("text-[11px] truncate", chat.unreadCount > 0 ? "font-bold text-foreground" : "text-muted-foreground")}>
                       {chat.lastMessage}
                     </p>
                   </div>
                   {chat.unreadCount > 0 && (
-                    <div className="bg-primary text-white text-[9px] h-5 w-5 rounded-full flex items-center justify-center font-bold shadow-sm shadow-primary/20">
+                    <div className="bg-primary text-white text-[9px] h-5 w-5 rounded-full flex items-center justify-center font-bold shadow-sm shadow-primary/20 shrink-0">
                       {chat.unreadCount}
                     </div>
                   )}
-                  <ChevronRight size={16} className="text-muted-foreground/30 group-hover:text-primary transition-colors" />
+                  <ChevronRight size={18} className="text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0" />
                 </CardContent>
               </Card>
             ))}
             {filteredChats.length === 0 && (
               <div className="text-center py-12">
-                <p className="text-xs text-muted-foreground">No se encontraron conversaciones.</p>
+                <p className="text-xs text-muted-foreground font-medium">No se encontraron conversaciones.</p>
               </div>
             )}
           </div>
@@ -688,7 +687,7 @@ export default function SocialPage() {
                           }}
                           className="flex-1 h-14 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
                         >
-                          <CalendarIcon size={20} /> ¡Invitar ahora!
+                          <CalendarIcon size={20} /> Invitar
                         </Button>
                         <Button disabled className="flex-1 h-14 rounded-2xl bg-green-500 text-white font-bold opacity-100">
                           Ya son amigos
