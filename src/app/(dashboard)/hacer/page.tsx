@@ -12,7 +12,7 @@ import {
   ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, 
   Timer, Play, BookOpen, Download, Music, Tag, Map, Star, ArrowLeft,
   CheckCircle2, ListChecks, ChefHat, Sparkles, MessageSquare, User,
-  Ticket
+  Ticket, Check
 } from 'lucide-react';
 import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION, MOCK_SHOPS, MOCK_TALKS } from '@/app/lib/mock-data';
 import { cn } from '@/lib/utils';
@@ -45,7 +45,7 @@ export default function HacerPage() {
   const [registrationSuccess, setRegistrationSuccess] = useState<string | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
   const { toast } = useToast();
-  const { registerActivity } = useApp();
+  const { registerActivity, registeredActivities } = useApp();
 
   const handleDownload = (title: string) => {
     setDownloadSuccess(title);
@@ -70,6 +70,10 @@ export default function HacerPage() {
     setRegistrationSuccess(activity.title);
   };
 
+  const isAlreadyRegistered = (id: string) => {
+    return registeredActivities.some(ra => ra.id === id);
+  };
+
   const filteredRecipes = recipeFilter === 'Todos' 
     ? MOCK_RECIPES 
     : MOCK_RECIPES.filter(r => r.category === recipeFilter);
@@ -88,6 +92,7 @@ export default function HacerPage() {
         if (selectedActivityId) {
           const activity = MOCK_SPORTS_ACTIVITIES.find(a => a.id === selectedActivityId);
           if (!activity) return null;
+          const registered = isAlreadyRegistered(activity.id);
           return (
             <div className="space-y-6 animate-fade-in pb-8">
               <Button variant="ghost" onClick={() => setSelectedActivityId(null)} className="mb-2 p-0 h-auto font-bold text-primary hover:bg-transparent">
@@ -97,10 +102,15 @@ export default function HacerPage() {
               <Card className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white">
                 <div className="relative h-60">
                   <img src={activity.image} alt={activity.title} className="w-full h-full object-cover" />
-                  <div className="absolute top-4 left-4">
+                  <div className="absolute top-4 left-4 flex gap-2">
                     <Badge className="bg-white/90 text-primary border-none rounded-full px-4 py-1 font-bold shadow-sm">
                       {activity.sport}
                     </Badge>
+                    {registered && (
+                      <Badge className="bg-green-500 text-white border-none rounded-full px-4 py-1 font-bold shadow-sm flex items-center gap-1">
+                        <Check size={14} /> Inscrito
+                      </Badge>
+                    )}
                   </div>
                 </div>
                 <CardContent className="p-6">
@@ -111,7 +121,7 @@ export default function HacerPage() {
                     <div className="flex flex-col items-center gap-1 bg-secondary/20 p-3 rounded-2xl text-center">
                       <CalendarIcon size={18} className="text-primary" />
                       <span className="text-[10px] font-bold text-muted-foreground uppercase">Fecha</span>
-                      <span className="text-[11px] font-black">{activity.date.split(',')[1]}</span>
+                      <span className="text-[11px] font-black">{activity.date.split(',')[1] || activity.date}</span>
                     </div>
                     <div className="flex flex-col items-center gap-1 bg-secondary/20 p-3 rounded-2xl text-center">
                       <Clock size={18} className="text-primary" />
@@ -184,12 +194,21 @@ export default function HacerPage() {
                     </div>
                   </section>
                   
-                  <Button 
-                    onClick={() => handleRegister(activity)}
-                    className="w-full h-14 rounded-[1.8rem] bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
-                  >
-                    Inscribirse Ahora
-                  </Button>
+                  {registered ? (
+                    <Button 
+                      disabled
+                      className="w-full h-14 rounded-[1.8rem] bg-green-500 text-white font-black text-lg opacity-100 cursor-default"
+                    >
+                      ¡Ya estás inscrito! ✅
+                    </Button>
+                  ) : (
+                    <Button 
+                      onClick={() => handleRegister(activity)}
+                      className="w-full h-14 rounded-[1.8rem] bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
+                    >
+                      Inscribirse Ahora
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -198,51 +217,62 @@ export default function HacerPage() {
         return (
           <div className="space-y-6 animate-fade-in pb-8">
             <p className="text-xs text-muted-foreground px-1">Próximos eventos y sesiones disponibles</p>
-            {MOCK_SPORTS_ACTIVITIES.map(activity => (
-              <Card 
-                key={activity.id} 
-                className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white hover:shadow-md transition-all group cursor-pointer"
-                onClick={() => setSelectedActivityId(activity.id)}
-              >
-                <div className="relative h-48 w-full overflow-hidden">
-                  <img 
-                    src={activity.image} 
-                    alt={activity.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                  />
-                  <div className="absolute top-4 left-4">
-                    <Badge className="bg-white/90 text-primary hover:bg-white border-none backdrop-blur-sm rounded-full px-4 py-1 font-bold shadow-sm">
-                      {activity.sport}
-                    </Badge>
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-xl mb-3 text-foreground group-hover:text-primary transition-colors">{activity.title}</h3>
-                  <p className="text-xs text-muted-foreground mb-5 line-clamp-2">{activity.description}</p>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
-                      <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
-                        <CalendarIcon size={14} />
-                      </div>
-                      <span className="truncate">{activity.date}</span>
-                    </div>
-                    <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
-                      <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
-                        <Clock size={14} />
-                      </div>
-                      <span>{activity.time}</span>
+            {MOCK_SPORTS_ACTIVITIES.map(activity => {
+              const registered = isAlreadyRegistered(activity.id);
+              return (
+                <Card 
+                  key={activity.id} 
+                  className="rounded-[2.5rem] border-none shadow-sm overflow-hidden bg-white hover:shadow-md transition-all group cursor-pointer"
+                  onClick={() => setSelectedActivityId(activity.id)}
+                >
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <img 
+                      src={activity.image} 
+                      alt={activity.title} 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                    />
+                    <div className="absolute top-4 left-4 flex gap-2">
+                      <Badge className="bg-white/90 text-primary hover:bg-white border-none backdrop-blur-sm rounded-full px-4 py-1 font-bold shadow-sm">
+                        {activity.sport}
+                      </Badge>
+                      {registered && (
+                        <Badge className="bg-green-500 text-white border-none rounded-full px-4 py-1 font-bold shadow-sm flex items-center gap-1">
+                          <Check size={12} /> Inscrito
+                        </Badge>
+                      )}
                     </div>
                   </div>
-                  
-                  <Button 
-                    className="w-full mt-6 h-12 rounded-2xl bg-primary text-white font-bold shadow-lg shadow-primary/20 group-hover:bg-primary/90 transition-colors"
-                  >
-                    Ver Detalles e Inscribirse
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-xl mb-3 text-foreground group-hover:text-primary transition-colors">{activity.title}</h3>
+                    <p className="text-xs text-muted-foreground mb-5 line-clamp-2">{activity.description}</p>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
+                        <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
+                          <CalendarIcon size={14} />
+                        </div>
+                        <span className="truncate">{activity.date}</span>
+                      </div>
+                      <div className="flex items-center gap-2.5 text-xs font-medium text-muted-foreground bg-secondary/20 p-3 rounded-2xl">
+                        <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
+                          <Clock size={14} />
+                        </div>
+                        <span>{activity.time}</span>
+                      </div>
+                    </div>
+                    
+                    <Button 
+                      className={cn(
+                        "w-full mt-6 h-12 rounded-2xl font-bold shadow-lg transition-colors",
+                        registered ? "bg-green-500 hover:bg-green-600 text-white" : "bg-primary text-white shadow-primary/20 group-hover:bg-primary/90"
+                      )}
+                    >
+                      {registered ? "Ver mi inscripción ✅" : "Ver Detalles e Inscribirse"}
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         );
       case 'relax':
@@ -516,48 +546,62 @@ export default function HacerPage() {
                 </div>
 
                 <div className="grid gap-4">
-                  {filteredTalks.map(talk => (
-                    <Card key={talk.id} className="rounded-3xl border-none shadow-sm bg-white overflow-hidden">
-                      <CardContent className="p-6">
-                        <div className="flex justify-between items-start mb-2">
-                          <Badge variant="outline" className="text-[9px] border-primary/20 text-primary uppercase font-black tracking-widest px-2">
-                            {talk.topic}
-                          </Badge>
-                          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-bold">
-                            <CalendarIcon size={12} className="text-primary" /> {talk.date}
-                          </div>
-                        </div>
-                        <h3 className="font-bold text-lg mb-2">{talk.title}</h3>
-                        <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{talk.description}</p>
-                        
-                        <div className="flex flex-col gap-3 bg-secondary/20 p-4 rounded-2xl mb-5">
-                          <div className="flex items-center gap-2 text-[11px] font-bold">
-                            <User size={14} className="text-primary" /> 
-                            <span className="text-primary">Experto:</span> {talk.expert}
-                          </div>
-                          <div className="grid grid-cols-2 gap-2">
-                            <div className="flex items-center gap-2 text-[11px] font-medium">
-                              <MapPin size={14} className="text-primary" /> {talk.location}
+                  {filteredTalks.map(talk => {
+                    const registered = isAlreadyRegistered(talk.id);
+                    return (
+                      <Card key={talk.id} className="rounded-3xl border-none shadow-sm bg-white overflow-hidden">
+                        <CardContent className="p-6">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex gap-2">
+                              <Badge variant="outline" className="text-[9px] border-primary/20 text-primary uppercase font-black tracking-widest px-2">
+                                {talk.topic}
+                              </Badge>
+                              {registered && (
+                                <Badge className="bg-green-500 text-white border-none px-2 text-[9px] flex items-center gap-1 font-bold">
+                                  <Check size={10} /> Inscrito
+                                </Badge>
+                              )}
                             </div>
-                            <div className="flex items-center gap-2 text-[11px] font-medium">
-                              <Clock size={14} className="text-primary" /> {talk.time}
+                            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-bold">
+                              <CalendarIcon size={12} className="text-primary" /> {talk.date}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-[11px] font-medium border-t border-border/20 pt-2">
-                            <Timer size={14} className="text-primary" /> 
-                            <span className="text-muted-foreground">Duración:</span> {talk.duration}
+                          <h3 className="font-bold text-lg mb-2">{talk.title}</h3>
+                          <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{talk.description}</p>
+                          
+                          <div className="flex flex-col gap-3 bg-secondary/20 p-4 rounded-2xl mb-5">
+                            <div className="flex items-center gap-2 text-[11px] font-bold">
+                              <User size={14} className="text-primary" /> 
+                              <span className="text-primary">Experto:</span> {talk.expert}
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center gap-2 text-[11px] font-medium">
+                                <MapPin size={14} className="text-primary" /> {talk.location}
+                              </div>
+                              <div className="flex items-center gap-2 text-[11px] font-medium">
+                                <Clock size={14} className="text-primary" /> {talk.time}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-[11px] font-medium border-t border-border/20 pt-2">
+                              <Timer size={14} className="text-primary" /> 
+                              <span className="text-muted-foreground">Duración:</span> {talk.duration}
+                            </div>
                           </div>
-                        </div>
 
-                        <Button 
-                          onClick={() => handleRegister(talk)}
-                          className="w-full h-12 rounded-xl bg-primary text-white font-bold"
-                        >
-                          Inscribirme a la Charla
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
+                          <Button 
+                            onClick={() => !registered && handleRegister(talk)}
+                            disabled={registered}
+                            className={cn(
+                              "w-full h-12 rounded-xl font-bold transition-all",
+                              registered ? "bg-green-500 text-white opacity-100" : "bg-primary text-white"
+                            )}
+                          >
+                            {registered ? "¡Ya estás inscrito! ✅" : "Inscribirme a la Charla"}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
                   {filteredTalks.length === 0 && (
                     <div className="text-center py-12 bg-white rounded-3xl border border-dashed">
                       <MessageSquare className="mx-auto text-muted-foreground/30 mb-3" size={40} />
