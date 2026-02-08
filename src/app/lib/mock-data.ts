@@ -156,7 +156,8 @@ export const MOCK_PLACES = [
     address: 'Av. Calle 63 y Av. Carrera 68',
     activities: ['Running', 'Ciclismo', 'Eventos Masivos', 'Yoga'],
     hours: '5am - 7pm',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323625/a7261b44-1ce1-41dc-878d-b89168baad35.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323625/a7261b44-1ce1-41dc-878d-b89168baad35.png',
+    rating: 5
   },
   {
     id: '2',
@@ -164,7 +165,8 @@ export const MOCK_PLACES = [
     address: 'Calle 63 # 45-10',
     activities: ['Yoga', 'Caminata', 'Navegación en Bote', 'Picnic'],
     hours: '6am - 6pm',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323648/1c3564ef-eaad-4e7e-8386-1532b38b1944.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323648/1c3564ef-eaad-4e7e-8386-1532b38b1944.png',
+    rating: 4
   },
   {
     id: '3',
@@ -172,7 +174,8 @@ export const MOCK_PLACES = [
     address: 'Carrera 15 con Calle 88',
     activities: ['Running', 'Calistenia', 'Paseo de Mascotas'],
     hours: 'Abierto 24h',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323666/39cefa5c-6590-48dd-b9b9-6167d8320e0b.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323666/39cefa5c-6590-48dd-b9b9-6167d8320e0b.png',
+    rating: 5
   },
   {
     id: '4',
@@ -180,7 +183,8 @@ export const MOCK_PLACES = [
     address: 'Calle 48B Sur y Avenida Boyacá',
     activities: ['Skateboarding', 'Fútbol', 'Atletismo', 'Ciclismo'],
     hours: '5am - 6pm',
-    image: 'https://picsum.photos/seed/tunal/600/400'
+    image: 'https://picsum.photos/seed/tunal/600/400',
+    rating: 3
   },
   {
     id: '5',
@@ -188,7 +192,8 @@ export const MOCK_PLACES = [
     address: 'Calle 93 # 11A-41',
     activities: ['Yoga Matutino', 'Eventos Culturales', 'Caminata'],
     hours: 'Abierto 24h',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323713/8d4ddf3a-efe2-4e51-a8fa-6ba7d912885a.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323713/8d4ddf3a-efe2-4e51-a8fa-6ba7d912885a.png',
+    rating: 4
   }
 ];
 
@@ -261,6 +266,45 @@ export const MOCK_SHOPS = [
     coupons: [
       { code: 'FIT2024', discount: '20% OFF', description: 'En toda la sección de proteínas' }
     ]
+  }
+];
+
+export const MOCK_CHATS = [
+  {
+    id: 'c1',
+    name: 'Mateo González',
+    photo: 'https://picsum.photos/seed/u1/150/150',
+    lastMessage: '¿Vamos al parque Simón Bolívar hoy?',
+    time: '10:30 AM',
+    unreadCount: 2,
+    online: true
+  },
+  {
+    id: 'c2',
+    name: 'Valentina Ruiz',
+    photo: 'https://picsum.photos/seed/u2/150/150',
+    lastMessage: '¡Esa receta de quinoa estuvo genial!',
+    time: 'Ayer',
+    unreadCount: 0,
+    online: false
+  },
+  {
+    id: 'c3',
+    name: 'Dr. Ricardo Gómez',
+    photo: 'https://picsum.photos/seed/u3/150/150',
+    lastMessage: 'Recuerda practicar la respiración profunda.',
+    time: 'Lunes',
+    unreadCount: 0,
+    online: false
+  },
+  {
+    id: 'c4',
+    name: 'Sofía Mendez',
+    photo: 'https://picsum.photos/seed/u4/150/150',
+    lastMessage: 'Mañana sale nuevo tip de nutrición.',
+    time: '2h ago',
+    unreadCount: 0,
+    online: true
   }
 ];
 
