@@ -8,15 +8,20 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
-  Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User, 
+  Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User as UserIcon, 
   MapPin, Send, Tag as TagIcon, Star, MessageSquare, 
-  Search, ChevronRight, Clock, Plus, X
+  Search, ChevronRight, Clock, Plus, X, Calendar as CalendarIcon,
+  Activity
 } from 'lucide-react';
-import { MOCK_SOCIAL_FEED, MOCK_CHATS, MOCK_PLACES } from '@/app/lib/mock-data';
-import { useApp } from '@/app/context/AppContext';
+import { MOCK_SOCIAL_FEED, MOCK_CHATS, MOCK_PLACES, HOBBIES_LIST } from '@/app/lib/mock-data';
+import { useApp, CalendarEvent } from '@/app/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 const RANDOM_BIOS = [
   "Hoy logré mi meta de hidratación, ¡se siente increíble! 💧",
@@ -75,8 +80,19 @@ interface SocialPost {
 }
 
 export default function SocialPage() {
-  const { userData, streak, matches, pendingMatches, addMatchRequest, isMatch, isPending } = useApp();
+  const { 
+    userData, 
+    streak, 
+    matches, 
+    pendingMatches, 
+    addMatchRequest, 
+    isMatch, 
+    isPending,
+    addNotification,
+    addCalendarEvent
+  } = useApp();
   const { toast } = useToast();
+  
   const [post, setPost] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -86,6 +102,15 @@ export default function SocialPage() {
   const [comunidadTab, setComunidadTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
   const [commentInput, setCommentInput] = useState<{ [postId: string]: string }>({});
   const [selectedPostDetail, setSelectedPostDetail] = useState<SocialPost | null>(null);
+  
+  // Actividades con amigos
+  const [invitingFriend, setInvitingFriend] = useState<SocialPost | null>(null);
+  const [activityForm, setActivityForm] = useState({
+    type: 'Yoga',
+    date: format(new Date(), 'yyyy-MM-dd'),
+    time: '18:00',
+    location: 'Parque Simón Bolívar'
+  });
 
   const generateRandomComments = useCallback((count: number): Comment[] => {
     return Array.from({ length: count }).map((_, i) => ({
@@ -209,16 +234,49 @@ export default function SocialPage() {
     }));
 
     setCommentInput(prev => ({ ...prev, [postId]: '' }));
-    toast({
-      title: "Comentario añadido",
-      description: "Tu comentario se ha publicado correctamente.",
-    });
   };
 
   const handleMatchRequestAction = (user: SocialPost) => {
     if (user.isMe) return;
     addMatchRequest(user.id);
     setMatchSuccess(user.name);
+  };
+
+  const handleInviteToActivity = (friend: SocialPost) => {
+    setInvitingFriend(friend);
+    // Sugerir un deporte basado en sus intereses si es posible
+    if (friend.interests && friend.interests.length > 0) {
+      const suggestion = friend.interests[0];
+      if (HOBBIES_LIST.includes(suggestion)) {
+        setActivityForm(prev => ({ ...prev, type: suggestion }));
+      }
+    }
+  };
+
+  const confirmActivityInvitation = () => {
+    if (!invitingFriend) return;
+
+    const event: CalendarEvent = {
+      id: Math.random().toString(36).substr(2, 9),
+      title: `${activityForm.type} con ${invitingFriend.name.split(' ')[0]}`,
+      date: new Date(activityForm.date + 'T' + activityForm.time),
+      time: activityForm.time,
+      type: activityForm.type,
+      notes: `Actividad planeada en ${activityForm.location}`
+    };
+
+    addCalendarEvent(event);
+    addNotification(
+      'Actividad Planeada', 
+      `Has invitado a ${invitingFriend.name.split(' ')[0]} a hacer ${activityForm.type}. El evento se añadió a tu agenda.`,
+      'match'
+    );
+
+    setInvitingFriend(null);
+    toast({
+      title: "Invitación Enviada",
+      description: `Se ha enviado la invitación de ${activityForm.type} a ${invitingFriend.name.split(' ')[0]}.`,
+    });
   };
 
   const filteredFeed = comunidadTab === 'discover' 
@@ -235,7 +293,7 @@ export default function SocialPage() {
   return (
     <div className="flex flex-col gap-6 p-6 animate-fade-in bg-secondary/10 min-h-screen pb-24">
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">bloomSocial</h1>
+        <h1 className="text-2xl font-bold text-foreground">bloomSocial</h1>
         <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm">
           <Flame size={18} className="text-orange-500" fill="currentColor" />
           <span className="text-sm font-bold">{streak} día racha</span>
@@ -352,19 +410,31 @@ export default function SocialPage() {
                     </div>
                   )}
 
-                  <div className="flex items-center gap-4 pt-3 border-t border-border/50">
-                    <button onClick={() => handleLike(user.id)} className={cn("flex items-center gap-1.5 transition-colors", user.userLiked ? "text-red-500" : "text-muted-foreground")}>
-                      <Heart size={18} fill={user.userLiked ? "currentColor" : "none"} /> 
-                      <span className="text-xs font-bold">{user.likes}</span>
-                    </button>
-                    <button onClick={() => setSelectedPostDetail(user)} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                      <MessageCircle size={18} /> 
-                      <span className="text-xs font-bold">{user.comments.length}</span>
-                    </button>
+                  <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                    <div className="flex items-center gap-4">
+                      <button onClick={() => handleLike(user.id)} className={cn("flex items-center gap-1.5 transition-colors", user.userLiked ? "text-red-500" : "text-muted-foreground")}>
+                        <Heart size={18} fill={user.userLiked ? "currentColor" : "none"} /> 
+                        <span className="text-xs font-bold">{user.likes}</span>
+                      </button>
+                      <button onClick={() => setSelectedPostDetail(user)} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                        <MessageCircle size={18} /> 
+                        <span className="text-xs font-bold">{user.comments.length}</span>
+                      </button>
+                    </div>
                     
-                    <div className="ml-auto">
+                    <div>
                       {isMatch(user.id) ? (
-                        <Badge className="bg-green-100 text-green-600 border-none px-3 py-1 font-bold text-[10px]">Amigos</Badge>
+                        <div className="flex items-center gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-8 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center gap-1.5"
+                            onClick={() => handleInviteToActivity(user)}
+                          >
+                            <CalendarIcon size={12} /> Invitar
+                          </Button>
+                          <Badge className="bg-green-100 text-green-600 border-none px-3 py-1 font-bold text-[10px]">Amigos</Badge>
+                        </div>
                       ) : isPending(user.id) ? (
                         <Badge className="bg-primary/10 text-primary border-none px-3 py-1 font-bold text-[10px]">Pendiente</Badge>
                       ) : !user.isMe && (
@@ -477,12 +547,6 @@ export default function SocialPage() {
               </Card>
             ))}
           </div>
-
-          <div className="flex flex-col items-center justify-center py-8 text-center bg-white/30 rounded-[2.5rem] border border-dashed border-muted-foreground/20">
-            <MessageSquare size={32} className="text-muted-foreground/30 mb-2" />
-            <p className="text-xs font-medium text-muted-foreground">Busca amigos para chatear</p>
-            <Button size="sm" variant="ghost" className="mt-2 text-primary text-[10px] font-bold">Ver Sugerencias</Button>
-          </div>
         </div>
       )}
 
@@ -570,9 +634,20 @@ export default function SocialPage() {
                 {!selectedPostDetail.isMe && (
                   <div className="pt-2">
                     {isMatch(selectedPostDetail.id) ? (
-                      <Button disabled className="w-full h-12 rounded-2xl bg-green-500 text-white font-bold opacity-100">
-                        Ya son amigos
-                      </Button>
+                      <div className="flex gap-3">
+                        <Button 
+                          onClick={() => {
+                            handleInviteToActivity(selectedPostDetail);
+                            setSelectedPostDetail(null);
+                          }}
+                          className="flex-1 h-12 rounded-2xl bg-primary text-white font-bold"
+                        >
+                          <CalendarIcon size={18} className="mr-2" /> Invitar a deporte
+                        </Button>
+                        <Button disabled className="flex-1 h-12 rounded-2xl bg-green-500 text-white font-bold opacity-100">
+                          Ya son amigos
+                        </Button>
+                      </div>
                     ) : isPending(selectedPostDetail.id) ? (
                       <Button disabled className="w-full h-12 rounded-2xl bg-primary/20 text-primary font-bold opacity-100">
                         Solicitud pendiente
@@ -611,6 +686,91 @@ export default function SocialPage() {
             </DialogDescription>
           </DialogHeader>
           <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary mt-6 font-bold shadow-lg shadow-primary/20">Entendido</Button>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal para invitar a actividad/deporte */}
+      <Dialog open={!!invitingFriend} onOpenChange={() => setInvitingFriend(null)}>
+        <DialogContent className="rounded-[2.5rem] max-w-[92vw] p-8 border-none overflow-hidden flex flex-col shadow-2xl">
+          {invitingFriend && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold flex items-center gap-3">
+                  <div className="bg-primary/10 p-2.5 rounded-xl text-primary">
+                    <Activity size={24} />
+                  </div>
+                  Nueva Actividad Juntos
+                </DialogTitle>
+                <DialogDescription className="text-xs">
+                  Planea un encuentro saludable con <span className="text-primary font-bold">{invitingFriend.name}</span>
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="py-6 space-y-5">
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">¿Qué haremos?</Label>
+                  <Select 
+                    value={activityForm.type} 
+                    onValueChange={(v) => setActivityForm(p => ({ ...p, type: v }))}
+                  >
+                    <SelectTrigger className="h-12 rounded-2xl bg-secondary/20 border-none shadow-none focus:ring-primary/20">
+                      <SelectValue placeholder="Selecciona deporte" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-2xl">
+                      {HOBBIES_LIST.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Fecha</Label>
+                    <Input 
+                      type="date" 
+                      value={activityForm.date}
+                      onChange={(e) => setActivityForm(p => ({ ...p, date: e.target.value }))}
+                      className="h-12 rounded-2xl bg-secondary/20 border-none shadow-none focus:ring-primary/20"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Hora</Label>
+                    <Input 
+                      type="time" 
+                      value={activityForm.time}
+                      onChange={(e) => setActivityForm(p => ({ ...p, time: e.target.value }))}
+                      className="h-12 rounded-2xl bg-secondary/20 border-none shadow-none focus:ring-primary/20"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">Ubicación sugerida</Label>
+                  <Input 
+                    placeholder="Ej: Parque Central" 
+                    value={activityForm.location}
+                    onChange={(e) => setActivityForm(p => ({ ...p, location: e.target.value }))}
+                    className="h-12 rounded-2xl bg-secondary/20 border-none shadow-none focus:ring-primary/20"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <Button 
+                  onClick={confirmActivityInvitation}
+                  className="w-full h-14 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform"
+                >
+                  Confirmar Invitación
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setInvitingFriend(null)}
+                  className="w-full mt-2 h-10 rounded-2xl text-muted-foreground font-bold"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>
