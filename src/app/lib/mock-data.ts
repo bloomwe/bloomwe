@@ -485,7 +485,7 @@ export const MOCK_SPORTS_ACTIVITIES = [
     time: '07:00 PM',
     duration: '90 min',
     location: 'Sede Principal Space',
-    image: 'https://picsum.photos/seed/dance1/600/400',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523800/0d48e693-bb2c-4f56-8268-52363e12b7e5.png',
     description: 'Aprende las mejores coreografías de danza urbana en el estudio más tecnológico de la ciudad.'
   },
   {
@@ -496,7 +496,7 @@ export const MOCK_SPORTS_ACTIVITIES = [
     time: '06:00 PM',
     duration: '60 min',
     location: 'Estudio Umaima',
-    image: 'https://picsum.photos/seed/dance2/600/400',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523809/f5deb1a4-799f-4368-8444-a2e6413471af.png',
     description: 'Descubre el arte de la danza oriental y mejora tu flexibilidad y fuerza abdominal.'
   },
   {
@@ -507,7 +507,7 @@ export const MOCK_SPORTS_ACTIVITIES = [
     time: '04:00 PM',
     duration: '120 min',
     location: 'Canchas El Campincito',
-    image: 'https://picsum.photos/seed/futbol1/600/400',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523819/65a91507-6850-4ed1-87d3-c31aa0e17f5f.png',
     description: 'Entrenamiento técnico de alto nivel para jóvenes que quieren llevar su juego al siguiente nivel.'
   },
   {
@@ -518,7 +518,7 @@ export const MOCK_SPORTS_ACTIVITIES = [
     time: '11:00 AM',
     duration: '180 min',
     location: 'Club Six Sensations',
-    image: 'https://picsum.photos/seed/futbol2/600/400',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523822/9890551d-1ab4-4d83-aa09-60f7c3e4c55d.png',
     description: 'Participa en nuestro torneo relámpago mixto con premios y hidratación incluida.'
   },
   {
@@ -529,7 +529,7 @@ export const MOCK_SPORTS_ACTIVITIES = [
     time: '10:00 AM',
     duration: '50 min',
     location: 'Sede Pulse 93',
-    image: 'https://picsum.photos/seed/pilates1/600/400',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523885/74715870-8804-4334-aa53-612281d34d26.png',
     description: 'Sesión de Pilates Reformer enfocada en el control y la tonificación profunda.'
   },
   {
@@ -540,7 +540,7 @@ export const MOCK_SPORTS_ACTIVITIES = [
     time: '08:00 AM',
     duration: '60 min',
     location: 'Ulai Studio',
-    image: 'https://picsum.photos/seed/pilates2/600/400',
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523890/0fbd1c00-1bc9-4cfd-9266-f0e58ffeaf72.png',
     description: 'Un flujo dinámico de Pilates que combina fuerza tradicional con movimientos modernos.'
   }
 ];
