@@ -32,6 +32,7 @@ const RECIPE_TABS = ['Todos', 'Ligeras', 'Fuertes', 'Snacks'];
 const EXPERT_SUBTABS = ['Especialistas', 'Charlas'];
 const EXPERT_TABS = ['Todos', 'Médicos', 'Psicólogos', 'Nutricionistas'];
 const TALK_TOPICS = ['Todos', 'Obesidad', 'Nutrición', 'Salud Mental', 'Covid'];
+const SPORT_TABS = ['Todos', 'Yoga', 'Running', 'Fútbol', 'Natación', 'Pilates', 'Baile'];
 
 export default function HacerPage() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
@@ -40,6 +41,7 @@ export default function HacerPage() {
   const [selectedActivityId, setSelectedActivityId] = useState<string | null>(null);
   const [recipeFilter, setRecipeFilter] = useState('Todos');
   const [expertFilter, setExpertFilter] = useState('Todos');
+  const [sportFilter, setSportFilter] = useState('Todos');
   const [expertSubtab, setExpertSubtab] = useState('Especialistas');
   const [talkFilter, setTalkFilter] = useState('Todos');
   const [registrationSuccess, setRegistrationSuccess] = useState<string | null>(null);
@@ -85,6 +87,10 @@ export default function HacerPage() {
   const filteredTalks = talkFilter === 'Todos'
     ? MOCK_TALKS
     : MOCK_TALKS.filter(t => t.topic === talkFilter);
+
+  const filteredSports = sportFilter === 'Todos'
+    ? MOCK_SPORTS_ACTIVITIES
+    : MOCK_SPORTS_ACTIVITIES.filter(s => s.sport === sportFilter);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -216,8 +222,22 @@ export default function HacerPage() {
         }
         return (
           <div className="space-y-6 animate-fade-in pb-8">
+            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+              {SPORT_TABS.map(tab => (
+                <Button 
+                  key={tab}
+                  variant={sportFilter === tab ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSportFilter(tab)}
+                  className={cn("rounded-full px-4 h-9 font-bold transition-all", sportFilter === tab ? "bg-primary shadow-md" : "border-primary/20 text-primary")}
+                >
+                  {tab}
+                </Button>
+              ))}
+            </div>
+
             <p className="text-xs text-muted-foreground px-1">Próximos eventos y sesiones disponibles</p>
-            {MOCK_SPORTS_ACTIVITIES.map(activity => {
+            {filteredSports.map(activity => {
               const registered = isAlreadyRegistered(activity.id);
               return (
                 <Card 
@@ -273,6 +293,12 @@ export default function HacerPage() {
                 </Card>
               );
             })}
+            {filteredSports.length === 0 && (
+              <div className="text-center py-12 bg-white rounded-3xl border border-dashed">
+                <Dumbbell className="mx-auto text-muted-foreground/30 mb-3" size={40} />
+                <p className="text-muted-foreground text-sm font-medium">No hay actividades disponibles para esta categoría.</p>
+              </div>
+            )}
           </div>
         );
       case 'relax':
@@ -772,6 +798,7 @@ export default function HacerPage() {
     setSelectedShopId(null);
     setSelectedRecipeId(null);
     setSelectedActivityId(null);
+    setSportFilter('Todos');
   };
 
   const handleBackToCategories = () => {
