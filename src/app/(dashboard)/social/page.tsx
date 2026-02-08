@@ -291,7 +291,6 @@ export default function SocialPage() {
 
   const handleSendMessage = () => {
     if (!chatInput.trim()) return;
-    // In a real app we'd add to state, here we just clear and toast for mock
     setChatInput('');
     toast({
       title: "Mensaje enviado",
@@ -454,7 +453,7 @@ export default function SocialPage() {
                             className="h-9 px-4 rounded-full bg-primary text-white text-[10px] font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-105 transition-all border-none"
                             onClick={() => handleInviteToActivity(user)}
                           >
-                            <CalendarIcon size={14} /> ¡Invitar ahora!
+                            <CalendarIcon size={14} /> Invitar
                           </Button>
                           <Badge className="bg-green-100 text-green-600 border-none px-3 py-1 font-bold text-[10px]">Amigos</Badge>
                         </div>
@@ -688,7 +687,7 @@ export default function SocialPage() {
                           }}
                           className="flex-1 h-14 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
                         >
-                          <CalendarIcon size={20} /> ¡Invitar ahora!
+                          <CalendarIcon size={20} /> Invitar
                         </Button>
                         <Button disabled className="flex-1 h-14 rounded-2xl bg-green-500 text-white font-bold opacity-100">
                           Ya son amigos
