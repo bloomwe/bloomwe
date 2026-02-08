@@ -526,8 +526,8 @@ export default function SocialPage() {
       )}
 
       {mainTab === 'mensajes' && (
-        <div className="space-y-6 animate-fade-in px-0.5">
-          <div className="flex gap-4 overflow-x-auto no-scrollbar -mx-2 px-2 pb-2">
+        <div className="space-y-6 animate-fade-in w-full max-w-full overflow-hidden">
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 px-1">
             {MOCK_CHATS.map(chat => (
               <div 
                 key={chat.id} 
@@ -552,28 +552,28 @@ export default function SocialPage() {
               placeholder="Buscar conversaciones..." 
               value={searchTermMessages}
               onChange={(e) => setSearchTermMessages(e.target.value)}
-              className="pl-11 h-12 rounded-2xl bg-white border-none shadow-sm" 
+              className="pl-11 h-12 rounded-2xl bg-white border-none shadow-sm w-full" 
             />
           </div>
 
-          <div className="grid gap-2 px-1">
+          <div className="grid gap-2 px-1 w-full overflow-hidden">
             {filteredChats.map(chat => (
               <Card 
                 key={chat.id} 
-                className="rounded-2xl border-none shadow-none bg-white hover:bg-secondary/10 transition-colors cursor-pointer group"
+                className="rounded-2xl border-none shadow-none bg-white hover:bg-secondary/10 transition-colors cursor-pointer group w-full"
                 onClick={() => setActiveChat(chat)}
               >
-                <CardContent className="p-4 pr-5 flex items-center gap-4">
+                <CardContent className="p-4 flex items-center gap-4 w-full">
                   <Avatar className="h-12 w-12 shadow-sm shrink-0">
                     <AvatarImage src={chat.photo} />
                     <AvatarFallback>{chat.name[0]}</AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start mb-0.5">
-                      <h3 className="font-bold text-sm truncate">{chat.name}</h3>
-                      <span className="text-[9px] text-muted-foreground font-medium ml-2 shrink-0">{chat.time}</span>
+                  <div className="flex-1 min-w-0 overflow-hidden">
+                    <div className="flex justify-between items-center mb-0.5">
+                      <h3 className="font-bold text-sm truncate pr-2">{chat.name}</h3>
+                      <span className="text-[9px] text-muted-foreground font-medium shrink-0">{chat.time}</span>
                     </div>
-                    <p className={cn("text-[11px] truncate", chat.unreadCount > 0 ? "font-bold text-foreground" : "text-muted-foreground")}>
+                    <p className={cn("text-[11px] truncate w-full", chat.unreadCount > 0 ? "font-bold text-foreground" : "text-muted-foreground")}>
                       {chat.lastMessage}
                     </p>
                   </div>
@@ -841,8 +841,8 @@ export default function SocialPage() {
                     </Avatar>
                     {activeChat.online && <div className="absolute bottom-0 right-0 h-2.5 w-2.5 bg-green-500 border-2 border-white rounded-full" />}
                   </div>
-                  <div>
-                    <DialogTitle className="text-sm font-bold">{activeChat.name}</DialogTitle>
+                  <div className="flex-1 min-w-0">
+                    <DialogTitle className="text-sm font-bold truncate">{activeChat.name}</DialogTitle>
                     <p className="text-[9px] text-green-500 font-bold uppercase tracking-wider">
                       {activeChat.online ? 'En línea' : 'Desconectado'}
                     </p>
