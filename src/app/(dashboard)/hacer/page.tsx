@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -622,7 +621,7 @@ export default function HacerPage() {
                               registered ? "bg-green-500 text-white opacity-100" : "bg-primary text-white"
                             )}
                           >
-                            {registered ? "¡Ya estás inscrito! ✅" : "Inscribirme a la Charla"}
+                            {registered ? "¡Ya estás inscrito!" : "Inscribirme a la Charla"}
                           </Button>
                         </CardContent>
                       </Card>
