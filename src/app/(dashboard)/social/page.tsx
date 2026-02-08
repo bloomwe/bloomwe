@@ -76,13 +76,18 @@ export default function SocialPage() {
     return Array.from({ length: count }).map((_, i) => {
       const id = Math.random().toString(36).substr(2, 9);
       const name = MOCK_SOCIAL_FEED[Math.floor(Math.random() * MOCK_SOCIAL_FEED.length)].name;
+      
+      // Pick 1 to 2 random tags for variety
+      const shuffled = [...QUICK_TAGS].sort(() => 0.5 - Math.random());
+      const postInterests = shuffled.slice(0, Math.floor(Math.random() * 2) + 1);
+
       return {
         id,
         name,
         photo: `https://picsum.photos/seed/${id}/150/150`,
         bio: RANDOM_BIOS[Math.floor(Math.random() * RANDOM_BIOS.length)],
         recentActivity: RANDOM_ACTIVITIES[Math.floor(Math.random() * RANDOM_ACTIVITIES.length)],
-        interests: [QUICK_TAGS[Math.floor(Math.random() * QUICK_TAGS.length)]],
+        interests: postInterests,
         streak: Math.floor(Math.random() * 50) + 1,
         isMe: false,
         likes: Math.floor(Math.random() * 50) + 5,
@@ -127,7 +132,7 @@ export default function SocialPage() {
       photo: userData?.profilePic || 'https://picsum.photos/seed/me/150/150',
       bio: post,
       recentActivity: 'Acaba de publicar un estado',
-      interests: selectedTags,
+      interests: [...selectedTags],
       streak: streak,
       isMe: true,
       likes: 0,
@@ -295,8 +300,23 @@ export default function SocialPage() {
                       <span className="text-[10px] font-bold">{user.streak}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-foreground/80 leading-relaxed mb-4">{user.bio}</p>
+                  <p className="text-sm text-foreground/80 leading-relaxed mb-2">{user.bio}</p>
                   
+                  {/* Visualización de Etiquetas */}
+                  {user.interests && user.interests.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {user.interests.map((tag) => (
+                        <Badge 
+                          key={tag} 
+                          variant="secondary" 
+                          className="bg-primary/5 text-primary border-none text-[8px] px-2 py-0.5 font-black uppercase tracking-widest rounded-full"
+                        >
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-4 pt-3 border-t border-border/50">
                     <button onClick={() => handleLike(user.id)} className={cn("flex items-center gap-1.5 transition-colors", user.userLiked ? "text-red-500" : "text-muted-foreground")}>
                       <Heart size={18} fill={user.userLiked ? "currentColor" : "none"} /> 
