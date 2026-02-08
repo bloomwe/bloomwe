@@ -2,15 +2,15 @@ export const MOCK_EXPERTS = [
   {
     id: '1',
     category: 'Médicos',
-    name: 'Dr. Julián Rivera',
+    name: 'Dr. Carlos Castro',
     specialty: 'Medicina General y Preventiva',
     experience: 8,
     bio: 'Especialista en salud joven y prevención de enfermedades crónicas con enfoque en hábitos saludables.',
     phone: '+573001234567',
-    email: 'julian.rivera@bloomwe.com',
+    email: 'carlos.castro@bloomwe.com',
     location: 'Centro Médico Norte, Piso 4',
     hours: 'Lun-Vie 8am - 5pm',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322773/2c36d6ef-677c-4318-8ded-ef0184074d05.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770523408/76044a1e-e275-4988-8990-45b519617d96_tjlxx5.jpg'
   },
   {
     id: '2',
@@ -396,7 +396,7 @@ export const MOCK_TALKS = [
     location: 'Sala de Conferencias B',
     date: '26 de Octubre',
     time: '02:00 PM',
-    expert: 'Dr. Julián Rivera',
+    expert: 'Dr. Carlos Castro',
     duration: '60 min',
     description: 'Charla sobre hábitos saludables para prevenir el sobrepeso desde joven.'
   },
