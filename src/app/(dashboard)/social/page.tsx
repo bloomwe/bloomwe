@@ -77,7 +77,6 @@ export default function SocialPage() {
       const id = Math.random().toString(36).substr(2, 9);
       const name = MOCK_SOCIAL_FEED[Math.floor(Math.random() * MOCK_SOCIAL_FEED.length)].name;
       
-      // Pick 1 to 2 random tags for variety
       const shuffled = [...QUICK_TAGS].sort(() => 0.5 - Math.random());
       const postInterests = shuffled.slice(0, Math.floor(Math.random() * 2) + 1);
 
@@ -202,6 +201,9 @@ export default function SocialPage() {
     ? feed.filter(u => isPending(u.id)) 
     : feed.filter(u => isMatch(u.id));
 
+  const pendingCount = feed.filter(u => isPending(u.id)).length;
+  const favoritesCount = feed.filter(u => isMatch(u.id)).length;
+
   if (!mounted) return null;
 
   return (
@@ -248,9 +250,17 @@ export default function SocialPage() {
       {mainTab === 'comunidad' && (
         <>
           <div className="flex gap-2 bg-white/50 p-1.5 rounded-2xl shadow-none">
-            <button onClick={() => setComunidadTab('discover')} className={cn("flex-1 py-2 rounded-xl text-[10px] font-bold", comunidadTab === 'discover' ? "bg-primary/10 text-primary" : "text-muted-foreground")}>Descubrir</button>
-            <button onClick={() => setComunidadTab('pending')} className={cn("flex-1 py-2 rounded-xl text-[10px] font-bold", comunidadTab === 'pending' ? "bg-primary/10 text-primary" : "text-muted-foreground")}>Pendientes</button>
-            <button onClick={() => setComunidadTab('favorites')} className={cn("flex-1 py-2 rounded-xl text-[10px] font-bold", comunidadTab === 'favorites' ? "bg-primary/10 text-primary" : "text-muted-foreground")}>Favoritos</button>
+            <button onClick={() => setComunidadTab('discover')} className={cn("flex-1 py-2 rounded-xl text-[10px] font-bold", comunidadTab === 'discover' ? "bg-primary/10 text-primary" : "text-muted-foreground")}>
+              Descubrir
+            </button>
+            <button onClick={() => setComunidadTab('pending')} className={cn("flex-1 py-2 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5", comunidadTab === 'pending' ? "bg-primary/10 text-primary" : "text-muted-foreground")}>
+              Pendientes
+              {pendingCount > 0 && <span className="bg-primary/20 text-primary px-1.5 py-0.5 rounded-md text-[8px]">{pendingCount}</span>}
+            </button>
+            <button onClick={() => setComunidadTab('favorites')} className={cn("flex-1 py-2 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5", comunidadTab === 'favorites' ? "bg-primary/10 text-primary" : "text-muted-foreground")}>
+              Favoritos
+              {favoritesCount > 0 && <span className="bg-primary/20 text-primary px-1.5 py-0.5 rounded-md text-[8px]">{favoritesCount}</span>}
+            </button>
           </div>
 
           {comunidadTab === 'discover' && (
@@ -302,7 +312,6 @@ export default function SocialPage() {
                   </div>
                   <p className="text-sm text-foreground/80 leading-relaxed mb-2">{user.bio}</p>
                   
-                  {/* Visualización de Etiquetas */}
                   {user.interests && user.interests.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mb-4">
                       {user.interests.map((tag) => (
