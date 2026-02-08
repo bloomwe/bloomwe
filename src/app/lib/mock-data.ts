@@ -311,6 +311,54 @@ export const MOCK_SPORTS_ACTIVITIES = [
   }
 ];
 
+export const MOCK_TALKS = [
+  {
+    id: 't1',
+    topic: 'Nutrición',
+    title: 'Alimentación Consciente para Estudiantes',
+    location: 'Auditorio Central',
+    date: '25 de Octubre',
+    time: '10:00 AM',
+    description: 'Aprende a nutrir tu cerebro para mejorar el rendimiento académico.'
+  },
+  {
+    id: 't2',
+    topic: 'Obesidad',
+    title: 'Prevención de Riesgos Metabólicos',
+    location: 'Sala de Conferencias B',
+    date: '26 de Octubre',
+    time: '02:00 PM',
+    description: 'Charla sobre hábitos saludables para prevenir el sobrepeso desde joven.'
+  },
+  {
+    id: 't3',
+    topic: 'Salud Mental',
+    title: 'Manejo del Estrés Académico',
+    location: 'Salón Comunitario',
+    date: '27 de Octubre',
+    time: '09:00 AM',
+    description: 'Herramientas psicológicas para afrontar periodos de alta carga de estudio.'
+  },
+  {
+    id: 't4',
+    topic: 'Covid',
+    title: 'Secuelas y Recuperación Post-Pandemia',
+    location: 'Centro de Salud Norte',
+    date: '28 de Octubre',
+    time: '11:00 AM',
+    description: 'Información médica sobre el cuidado del sistema respiratorio e inmune.'
+  },
+  {
+    id: 't5',
+    topic: 'Nutrición',
+    title: 'Mitos de las Dietas de Moda',
+    location: 'Gimnasio Municipal',
+    date: '29 de Octubre',
+    time: '04:00 PM',
+    description: 'Un análisis científico sobre lo que realmente funciona para tu cuerpo.'
+  }
+];
+
 export const MOCK_SOCIAL_FEED = [
   {
     id: '1',

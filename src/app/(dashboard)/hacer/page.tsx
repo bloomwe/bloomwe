@@ -10,13 +10,12 @@ import {
   Dumbbell, Moon, ShoppingBag, TreePine, Utensils, Award, 
   ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, 
   Timer, Play, BookOpen, Download, Music, Tag, Map, Star, ArrowLeft,
-  CheckCircle2, ListChecks, ChefHat, Sparkles
+  CheckCircle2, ListChecks, ChefHat, Sparkles, MessageSquare
 } from 'lucide-react';
-import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION, MOCK_SHOPS } from '@/app/lib/mock-data';
+import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION, MOCK_SHOPS, MOCK_TALKS } from '@/app/lib/mock-data';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useApp } from '@/app/context/AppContext';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const CATEGORIES = [
   { id: 'deportes', name: 'Deportes', icon: Dumbbell, color: 'bg-orange-100 text-orange-600' },
@@ -28,7 +27,9 @@ const CATEGORIES = [
 ];
 
 const RECIPE_TABS = ['Todos', 'Ligeras', 'Fuertes', 'Snacks'];
+const EXPERT_SUBTABS = ['Especialistas', 'Charlas'];
 const EXPERT_TABS = ['Todos', 'Médicos', 'Psicólogos', 'Nutricionistas'];
+const TALK_TOPICS = ['Todos', 'Obesidad', 'Nutrición', 'Salud Mental', 'Covid'];
 
 export default function HacerPage() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
@@ -36,6 +37,8 @@ export default function HacerPage() {
   const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
   const [recipeFilter, setRecipeFilter] = useState('Todos');
   const [expertFilter, setExpertFilter] = useState('Todos');
+  const [expertSubtab, setExpertSubtab] = useState('Especialistas');
+  const [talkFilter, setTalkFilter] = useState('Todos');
   const [registrationSuccess, setRegistrationSuccess] = useState<string | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
   const { toast } = useToast();
@@ -56,10 +59,10 @@ export default function HacerPage() {
     registerActivity({
       id: activity.id,
       title: activity.title,
-      date: activity.date,
+      date: activity.date || activity.time, // Fallback
       time: activity.time,
       location: activity.location,
-      sport: activity.sport
+      sport: activity.sport || activity.topic || 'General'
     });
     setRegistrationSuccess(activity.title);
   };
@@ -72,7 +75,9 @@ export default function HacerPage() {
     ? MOCK_EXPERTS
     : MOCK_EXPERTS.filter(e => e.category === expertFilter);
 
-  const mapPlaceholder = PlaceHolderImages.find(img => img.id === 'google_maps_placeholder');
+  const filteredTalks = talkFilter === 'Todos'
+    ? MOCK_TALKS
+    : MOCK_TALKS.filter(t => t.topic === talkFilter);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -313,52 +318,129 @@ export default function HacerPage() {
       case 'expertos':
         return (
           <div className="space-y-6 animate-fade-in pb-8">
-            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-              {EXPERT_TABS.map(tab => (
-                <Button 
+            <div className="bg-white p-1 rounded-2xl shadow-sm border border-border/50 flex gap-1">
+              {EXPERT_SUBTABS.map(tab => (
+                <button
                   key={tab}
-                  variant={expertFilter === tab ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setExpertFilter(tab)}
-                  className={cn("rounded-full px-4 h-9 font-bold transition-all", expertFilter === tab ? "bg-primary shadow-md" : "border-primary/20 text-primary")}
+                  onClick={() => setExpertSubtab(tab)}
+                  className={cn(
+                    "flex-1 py-2 rounded-xl text-xs font-bold transition-all",
+                    expertSubtab === tab ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:bg-secondary/20"
+                  )}
                 >
                   {tab}
-                </Button>
+                </button>
               ))}
             </div>
 
-            <div className="grid gap-4">
-              {filteredExperts.map(exp => (
-                <Card key={exp.id} className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
-                  <CardContent className="p-6 flex gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-secondary/30 overflow-hidden shrink-0">
-                      <img 
-                        src={exp.image} 
-                        alt={exp.name} 
-                        className="w-full h-full object-cover" 
-                        data-ai-hint="doctor portrait"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start">
-                        <h3 className="font-bold text-lg">{exp.name}</h3>
-                        <Badge variant="secondary" className="bg-primary/5 text-primary text-[8px] border-none uppercase">{exp.category}</Badge>
-                      </div>
-                      <p className="text-xs text-primary font-bold uppercase tracking-wider">{exp.specialty}</p>
-                      <p className="text-[11px] text-muted-foreground mt-2 line-clamp-2">{exp.bio}</p>
-                      <div className="flex gap-2 mt-4">
-                        <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
-                          <a href={`tel:${exp.phone}`}><Phone size={14} className="mr-2" /> Llamar</a>
+            {expertSubtab === 'Especialistas' ? (
+              <>
+                <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                  {EXPERT_TABS.map(tab => (
+                    <button 
+                      key={tab}
+                      onClick={() => setExpertFilter(tab)}
+                      className={cn(
+                        "rounded-full px-4 h-9 font-bold transition-all border text-[10px]",
+                        expertFilter === tab ? "bg-primary text-white border-primary shadow-md" : "border-primary/20 text-primary bg-white"
+                      )}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="grid gap-4">
+                  {filteredExperts.map(exp => (
+                    <Card key={exp.id} className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
+                      <CardContent className="p-6 flex gap-4">
+                        <div className="w-16 h-16 rounded-2xl bg-secondary/30 overflow-hidden shrink-0">
+                          <img 
+                            src={exp.image} 
+                            alt={exp.name} 
+                            className="w-full h-full object-cover" 
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-start">
+                            <h3 className="font-bold text-lg">{exp.name}</h3>
+                            <Badge variant="secondary" className="bg-primary/5 text-primary text-[8px] border-none uppercase">{exp.category}</Badge>
+                          </div>
+                          <p className="text-xs text-primary font-bold uppercase tracking-wider">{exp.specialty}</p>
+                          <p className="text-[11px] text-muted-foreground mt-2 line-clamp-2">{exp.bio}</p>
+                          <div className="flex gap-2 mt-4">
+                            <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
+                              <a href={`tel:${exp.phone}`}><Phone size={14} className="mr-2" /> Llamar</a>
+                            </Button>
+                            <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
+                              <a href={`mailto:${exp.email}`}><Mail size={14} className="mr-2" /> Email</a>
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="space-y-6">
+                <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                  {TALK_TOPICS.map(topic => (
+                    <button 
+                      key={topic}
+                      onClick={() => setTalkFilter(topic)}
+                      className={cn(
+                        "rounded-full px-4 h-9 font-bold transition-all border text-[10px]",
+                        talkFilter === topic ? "bg-primary text-white border-primary shadow-md" : "border-primary/20 text-primary bg-white"
+                      )}
+                    >
+                      {topic}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="grid gap-4">
+                  {filteredTalks.map(talk => (
+                    <Card key={talk.id} className="rounded-3xl border-none shadow-sm bg-white overflow-hidden">
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start mb-2">
+                          <Badge variant="outline" className="text-[9px] border-primary/20 text-primary uppercase font-black tracking-widest px-2">
+                            {talk.topic}
+                          </Badge>
+                          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-bold">
+                            <CalendarIcon size={12} className="text-primary" /> {talk.date}
+                          </div>
+                        </div>
+                        <h3 className="font-bold text-lg mb-2">{talk.title}</h3>
+                        <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{talk.description}</p>
+                        
+                        <div className="flex flex-col gap-2 bg-secondary/20 p-4 rounded-2xl mb-5">
+                          <div className="flex items-center gap-2 text-[11px] font-medium">
+                            <MapPin size={14} className="text-primary" /> {talk.location}
+                          </div>
+                          <div className="flex items-center gap-2 text-[11px] font-medium">
+                            <Clock size={14} className="text-primary" /> {talk.time}
+                          </div>
+                        </div>
+
+                        <Button 
+                          onClick={() => handleRegister(talk)}
+                          className="w-full h-12 rounded-xl bg-primary text-white font-bold"
+                        >
+                          Inscribirme a la Charla
                         </Button>
-                        <Button size="sm" variant="outline" className="h-10 rounded-xl flex-1 border-primary/20 text-primary hover:bg-primary/5" asChild>
-                          <a href={`mailto:${exp.email}`}><Mail size={14} className="mr-2" /> Email</a>
-                        </Button>
-                      </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  {filteredTalks.length === 0 && (
+                    <div className="text-center py-12 bg-white rounded-3xl border border-dashed">
+                      <MessageSquare className="mx-auto text-muted-foreground/30 mb-3" size={40} />
+                      <p className="text-muted-foreground text-sm font-medium">No hay charlas programadas para este tema.</p>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         );
       case 'comidas':
