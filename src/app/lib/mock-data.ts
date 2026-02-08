@@ -366,7 +366,7 @@ export const MOCK_SPORTS_ACTIVITIES = [
   },
   {
     id: 's6',
-    sport: 'Baile',
+    sport: 'Danza',
     title: 'Ritmos Latinos y Cardio',
     date: 'Viernes, 27 Oct',
     time: '06:30 PM',
@@ -374,6 +374,72 @@ export const MOCK_SPORTS_ACTIVITIES = [
     location: 'Plaza Principal del Parque',
     image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=1000',
     description: 'Diviértete mientras te ejercitas al ritmo de los mejores hits latinos. ¡No se requiere experiencia previa!'
+  },
+  {
+    id: 's7',
+    sport: 'Danza',
+    title: 'Space Dance Studio - Hip Hop',
+    date: 'Miércoles, 1 Nov',
+    time: '07:00 PM',
+    duration: '90 min',
+    location: 'Sede Principal Space',
+    image: 'https://picsum.photos/seed/dance1/600/400',
+    description: 'Aprende las mejores coreografías de danza urbana en el estudio más tecnológico de la ciudad.'
+  },
+  {
+    id: 's8',
+    sport: 'Danza',
+    title: 'Umaima Shek - Danza Oriental',
+    date: 'Jueves, 2 Nov',
+    time: '06:00 PM',
+    duration: '60 min',
+    location: 'Estudio Umaima',
+    image: 'https://picsum.photos/seed/dance2/600/400',
+    description: 'Descubre el arte de la danza oriental y mejora tu flexibilidad y fuerza abdominal.'
+  },
+  {
+    id: 's9',
+    sport: 'Fútbol',
+    title: 'Kanteranos - Entrenamiento Elite',
+    date: 'Viernes, 3 Nov',
+    time: '04:00 PM',
+    duration: '120 min',
+    location: 'Canchas El Campincito',
+    image: 'https://picsum.photos/seed/futbol1/600/400',
+    description: 'Entrenamiento técnico de alto nivel para jóvenes que quieren llevar su juego al siguiente nivel.'
+  },
+  {
+    id: 's10',
+    sport: 'Fútbol',
+    title: 'Six Sensations - Torneo Mixto',
+    date: 'Sábado, 4 Nov',
+    time: '11:00 AM',
+    duration: '180 min',
+    location: 'Club Six Sensations',
+    image: 'https://picsum.photos/seed/futbol2/600/400',
+    description: 'Participa en nuestro torneo relámpago mixto con premios y hidratación incluida.'
+  },
+  {
+    id: 's11',
+    sport: 'Pilates',
+    title: 'Pulse Pilates - Reformer Session',
+    date: 'Domingo, 5 Nov',
+    time: '10:00 AM',
+    duration: '50 min',
+    location: 'Sede Pulse 93',
+    image: 'https://picsum.photos/seed/pilates1/600/400',
+    description: 'Sesión de Pilates Reformer enfocada en el control y la tonificación profunda.'
+  },
+  {
+    id: 's12',
+    sport: 'Pilates',
+    title: 'Ulai Pilates - Power Flow',
+    date: 'Lunes, 6 Nov',
+    time: '08:00 AM',
+    duration: '60 min',
+    location: 'Ulai Studio',
+    image: 'https://picsum.photos/seed/pilates2/600/400',
+    description: 'Un flujo dinámico de Pilates que combina fuerza tradicional con movimientos modernos.'
   }
 ];
 
@@ -585,7 +651,7 @@ export const MOCK_NOTIFICATIONS = [
 ];
 
 export const HOBBIES_LIST = [
-  'Yoga', 'Gimnasio', 'Ciclismo', 'Meditación', 'Lectura', 'Natación', 'Baile', 'Correr', 'Pilates'
+  'Yoga', 'Gimnasio', 'Ciclismo', 'Meditación', 'Lectura', 'Natación', 'Danza', 'Correr', 'Pilates'
 ];
 
 export const LEVELS = ['Nuevo', 'Medio', 'Avanzado', 'Experto'];
