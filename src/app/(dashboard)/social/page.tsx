@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -18,38 +18,25 @@ import { useApp } from '@/app/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
-const NAMES = ['Lucas', 'Martina', 'Daniel', 'Isabella', 'Santi', 'Elena', 'Diego', 'Lucía', 'Javier', 'Sara'];
-const LAST_NAMES = ['Silva', 'Pérez', 'Torres', 'Sánchez', 'Ramírez', 'Díaz', 'Morales', 'Castro'];
-const BIOS = [
-  'Enfocado en mi mejor versión. ¡Vamos con toda!',
-  'Amante de la naturaleza y el ejercicio al aire libre.',
-  'Cocinando saludable y viviendo feliz.',
-  'Buscando equilibrio entre estudio y bienestar.',
-  'Día a día construyendo mejores hábitos.'
-];
-const ACTIVITIES = [
-  'Acaba de completar un reto de hidratación',
-  'Subió una nueva foto de su entrenamiento',
-  'Se unió a bloomWe hoy',
-  'Alcanzó su meta de pasos diaria',
-  'Compartió un tip de meditación'
+const RANDOM_BIOS = [
+  "Hoy logré mi meta de hidratación, ¡se siente increíble! 💧",
+  "¿Alguien para un partido de fútbol en el Simón Bolívar este finde? ⚽",
+  "Probando la receta de bowl de quinoa de bloomWe. 10/10 recomendable. 🥗",
+  "La meditación de hoy me dejó con una paz mental absoluta. 🙏",
+  "¡Nueva racha de 7 días! La disciplina tarde o temprano vence al talento.",
+  "Acabo de descubrir un nuevo spot para hacer yoga al aire libre. ✨",
+  "Motivada al 100% con los tips personalizados de hoy.",
+  "Cuidar la salud mental es tan importante como el ejercicio físico. ❤️",
+  "¿Algún consejo para mejorar mi técnica de natación? 🏊‍♂️",
+  "Día de descanso activo: caminata por el Virrey."
 ];
 
-const RANDOM_COMMENTS = [
-  "¡Excelente iniciativa!",
-  "Me motiva mucho ver esto.",
-  "¡A darle con toda!",
-  "Increíble progreso, sigue así.",
-  "¿Cómo lo lograste? ¡Pasa el tip!",
-  "Me encanta tu energía.",
-  "¡Qué bien te ves!",
-  "Totalmente de acuerdo contigo.",
-  "Esto es justo lo que necesitaba leer hoy.",
-  "¡Eres una inspiración!",
-  "¡Qué buen hábito!",
-  "Mañana mismo empiezo yo también.",
-  "¡Eso es actitud!",
-  "Brutal el cambio que estás logrando."
+const RANDOM_ACTIVITIES = [
+  "Completó reto de hidratación",
+  "Publicó nueva foto",
+  "Alcanzó meta de pasos",
+  "Compartió un tip",
+  "Nueva marca personal"
 ];
 
 const QUICK_TAGS = ['Yoga', 'Nutrición', 'Mental', 'Deporte'];
@@ -59,26 +46,55 @@ export default function SocialPage() {
   const { toast } = useToast();
   const [post, setPost] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [newComment, setNewComment] = useState('');
   const [mounted, setMounted] = useState(false);
   const [feed, setFeed] = useState<any[]>([]);
   const [matchSuccess, setMatchSuccess] = useState<string | null>(null);
   const [mainTab, setMainTab] = useState<'comunidad' | 'lugares' | 'mensajes'>('comunidad');
   const [comunidadTab, setComunidadTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
-  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+
+  // Función para generar posts aleatorios
+  const generateRandomPosts = useCallback((count: number) => {
+    return Array.from({ length: count }).map((_, i) => {
+      const id = Math.random().toString(36).substr(2, 9);
+      const name = MOCK_SOCIAL_FEED[Math.floor(Math.random() * MOCK_SOCIAL_FEED.length)].name;
+      return {
+        id,
+        name,
+        photo: `https://picsum.photos/seed/${id}/150/150`,
+        bio: RANDOM_BIOS[Math.floor(Math.random() * RANDOM_BIOS.length)],
+        recentActivity: RANDOM_ACTIVITIES[Math.floor(Math.random() * RANDOM_ACTIVITIES.length)],
+        interests: [QUICK_TAGS[Math.floor(Math.random() * QUICK_TAGS.length)]],
+        streak: Math.floor(Math.random() * 50) + 1,
+        isMe: false,
+        likes: Math.floor(Math.random() * 50) + 5,
+        userLiked: false,
+        comments: []
+      };
+    });
+  }, []);
 
   useEffect(() => {
     setMounted(true);
+    // Cargar feed inicial mezclando mock data con posts generados
     const initialFeed = MOCK_SOCIAL_FEED.map(u => ({ 
       ...u, 
       isMe: false, 
       likes: Math.floor(Math.random() * 20) + 5,
       userLiked: false,
-      comments: [],
-      interests: ['Yoga', 'Bienestar']
+      comments: []
     }));
-    setFeed(initialFeed);
-  }, []);
+    setFeed([...initialFeed, ...generateRandomPosts(3)]);
+  }, [generateRandomPosts]);
+
+  // Asegurar que el feed de descubrimiento nunca esté vacío
+  useEffect(() => {
+    if (mounted && mainTab === 'comunidad' && comunidadTab === 'discover') {
+      const discoverableCount = feed.filter(u => !isMatch(u.id) && !isPending(u.id) && !u.isMe).length;
+      if (discoverableCount < 3) {
+        setFeed(prev => [...prev, ...generateRandomPosts(5)]);
+      }
+    }
+  }, [feed, isMatch, isPending, comunidadTab, mainTab, mounted, generateRandomPosts]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
@@ -211,7 +227,7 @@ export default function SocialPage() {
                   ))}
                 </div>
                 <div className="flex justify-end pt-1">
-                  <Button onClick={handlePost} size="sm" className="bg-primary rounded-full px-6 font-bold shadow-md">Publicar</Button>
+                  <button onClick={handlePost} className="bg-primary text-white rounded-full px-6 py-2 text-xs font-bold shadow-md hover:bg-primary/90 transition-all">Publicar</button>
                 </div>
               </CardContent>
             </Card>
@@ -219,7 +235,7 @@ export default function SocialPage() {
 
           <div className="grid gap-4">
             {filteredFeed.map((user) => (
-              <Card key={user.id} className="rounded-3xl border-none shadow-sm overflow-hidden bg-white">
+              <Card key={user.id} className="rounded-3xl border-none shadow-sm overflow-hidden bg-white group">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3 mb-3">
                     <Avatar className="h-10 w-10 border-2 border-primary/20">
@@ -228,7 +244,7 @@ export default function SocialPage() {
                     </Avatar>
                     <div className="flex-1">
                       <h3 className="font-bold text-sm">{user.name}</h3>
-                      <p className="text-[10px] text-muted-foreground">{user.recentActivity}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase font-medium">{user.recentActivity}</p>
                     </div>
                     <div className="flex items-center gap-1 bg-primary/5 px-2 py-1 rounded-full text-primary">
                       <Flame size={12} fill="currentColor" />
@@ -236,21 +252,36 @@ export default function SocialPage() {
                     </div>
                   </div>
                   <p className="text-sm text-foreground/80 leading-relaxed mb-4">{user.bio}</p>
+                  
                   <div className="flex items-center gap-4 pt-3 border-t border-border/50">
                     <button onClick={() => handleLike(user.id)} className={cn("flex items-center gap-1.5 transition-colors", user.userLiked ? "text-red-500" : "text-muted-foreground")}>
                       <Heart size={18} fill={user.userLiked ? "currentColor" : "none"} /> 
                       <span className="text-xs font-bold">{user.likes}</span>
                     </button>
                     <button className="flex items-center gap-2 text-muted-foreground"><MessageCircle size={18} /> <span className="text-xs font-bold">0</span></button>
-                    {!user.isMe && !isMatch(user.id) && !isPending(user.id) && (
-                      <button onClick={() => handleMatchRequestAction(user)} className="flex items-center gap-2 text-primary font-bold ml-auto">
-                        <Zap size={16} fill="currentColor" /> <span className="text-xs">Match</span>
-                      </button>
-                    )}
+                    
+                    <div className="ml-auto">
+                      {isMatch(user.id) ? (
+                        <Badge className="bg-green-100 text-green-600 border-none px-3 py-1 font-bold text-[10px]">Amigos</Badge>
+                      ) : isPending(user.id) ? (
+                        <Badge className="bg-primary/10 text-primary border-none px-3 py-1 font-bold text-[10px]">Pendiente</Badge>
+                      ) : !user.isMe && (
+                        <button onClick={() => handleMatchRequestAction(user)} className="flex items-center gap-2 text-primary font-bold hover:scale-105 transition-transform">
+                          <Zap size={16} fill="currentColor" /> <span className="text-xs">Match</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
+            
+            {filteredFeed.length === 0 && (
+              <div className="flex flex-col items-center justify-center p-12 text-center bg-white/50 rounded-3xl border border-dashed border-muted-foreground/20">
+                <Smile size={32} className="text-muted-foreground/30 mb-2" />
+                <p className="text-xs font-medium text-muted-foreground">Nada por aquí... ¡Sigue explorando!</p>
+              </div>
+            )}
           </div>
         </>
       )}
@@ -272,9 +303,9 @@ export default function SocialPage() {
                 <div className="relative h-36">
                   <img src={place.image} alt={place.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute top-3 right-3">
-                    <button className="h-8 w-8 bg-white/90 rounded-full flex items-center justify-center text-yellow-500 shadow-md">
+                    <div className="h-8 w-8 bg-white/90 rounded-full flex items-center justify-center text-yellow-500 shadow-md">
                       <Star size={18} fill="currentColor" />
-                    </button>
+                    </div>
                   </div>
                   <div className="absolute bottom-3 left-3 flex gap-0.5">
                     {[...Array(place.rating || 5)].map((_, i) => (
@@ -353,9 +384,9 @@ export default function SocialPage() {
         </div>
       )}
 
-      {/* Diálogos y confirmaciones (Mantenidos de la versión anterior) */}
+      {/* Diálogos y confirmaciones */}
       <Dialog open={!!matchSuccess} onOpenChange={() => setMatchSuccess(null)}>
-        <DialogContent className="rounded-[2.5rem] max-w-[85vw] p-8 text-center">
+        <DialogContent className="rounded-[2.5rem] max-w-[85vw] p-8 text-center border-none">
           <DialogHeader>
             <DialogTitle className="text-center text-2xl font-black text-primary flex flex-col items-center gap-4">
               <div className="bg-primary/10 p-4 rounded-full">
@@ -363,11 +394,11 @@ export default function SocialPage() {
               </div>
               ¡Solicitud Enviada!
             </DialogTitle>
-            <DialogDescription className="text-center pt-2">
-              Se ha enviado tu interés a <span className="text-primary font-bold">{matchSuccess}</span>.
+            <DialogDescription className="text-center pt-2 font-medium">
+              Se ha enviado tu interés a <span className="text-primary font-bold">{matchSuccess}</span>. Lo verás en tu pestaña de pendientes.
             </DialogDescription>
           </DialogHeader>
-          <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary mt-6">Entendido</Button>
+          <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary mt-6 font-bold shadow-lg shadow-primary/20">Entendido</Button>
         </DialogContent>
       </Dialog>
     </div>
