@@ -99,11 +99,10 @@ export default function SocialPage() {
   const [feed, setFeed] = useState<SocialPost[]>([]);
   const [matchSuccess, setMatchSuccess] = useState<string | null>(null);
   const [mainTab, setMainTab] = useState<'comunidad' | 'lugares' | 'mensajes'>('comunidad');
-  const [comunidadTab, setComunidadTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
+  const [comunidadTab, setComunidadTab] = useState<'discover' | 'pending' | 'amigos'>('discover');
   const [commentInput, setCommentInput] = useState<{ [postId: string]: string }>({});
   const [selectedPostDetail, setSelectedPostDetail] = useState<SocialPost | null>(null);
   
-  // Actividades con amigos
   const [invitingFriend, setInvitingFriend] = useState<SocialPost | null>(null);
   const [activityForm, setActivityForm] = useState({
     type: 'Yoga',
@@ -244,7 +243,6 @@ export default function SocialPage() {
 
   const handleInviteToActivity = (friend: SocialPost) => {
     setInvitingFriend(friend);
-    // Sugerir un deporte basado en sus intereses si es posible
     if (friend.interests && friend.interests.length > 0) {
       const suggestion = friend.interests[0];
       if (HOBBIES_LIST.includes(suggestion)) {
@@ -286,7 +284,7 @@ export default function SocialPage() {
     : feed.filter(u => isMatch(u.id));
 
   const pendingCount = feed.filter(u => isPending(u.id)).length;
-  const favoritesCount = feed.filter(u => isMatch(u.id)).length;
+  const friendsCount = feed.filter(u => isMatch(u.id)).length;
 
   if (!mounted) return null;
 
@@ -341,9 +339,9 @@ export default function SocialPage() {
               Pendientes
               {pendingCount > 0 && <span className="bg-primary/20 text-primary px-1.5 py-0.5 rounded-md text-[8px]">{pendingCount}</span>}
             </button>
-            <button onClick={() => setComunidadTab('favorites')} className={cn("flex-1 py-2 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5", comunidadTab === 'favorites' ? "bg-primary/10 text-primary" : "text-muted-foreground")}>
-              Favoritos
-              {favoritesCount > 0 && <span className="bg-primary/20 text-primary px-1.5 py-0.5 rounded-md text-[8px]">{favoritesCount}</span>}
+            <button onClick={() => setComunidadTab('amigos')} className={cn("flex-1 py-2 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5", comunidadTab === 'amigos' ? "bg-primary/10 text-primary" : "text-muted-foreground")}>
+              Amigos
+              {friendsCount > 0 && <span className="bg-primary/20 text-primary px-1.5 py-0.5 rounded-md text-[8px]">{friendsCount}</span>}
             </button>
           </div>
 
@@ -426,12 +424,10 @@ export default function SocialPage() {
                       {isMatch(user.id) ? (
                         <div className="flex items-center gap-2">
                           <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="h-8 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center gap-1.5"
+                            className="h-9 px-4 rounded-full bg-primary text-white text-[10px] font-black uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-105 transition-all border-none"
                             onClick={() => handleInviteToActivity(user)}
                           >
-                            <CalendarIcon size={12} /> Invitar
+                            <CalendarIcon size={14} /> ¡Invitar ahora!
                           </Button>
                           <Badge className="bg-green-100 text-green-600 border-none px-3 py-1 font-bold text-[10px]">Amigos</Badge>
                         </div>
@@ -640,11 +636,11 @@ export default function SocialPage() {
                             handleInviteToActivity(selectedPostDetail);
                             setSelectedPostDetail(null);
                           }}
-                          className="flex-1 h-12 rounded-2xl bg-primary text-white font-bold"
+                          className="flex-1 h-14 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
                         >
-                          <CalendarIcon size={18} className="mr-2" /> Invitar a deporte
+                          <CalendarIcon size={20} /> ¡Invitar ahora!
                         </Button>
-                        <Button disabled className="flex-1 h-12 rounded-2xl bg-green-500 text-white font-bold opacity-100">
+                        <Button disabled className="flex-1 h-14 rounded-2xl bg-green-500 text-white font-bold opacity-100">
                           Ya son amigos
                         </Button>
                       </div>
