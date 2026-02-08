@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -5,12 +6,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { 
   Heart, MessageCircle, Zap, Flame, Smile, Sparkles, User, 
   MapPin, Send, Tag as TagIcon, Star, MessageSquare, 
-  Search, ChevronRight, Clock, Plus
+  Search, ChevronRight, Clock, Plus, X
 } from 'lucide-react';
 import { MOCK_SOCIAL_FEED, MOCK_CHATS, MOCK_PLACES } from '@/app/lib/mock-data';
 import { useApp } from '@/app/context/AppContext';
@@ -28,6 +29,19 @@ const RANDOM_BIOS = [
   "Cuidar la salud mental es tan importante como el ejercicio físico. ❤️",
   "¿Algún consejo para mejorar mi técnica de natación? 🏊‍♂️",
   "Día de descanso activo: caminata por el Virrey."
+];
+
+const RANDOM_COMMENTS_POOL = [
+  "¡Qué buena vibra! Sigue así. 🚀",
+  "Me encanta esto, yo también quiero empezar.",
+  "¿En qué parque fue eso? Se ve genial.",
+  "Esa racha es impresionante, felicidades. 🔥",
+  "Totalmente de acuerdo, el bienestar es prioridad.",
+  "¡Vamos con toda! Mañana será un mejor día.",
+  "Yo probé esa receta y es de las mejores de bloomWe.",
+  "La disciplina es la clave de todo.",
+  "Qué buen post, gracias por compartir.",
+  "¿Hacemos match? Me gustaría compartir tips."
 ];
 
 const RANDOM_ACTIVITIES = [
@@ -71,6 +85,15 @@ export default function SocialPage() {
   const [mainTab, setMainTab] = useState<'comunidad' | 'lugares' | 'mensajes'>('comunidad');
   const [comunidadTab, setComunidadTab] = useState<'discover' | 'pending' | 'favorites'>('discover');
   const [commentInput, setCommentInput] = useState<{ [postId: string]: string }>({});
+  const [selectedPostDetail, setSelectedPostDetail] = useState<SocialPost | null>(null);
+
+  const generateRandomComments = useCallback((count: number): Comment[] => {
+    return Array.from({ length: count }).map((_, i) => ({
+      id: Math.random().toString(36).substr(2, 9),
+      name: MOCK_SOCIAL_FEED[Math.floor(Math.random() * MOCK_SOCIAL_FEED.length)].name,
+      text: RANDOM_COMMENTS_POOL[Math.floor(Math.random() * RANDOM_COMMENTS_POOL.length)]
+    }));
+  }, []);
 
   const generateRandomPosts = useCallback((count: number): SocialPost[] => {
     return Array.from({ length: count }).map((_, i) => {
@@ -91,10 +114,10 @@ export default function SocialPage() {
         isMe: false,
         likes: Math.floor(Math.random() * 50) + 5,
         userLiked: false,
-        comments: []
+        comments: generateRandomComments(Math.floor(Math.random() * 3) + 1)
       };
     });
-  }, []);
+  }, [generateRandomComments]);
 
   useEffect(() => {
     setMounted(true);
@@ -103,10 +126,10 @@ export default function SocialPage() {
       isMe: false, 
       likes: Math.floor(Math.random() * 20) + 5,
       userLiked: false,
-      comments: (u as any).comments || []
+      comments: (u as any).comments?.length ? (u as any).comments : generateRandomComments(2)
     }));
     setFeed([...initialFeed, ...generateRandomPosts(3)]);
-  }, [generateRandomPosts]);
+  }, [generateRandomPosts, generateRandomComments]);
 
   useEffect(() => {
     if (mounted && mainTab === 'comunidad' && comunidadTab === 'discover') {
@@ -143,7 +166,7 @@ export default function SocialPage() {
     setSelectedTags([]);
     toast({
       title: "Publicado",
-      description: "Tu estado se ha compartido con la comunidad.",
+      description: "Tu estado se ha compartido con la comunidad de bloomWe.",
     });
   };
 
@@ -165,19 +188,22 @@ export default function SocialPage() {
     const text = commentInput[postId];
     if (!text) return;
 
+    const newComment = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: userData?.name || 'Usuario',
+      text
+    };
+
     setFeed(prev => prev.map(p => {
       if (p.id === postId) {
-        return {
+        const updatedPost = {
           ...p,
-          comments: [
-            ...p.comments,
-            {
-              id: Math.random().toString(36).substr(2, 9),
-              name: userData?.name || 'Usuario',
-              text
-            }
-          ]
+          comments: [...p.comments, newComment]
         };
+        if (selectedPostDetail?.id === postId) {
+          setSelectedPostDetail(updatedPost);
+        }
+        return updatedPost;
       }
       return p;
     }));
@@ -331,7 +357,7 @@ export default function SocialPage() {
                       <Heart size={18} fill={user.userLiked ? "currentColor" : "none"} /> 
                       <span className="text-xs font-bold">{user.likes}</span>
                     </button>
-                    <button className="flex items-center gap-2 text-muted-foreground">
+                    <button onClick={() => setSelectedPostDetail(user)} className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
                       <MessageCircle size={18} /> 
                       <span className="text-xs font-bold">{user.comments.length}</span>
                     </button>
@@ -346,35 +372,6 @@ export default function SocialPage() {
                           <Zap size={16} fill="currentColor" /> <span className="text-xs">Match</span>
                         </button>
                       )}
-                    </div>
-                  </div>
-
-                  <div className="mt-4 pt-4 border-t border-border/30 space-y-3">
-                    {user.comments.length > 0 && (
-                      <div className="space-y-2">
-                        {user.comments.map((comment) => (
-                          <div key={comment.id} className="flex flex-col bg-secondary/10 p-2.5 rounded-2xl">
-                            <span className="text-[10px] font-black text-primary uppercase mb-0.5">{comment.name}</span>
-                            <p className="text-xs text-muted-foreground leading-tight">{comment.text}</p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <div className="flex gap-2 items-center bg-secondary/20 p-2 rounded-2xl">
-                      <Input 
-                        placeholder="Añadir un comentario..." 
-                        value={commentInput[user.id] || ''}
-                        onChange={(e) => setCommentInput(prev => ({ ...prev, [user.id]: e.target.value }))}
-                        className="h-8 bg-transparent border-none text-[11px] placeholder:text-muted-foreground/50 shadow-none focus-visible:ring-0"
-                      />
-                      <Button 
-                        size="icon" 
-                        variant="ghost" 
-                        className="h-7 w-7 rounded-full text-primary hover:bg-primary/10 shrink-0"
-                        onClick={() => handleAddComment(user.id)}
-                      >
-                        <Send size={14} />
-                      </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -489,6 +486,117 @@ export default function SocialPage() {
         </div>
       )}
 
+      {/* Modal de Detalle de Publicación / Comentarios */}
+      <Dialog open={!!selectedPostDetail} onOpenChange={() => setSelectedPostDetail(null)}>
+        <DialogContent className="rounded-[2.5rem] max-w-[92vw] p-0 border-none overflow-hidden max-h-[90vh] flex flex-col shadow-2xl">
+          {selectedPostDetail && (
+            <>
+              <DialogHeader className="p-6 pb-2 shrink-0">
+                <div className="flex items-center gap-4 mb-2">
+                  <Avatar className="h-12 w-12 border-2 border-primary/20">
+                    <AvatarImage src={selectedPostDetail.photo} />
+                    <AvatarFallback>{selectedPostDetail.name[0]}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <DialogTitle className="text-lg font-bold">{selectedPostDetail.name}</DialogTitle>
+                    <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">{selectedPostDetail.recentActivity}</p>
+                  </div>
+                </div>
+              </DialogHeader>
+              
+              <div className="px-6 py-2 overflow-y-auto no-scrollbar flex-1 space-y-6">
+                <div className="bg-secondary/10 p-5 rounded-[2rem] border border-primary/5">
+                  <p className="text-sm text-foreground/80 leading-relaxed italic">"{selectedPostDetail.bio}"</p>
+                  <div className="flex flex-wrap gap-1.5 mt-4">
+                    {selectedPostDetail.interests.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="bg-primary/10 text-primary border-none text-[8px] px-2 py-0.5 font-bold rounded-full">#{tag}</Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1.5 text-red-500">
+                      <Heart size={20} fill={selectedPostDetail.userLiked ? "currentColor" : "none"} />
+                      <span className="text-sm font-bold">{selectedPostDetail.likes}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-primary">
+                      <MessageCircle size={20} />
+                      <span className="text-sm font-bold">{selectedPostDetail.comments.length}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 bg-orange-50 px-3 py-1 rounded-full text-orange-600 border border-orange-100">
+                    <Flame size={16} fill="currentColor" />
+                    <span className="text-xs font-black">{selectedPostDetail.streak} días</span>
+                  </div>
+                </div>
+
+                <section className="space-y-4 pt-2">
+                  <h4 className="text-xs font-black uppercase text-muted-foreground tracking-widest px-1">Comentarios de la gente</h4>
+                  {selectedPostDetail.comments.length === 0 ? (
+                    <div className="text-center py-8 bg-secondary/5 rounded-3xl border border-dashed border-muted-foreground/10">
+                      <p className="text-xs text-muted-foreground font-medium">Sé el primero en comentar esta publicación.</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-3">
+                      {selectedPostDetail.comments.map((comment) => (
+                        <div key={comment.id} className="flex flex-col bg-white p-4 rounded-[1.5rem] shadow-sm border border-border/50">
+                          <span className="text-[10px] font-black text-primary uppercase mb-1">{comment.name}</span>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{comment.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </div>
+
+              <div className="p-6 bg-white border-t border-border/50 shrink-0 space-y-4">
+                <div className="flex gap-2 items-center bg-secondary/20 p-2.5 rounded-2xl">
+                  <Input 
+                    placeholder="Escribe algo positivo..." 
+                    value={commentInput[selectedPostDetail.id] || ''}
+                    onChange={(e) => setCommentInput(prev => ({ ...prev, [selectedPostDetail.id!]: e.target.value }))}
+                    className="bg-transparent border-none text-sm placeholder:text-muted-foreground/50 shadow-none focus-visible:ring-0"
+                  />
+                  <Button 
+                    size="icon" 
+                    className="h-10 w-10 rounded-full bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 shrink-0"
+                    onClick={() => handleAddComment(selectedPostDetail.id)}
+                  >
+                    <Send size={18} />
+                  </Button>
+                </div>
+
+                {!selectedPostDetail.isMe && (
+                  <div className="pt-2">
+                    {isMatch(selectedPostDetail.id) ? (
+                      <Button disabled className="w-full h-12 rounded-2xl bg-green-500 text-white font-bold opacity-100">
+                        Ya son amigos
+                      </Button>
+                    ) : isPending(selectedPostDetail.id) ? (
+                      <Button disabled className="w-full h-12 rounded-2xl bg-primary/20 text-primary font-bold opacity-100">
+                        Solicitud pendiente
+                      </Button>
+                    ) : (
+                      <Button 
+                        onClick={() => {
+                          handleMatchRequestAction(selectedPostDetail);
+                          setSelectedPostDetail(null);
+                        }} 
+                        className="w-full h-14 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform"
+                      >
+                        <Zap size={20} className="mr-2" fill="currentColor" /> Hacer Match con {selectedPostDetail.name.split(' ')[0]}
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de éxito de Match */}
       <Dialog open={!!matchSuccess} onOpenChange={() => setMatchSuccess(null)}>
         <DialogContent className="rounded-[2.5rem] max-w-[85vw] p-8 text-center border-none">
           <DialogHeader>
@@ -499,7 +607,7 @@ export default function SocialPage() {
               ¡Solicitud Enviada!
             </DialogTitle>
             <DialogDescription className="text-center pt-2 font-medium">
-              Se ha enviado tu interés a <span className="text-primary font-bold">{matchSuccess}</span>. Lo verás en tu pestaña de pendientes.
+              Se ha enviado tu interés a <span className="text-primary font-bold">{matchSuccess}</span>. Lo verás en tu pestaña de pendientes en bloomWe.
             </DialogDescription>
           </DialogHeader>
           <Button onClick={() => setMatchSuccess(null)} className="w-full h-12 rounded-2xl bg-primary mt-6 font-bold shadow-lg shadow-primary/20">Entendido</Button>
