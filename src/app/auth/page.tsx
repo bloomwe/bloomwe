@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -48,7 +47,7 @@ const AuthContent = () => {
       
       if (signup(email, password)) {
         toast({
-          title: "¡Bienvenido a BloomWell!",
+          title: "¡Bienvenido a bloomWe!",
           description: "Cuenta creada con éxito. Vamos a configurar tu perfil.",
         });
         router.push('/onboarding');
@@ -75,7 +74,7 @@ const AuthContent = () => {
           <div className="mx-auto w-16 h-16 bg-primary rounded-3xl flex items-center justify-center shadow-xl mb-4">
             <Sparkles className="text-white" size={32} />
           </div>
-          <h1 className="text-3xl font-black text-primary">BloomWell</h1>
+          <h1 className="text-3xl font-black text-primary">bloomWe</h1>
           <p className="text-muted-foreground font-medium">Tu camino al bienestar comienza aquí</p>
         </div>
 

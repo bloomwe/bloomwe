@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -106,7 +105,7 @@ const OnboardingFlow = () => {
         toast({
           variant: "destructive",
           title: "Restricción de edad",
-          description: "Debes ser mayor de edad (18+ años) para registrarte en BloomWell.",
+          description: "Debes ser mayor de edad (18+ años) para registrarte en bloomWe.",
         });
         return;
       }

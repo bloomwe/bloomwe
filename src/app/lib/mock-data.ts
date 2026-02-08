@@ -1,4 +1,3 @@
-
 export const MOCK_EXPERTS = [
   {
     id: '1',
@@ -8,7 +7,7 @@ export const MOCK_EXPERTS = [
     experience: 8,
     bio: 'Especialista en salud joven y prevención de enfermedades crónicas con enfoque en hábitos saludables.',
     phone: '+573001234567',
-    email: 'julian.rivera@bloomwell.com',
+    email: 'julian.rivera@bloomwe.com',
     location: 'Centro Médico Norte, Piso 4',
     hours: 'Lun-Vie 8am - 5pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322773/2c36d6ef-677c-4318-8ded-ef0184074d05.png'
@@ -21,7 +20,7 @@ export const MOCK_EXPERTS = [
     experience: 12,
     bio: 'Dedicada al diagnóstico integral y manejo de condiciones de salud en adultos jóvenes.',
     phone: '+573109876543',
-    email: 'elena.c@bloomwell.com',
+    email: 'elena.c@bloomwe.com',
     location: 'Hospital San Lucas, Consultorio 302',
     hours: 'Mar-Jue 2pm - 7pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322799/01167078-9403-45fe-88f0-47e23a9abe8b.png'
@@ -34,7 +33,7 @@ export const MOCK_EXPERTS = [
     experience: 10,
     bio: 'Experto en manejo de ansiedad, estrés académico y desarrollo personal en jóvenes.',
     phone: '+573152223344',
-    email: 'ricardo.g@bloomwell.com',
+    email: 'ricardo.g@bloomwe.com',
     location: 'Torre Empresarial, Of. 901',
     hours: 'Lun-Vie 9am - 6pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322763/f53d1073-a2b2-4169-a987-0029f6569ae2.png'
@@ -47,7 +46,7 @@ export const MOCK_EXPERTS = [
     experience: 6,
     bio: 'Enfoque empático para tratar temas de autoestima, relaciones y bienestar emocional.',
     phone: '+573201112233',
-    email: 'camila.v@bloomwell.com',
+    email: 'camila.v@bloomwe.com',
     location: 'Centro Zen, Calle 80',
     hours: 'Mié-Sáb 8am - 2pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322679/b4ad95ce-e7dc-40f4-b3c2-ee28ce9e9e53.png'
@@ -60,7 +59,7 @@ export const MOCK_EXPERTS = [
     experience: 5,
     bio: 'Ayudo a jóvenes a optimizar su rendimiento físico y mental a través de una alimentación balanceada.',
     phone: '+573007654321',
-    email: 'sofia.m@bloomwell.com',
+    email: 'sofia.m@bloomwe.com',
     location: 'Consultorio Vitalia 202',
     hours: 'Lun-Sáb 9am - 1pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322650/efbadf20-6ab5-452a-9490-1e36ef7f9420.png'
@@ -73,7 +72,7 @@ export const MOCK_EXPERTS = [
     experience: 7,
     bio: 'Especialista en planes de alimentación personalizados para mejorar la salud metabólica.',
     phone: '+573014445566',
-    email: 'andres.p@bloomwell.com',
+    email: 'andres.p@bloomwe.com',
     location: 'Plaza Médica, Local 12',
     hours: 'Lun-Vie 7am - 4pm',
     image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770322644/6cf77b39-6200-498d-a8cc-cac2a3063730.png'
@@ -157,7 +156,8 @@ export const MOCK_PLACES = [
     address: 'Av. Calle 63 y Av. Carrera 68',
     activities: ['Running', 'Ciclismo', 'Eventos Masivos', 'Yoga'],
     hours: '5am - 7pm',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323625/a7261b44-1ce1-41dc-878d-b89168baad35.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323625/a7261b44-1ce1-41dc-878d-b89168baad35.png',
+    rating: 5
   },
   {
     id: '2',
@@ -165,7 +165,8 @@ export const MOCK_PLACES = [
     address: 'Calle 63 # 45-10',
     activities: ['Yoga', 'Caminata', 'Navegación en Bote', 'Picnic'],
     hours: '6am - 6pm',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323648/1c3564ef-eaad-4e7e-8386-1532b38b1944.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323648/1c3564ef-eaad-4e7e-8386-1532b38b1944.png',
+    rating: 4
   },
   {
     id: '3',
@@ -173,7 +174,8 @@ export const MOCK_PLACES = [
     address: 'Carrera 15 con Calle 88',
     activities: ['Running', 'Calistenia', 'Paseo de Mascotas'],
     hours: 'Abierto 24h',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323666/39cefa5c-6590-48dd-b9b9-6167d8320e0b.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323666/39cefa5c-6590-48dd-b9b9-6167d8320e0b.png',
+    rating: 5
   },
   {
     id: '4',
@@ -181,7 +183,8 @@ export const MOCK_PLACES = [
     address: 'Calle 48B Sur y Avenida Boyacá',
     activities: ['Skateboarding', 'Fútbol', 'Atletismo', 'Ciclismo'],
     hours: '5am - 6pm',
-    image: 'https://picsum.photos/seed/tunal/600/400'
+    image: 'https://picsum.photos/seed/tunal/600/400',
+    rating: 3
   },
   {
     id: '5',
@@ -189,7 +192,8 @@ export const MOCK_PLACES = [
     address: 'Calle 93 # 11A-41',
     activities: ['Yoga Matutino', 'Eventos Culturales', 'Caminata'],
     hours: 'Abierto 24h',
-    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323713/8d4ddf3a-efe2-4e51-a8fa-6ba7d912885a.png'
+    image: 'https://res.cloudinary.com/dwoyltoyd/image/upload/v1770323713/8d4ddf3a-efe2-4e51-a8fa-6ba7d912885a.png',
+    rating: 4
   }
 ];
 
@@ -265,6 +269,45 @@ export const MOCK_SHOPS = [
   }
 ];
 
+export const MOCK_CHATS = [
+  {
+    id: 'c1',
+    name: 'Mateo González',
+    photo: 'https://picsum.photos/seed/u1/150/150',
+    lastMessage: '¿Vamos al parque Simón Bolívar hoy?',
+    time: '10:30 AM',
+    unreadCount: 2,
+    online: true
+  },
+  {
+    id: 'c2',
+    name: 'Valentina Ruiz',
+    photo: 'https://picsum.photos/seed/u2/150/150',
+    lastMessage: '¡Esa receta de quinoa estuvo genial!',
+    time: 'Ayer',
+    unreadCount: 0,
+    online: false
+  },
+  {
+    id: 'c3',
+    name: 'Dr. Ricardo Gómez',
+    photo: 'https://picsum.photos/seed/u3/150/150',
+    lastMessage: 'Recuerda practicar la respiración profunda.',
+    time: 'Lunes',
+    unreadCount: 0,
+    online: false
+  },
+  {
+    id: 'c4',
+    name: 'Sofía Mendez',
+    photo: 'https://picsum.photos/seed/u4/150/150',
+    lastMessage: 'Mañana sale nuevo tip de nutrición.',
+    time: '2h ago',
+    unreadCount: 0,
+    online: true
+  }
+];
+
 export const MOCK_SPORTS_ACTIVITIES = [
   {
     id: 's1',
@@ -309,6 +352,86 @@ export const MOCK_SPORTS_ACTIVITIES = [
     location: 'Complejo Acuático Municipal',
     image: 'https://images.unsplash.com/photo-1519315901367-f34ff9154487?q=80&w=1000',
     description: 'Mejora tu brazada con consejos de instructores profesionales en piscina climatizada.'
+  },
+  {
+    id: 's5',
+    sport: 'Pilates',
+    title: 'Pilates Integral para Jóvenes',
+    date: 'Martes, 24 Oct',
+    time: '09:00 AM',
+    duration: '55 min',
+    location: 'Estudio de Bienestar bloomWe',
+    image: 'https://images.unsplash.com/photo-1518611012118-29a8d63ee0c2?q=80&w=1000',
+    description: 'Mejora tu postura y fortalece tu core con nuestra sesión especializada de Pilates mat.'
+  },
+  {
+    id: 's6',
+    sport: 'Baile',
+    title: 'Ritmos Latinos y Cardio',
+    date: 'Viernes, 27 Oct',
+    time: '06:30 PM',
+    duration: '60 min',
+    location: 'Plaza Principal del Parque',
+    image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=1000',
+    description: 'Diviértete mientras te ejercitas al ritmo de los mejores hits latinos. ¡No se requiere experiencia previa!'
+  }
+];
+
+export const MOCK_TALKS = [
+  {
+    id: 't1',
+    topic: 'Nutrición',
+    title: 'Alimentación Consciente para Estudiantes',
+    location: 'Auditorio Central',
+    date: '25 de Octubre',
+    time: '10:00 AM',
+    expert: 'Dra. Sofía Mendez',
+    duration: '90 min',
+    description: 'Aprende a nutrir tu cerebro para mejorar el rendimiento académico.'
+  },
+  {
+    id: 't2',
+    topic: 'Obesidad',
+    title: 'Prevención de Riesgos Metabólicos',
+    location: 'Sala de Conferencias B',
+    date: '26 de Octubre',
+    time: '02:00 PM',
+    expert: 'Dr. Julián Rivera',
+    duration: '60 min',
+    description: 'Charla sobre hábitos saludables para prevenir el sobrepeso desde joven.'
+  },
+  {
+    id: 't3',
+    topic: 'Salud Mental',
+    title: 'Manejo del Estrés Académico',
+    location: 'Salón Comunitario',
+    date: '27 de Octubre',
+    time: '09:00 AM',
+    expert: 'Dr. Ricardo Gómez',
+    duration: '120 min',
+    description: 'Herramientas psicológicas para afrontar periodos de alta carga de estudio.'
+  },
+  {
+    id: 't4',
+    topic: 'Covid',
+    title: 'Secuelas y Recuperación Post-Pandemia',
+    location: 'Centro de Salud Norte',
+    date: '28 de Octubre',
+    time: '11:00 AM',
+    expert: 'Dra. Elena Castiblanco',
+    duration: '45 min',
+    description: 'Información médica sobre el cuidado del sistema respiratorio e inmune.'
+  },
+  {
+    id: 't5',
+    topic: 'Nutrición',
+    title: 'Mitos de las Dietas de Moda',
+    location: 'Gimnasio Municipal',
+    date: '29 de Octubre',
+    time: '04:00 PM',
+    expert: 'Dr. Andrés Pardo',
+    duration: '75 min',
+    description: 'Un análisis científico sobre lo que realmente funciona para tu cuerpo.'
   }
 ];
 
@@ -320,7 +443,11 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Amante del yoga y la vida sana. ¡Vamos por esos 30 días!',
     recentActivity: 'Completó sesión de Yoga 20 min',
     interests: ['Yoga', 'Lectura'],
-    streak: 15
+    streak: 15,
+    comments: [
+      { id: 'com1', name: 'Valentina Ruiz', text: '¡Increíble Mateo! Yo también quiero llegar a los 30 días.' },
+      { id: 'com2', name: 'Dr. Ricardo Gómez', text: 'Excelente disciplina, Mateo.' }
+    ]
   },
   {
     id: '2',
@@ -329,7 +456,10 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Correr me hace libre. Busco partners para el parque.',
     recentActivity: 'Corrió 5km en el Parque Central',
     interests: ['Running', 'Ciclismo'],
-    streak: 7
+    streak: 7,
+    comments: [
+      { id: 'com3', name: 'Mateo González', text: '¿Qué días vas? Me encantaría unirme.' }
+    ]
   },
   {
     id: '3',
@@ -338,7 +468,10 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Como psicólogo, creo que el bienestar mental es la base de todo.',
     recentActivity: 'Publicó: Tips para la ansiedad',
     interests: ['Meditación', 'Salud Mental'],
-    streak: 22
+    streak: 22,
+    comments: [
+      { id: 'com4', name: 'Sofía Mendez', text: 'Muy necesarios estos consejos hoy en día, doctor.' }
+    ]
   },
   {
     id: '4',
@@ -347,7 +480,10 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Nutricionista apasionada por las recetas fáciles y ricas.',
     recentActivity: 'Compartió nueva receta de Smoothie',
     interests: ['Nutrición', 'Culinaria'],
-    streak: 30
+    streak: 30,
+    comments: [
+      { id: 'com5', name: 'Valentina Ruiz', text: '¡Se ve delicioso! Lo probaré después de correr.' }
+    ]
   },
   {
     id: '5',
@@ -356,7 +492,8 @@ export const MOCK_SOCIAL_FEED = [
     bio: 'Entrenador personal. El secreto es la disciplina.',
     recentActivity: 'Hizo 100 flexiones hoy',
     interests: ['Gimnasio', 'Crossfit'],
-    streak: 45
+    streak: 45,
+    comments: []
   }
 ];
 
@@ -448,7 +585,7 @@ export const MOCK_NOTIFICATIONS = [
 ];
 
 export const HOBBIES_LIST = [
-  'Yoga', 'Gimnasio', 'Ciclismo', 'Meditación', 'Lectura', 'Natación', 'Baile', 'Correr'
+  'Yoga', 'Gimnasio', 'Ciclismo', 'Meditación', 'Lectura', 'Natación', 'Baile', 'Correr', 'Pilates'
 ];
 
 export const LEVELS = ['Nuevo', 'Medio', 'Avanzado', 'Experto'];

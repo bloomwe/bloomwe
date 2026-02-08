@@ -26,7 +26,7 @@ function AppInitializer() {
       <div className="w-24 h-24 bg-primary rounded-3xl flex items-center justify-center animate-bounce shadow-xl">
         <span className="text-white text-4xl font-bold">BW</span>
       </div>
-      <h1 className="text-2xl font-bold text-primary">BloomWell</h1>
+      <h1 className="text-2xl font-bold text-primary">bloomWe</h1>
       <Skeleton className="h-4 w-48" />
     </div>
   );
