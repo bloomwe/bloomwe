@@ -319,6 +319,8 @@ export const MOCK_TALKS = [
     location: 'Auditorio Central',
     date: '25 de Octubre',
     time: '10:00 AM',
+    expert: 'Dra. Sofía Mendez',
+    duration: '90 min',
     description: 'Aprende a nutrir tu cerebro para mejorar el rendimiento académico.'
   },
   {
@@ -328,6 +330,8 @@ export const MOCK_TALKS = [
     location: 'Sala de Conferencias B',
     date: '26 de Octubre',
     time: '02:00 PM',
+    expert: 'Dr. Julián Rivera',
+    duration: '60 min',
     description: 'Charla sobre hábitos saludables para prevenir el sobrepeso desde joven.'
   },
   {
@@ -337,6 +341,8 @@ export const MOCK_TALKS = [
     location: 'Salón Comunitario',
     date: '27 de Octubre',
     time: '09:00 AM',
+    expert: 'Dr. Ricardo Gómez',
+    duration: '120 min',
     description: 'Herramientas psicológicas para afrontar periodos de alta carga de estudio.'
   },
   {
@@ -346,6 +352,8 @@ export const MOCK_TALKS = [
     location: 'Centro de Salud Norte',
     date: '28 de Octubre',
     time: '11:00 AM',
+    expert: 'Dra. Elena Castiblanco',
+    duration: '45 min',
     description: 'Información médica sobre el cuidado del sistema respiratorio e inmune.'
   },
   {
@@ -355,6 +363,8 @@ export const MOCK_TALKS = [
     location: 'Gimnasio Municipal',
     date: '29 de Octubre',
     time: '04:00 PM',
+    expert: 'Dr. Andrés Pardo',
+    duration: '75 min',
     description: 'Un análisis científico sobre lo que realmente funciona para tu cuerpo.'
   }
 ];

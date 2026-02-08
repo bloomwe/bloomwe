@@ -10,7 +10,7 @@ import {
   Dumbbell, Moon, ShoppingBag, TreePine, Utensils, Award, 
   ChevronRight, Phone, Mail, MapPin, Search, Clock, Calendar as CalendarIcon, 
   Timer, Play, BookOpen, Download, Music, Tag, Map, Star, ArrowLeft,
-  CheckCircle2, ListChecks, ChefHat, Sparkles, MessageSquare
+  CheckCircle2, ListChecks, ChefHat, Sparkles, MessageSquare, User
 } from 'lucide-react';
 import { MOCK_EXPERTS, MOCK_RECIPES, MOCK_PLACES, MOCK_SPORTS_ACTIVITIES, MOCK_RELAXATION, MOCK_SHOPS, MOCK_TALKS } from '@/app/lib/mock-data';
 import { cn } from '@/lib/utils';
@@ -414,12 +414,22 @@ export default function HacerPage() {
                         <h3 className="font-bold text-lg mb-2">{talk.title}</h3>
                         <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{talk.description}</p>
                         
-                        <div className="flex flex-col gap-2 bg-secondary/20 p-4 rounded-2xl mb-5">
-                          <div className="flex items-center gap-2 text-[11px] font-medium">
-                            <MapPin size={14} className="text-primary" /> {talk.location}
+                        <div className="flex flex-col gap-3 bg-secondary/20 p-4 rounded-2xl mb-5">
+                          <div className="flex items-center gap-2 text-[11px] font-bold">
+                            <User size={14} className="text-primary" /> 
+                            <span className="text-primary">Experto:</span> {talk.expert}
                           </div>
-                          <div className="flex items-center gap-2 text-[11px] font-medium">
-                            <Clock size={14} className="text-primary" /> {talk.time}
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex items-center gap-2 text-[11px] font-medium">
+                              <MapPin size={14} className="text-primary" /> {talk.location}
+                            </div>
+                            <div className="flex items-center gap-2 text-[11px] font-medium">
+                              <Clock size={14} className="text-primary" /> {talk.time}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-[11px] font-medium border-t border-border/20 pt-2">
+                            <Timer size={14} className="text-primary" /> 
+                            <span className="text-muted-foreground">Duración:</span> {talk.duration}
                           </div>
                         </div>
 
